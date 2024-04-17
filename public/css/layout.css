@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+:root {
+    --dark-grey: #333333;
+    --medium-grey: #636363;
+    --light-grey: #eeeeee;
+    --ash: #f4f4f4;
+    --primary-color: #2b72fb;
+    --white: white;
+    --border: 1px solid var(--light-grey);
+    --shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+body {
+    font-family: inherit;
+    background-color: var(--white);
+    color: var(--dark-grey);
+    letter-spacing: -0.4px;
+}
+
+.navbar-brand img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.navbar {
+    border-bottom: var(--border);
+    margin-bottom: 15px;
+}
+
+.navbar-brand .active {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-link {
+    font-weight: 500;
+    font-size: large;
+    display: inline;
+    color: rgba(0, 0, 0, .7);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(0, 0, 0, .7);
+}
+
+span.nav-link {
+    display: inline;
+    color: rgba(51, 51, 51, .7);
+}
+
+.nav-link:hover {
+    font-weight: bold;
+    color: rgba(51, 51, 51, .9);
+}
+
+.search input {
+    background-image: url("/img/icons8-search.svg");
+    background-repeat: no-repeat;
+    background-position: 2% 50%;
+    background-color: var(--ash);
+    border: none;
+    border-radius: 6px;
+    padding: 0.7rem;
+    padding-left: 2.4rem;
+    font-size: 16px;
+    width: 100%;
+    border: var(--border);
+}
+
+.search .bx-search {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    font-size: 1.3rem;
+    transform: translateY(-50%);
+    opacity: 0.6;
+}
+
+.shopping-cart {
+    border: none;
+    background-color: white;
+}
