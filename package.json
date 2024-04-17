@@ -1,0 +1,25 @@
+{
+  "name": "biosquery-backend",
+  "version": "1.0.0",
+  "description": "The backend source for BIOSQuery",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/team408/BIOSQuery-Backend.git"
+  },
+  "author": "team408",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/team408/BIOSQuery-Backend/issues"
+  },
+  "homepage": "https://github.com/team408/BIOSQuery-Backend#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
+  }
+}
