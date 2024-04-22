@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<div class="container">
+
+    <!-- Album cards -->
+    <div class="row">
+        <% endpoints.forEach(function(endpoint) { %>
+        <div class="col-md-3 g-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= endpoint.hostname %>
+                    </h5>
+                    <p class="card-text">
+                        <%= endpoint.primary_ip %>
+                    </p>
+                    <p class="card-text">
+                        <%= endpoint.primary_mac %>
+                    </p>
+                    <p hidden class="endpointUuid">
+                        <%- endpoint.uuid %>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+</div>
+
+<%- include('partials/footer') %>
