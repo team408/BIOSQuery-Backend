@@ -1,4 +1,5 @@
 <%- include('partials/header') %>
+<link rel="stylesheet" href="/css/endpoints.css">
 
 <div class="container">
 
@@ -11,6 +12,11 @@
         <div class="col-md-3 g-3">
             <div class="card">
                 <div class="card-body">
+                    <% if(endpoint.platform=="rhel") { %>
+                    <img src="../img/rhel_logo.png" class="card-img-top platform-img">
+                    <% } else {; %>
+                    <img src="../img/ubuntu.png" class="card-img-top platform-img">
+                    <% } %>
                     <h5 class="card-title">
                         <%= endpoint.hostname %>
                     </h5>
