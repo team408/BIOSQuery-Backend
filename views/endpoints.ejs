@@ -2,8 +2,11 @@
 
 <div class="container">
 
-    <!-- Album cards -->
+    <!-- Endpoint cards -->
     <div class="row">
+        <% if(!endpoints) { %>
+        No endpoints found
+        <% } else { %>
         <% endpoints.forEach(function(endpoint) { %>
         <div class="col-md-3 g-3">
             <div class="card">
@@ -24,6 +27,7 @@
             </div>
         </div>
         <% }); %>
+        <% } %>
     </div>
 
 </div>
