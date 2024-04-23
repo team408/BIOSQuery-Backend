@@ -2,9 +2,7 @@ const fleetService = require('../services/fleet');
 
 async function getEndpoints(req, res) {
     try {
-
-        endpointsUri = '/api/v1/fleet/hosts?page=0&per_page=100'
-        endpoints = await fleetService.fleetApiRequest(endpointsUri);
+        endpoints = await fleetService.listEndpoints();
         res.render("endpoints.ejs", { endpoints: endpoints.hosts });
 
     } catch (error) {
