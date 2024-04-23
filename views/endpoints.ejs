@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/endpoints.css">
+
+<div class="container">
+
+    <!-- Endpoint cards -->
+    <div class="row">
+        <% if(!endpoints) { %>
+        No endpoints found
+        <% } else { %>
+        <% endpoints.forEach(function(endpoint) { %>
+        <div class="col-md-3 g-3">
+            <div class="card">
+                <div class="card-body">
+                    <% if(endpoint.platform=="rhel") { %>
+                    <img src="../img/rhel_logo.png" class="card-img-top platform-img">
+                    <% } else {; %>
+                    <img src="../img/ubuntu.png" class="card-img-top platform-img">
+                    <% } %>
+                    <h5 class="card-title">
+                        <%= endpoint.hostname %>
+                    </h5>
+                    <p class="card-text">
+                        <%= endpoint.primary_ip %>
+                    </p>
+                    <p class="card-text">
+                        <%= endpoint.primary_mac %>
+                    </p>
+                    <p hidden class="endpointUuid">
+                        <%- endpoint.uuid %>
+                    </p>
+                </div>
+                <% if (endpoint.chipsec) { %>
+                <div class="card-footer text-muted">
+                    ✅ Chipsec installed
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <% }); %>
+        <% } %>
+    </div>
+
+</div>
+
+<%- include('partials/footer') %>
