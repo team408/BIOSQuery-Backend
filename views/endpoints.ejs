@@ -30,6 +30,11 @@
                         <%- endpoint.uuid %>
                     </p>
                 </div>
+                <% if (endpoint.chipsec) { %>
+                <div class="card-footer text-muted">
+                    ✅ Chipsec installed
+                </div>
+                <% } %>
             </div>
         </div>
         <% }); %>
