@@ -31,9 +31,9 @@
                     </p>
                 </div>
                 <% if (endpoint.chipsec) { %>
-                <div class="card-footer text-muted">
-                    ✅ Chipsec installed
-                </div>
+                <div class="card-footer text-muted">✅ Chipsec installed</div>
+                <% } else { %>
+                <div class="card-footer text-muted">⛔ Chipsec isn't installed </div>
                 <% } %>
             </div>
         </div>
