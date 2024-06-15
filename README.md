@@ -17,12 +17,23 @@ cd BIOSQuery-Backend
 npm install
 ```
 
-4. Start the app
+4. Create the `.env` file and add values
+```bash
+# Add the wanted values:
+LISTEN_PORT=3000
+FLEET_SERVER={{server_url}}
+FLEET_SERVER_PORT={{server_port}}
+FLEET_API_TOKEN={{api_token}}
+# accepting insecure requests
+NODE_TLS_REJECT_UNAUTHORIZED=0 
+```
+
+5. Start the app
 ```bash
 node app.js
 ```
 
-5. [Optional] Add a `vscode` launch file
+6. [Optional] Add a `vscode` launch file
 ```bash
 mkdir .vscode
 
