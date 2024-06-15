@@ -5,8 +5,8 @@
 
     <!-- Endpoint cards -->
     <div class="row">
-        <% if(!endpoints) { %>
-        No endpoints found
+        <% if(!endpoints.length) { %>
+        <h1>No endpoints found</h1>
         <% } else { %>
         <% endpoints.forEach(function(endpoint) { %>
         <div class="col-md-3 g-3">

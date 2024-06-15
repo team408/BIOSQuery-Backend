@@ -15,7 +15,7 @@ async function getRequest(url, headers = null) {
 }
 
 async function fleetApiGetRequest(uri) {
-    fleetUrl = `https://${process.env.FLEET_SERVER_IP}:${process.env.FLEET_SERVER_PORT}`;
+    fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
     response = await getRequest(fleetUrl + uri, headers = { "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}` })
     return response
 };
@@ -23,6 +23,12 @@ async function fleetApiGetRequest(uri) {
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'
     let endpoints = await fleetApiGetRequest(endpointsUri);
+    
+    // No endpoints found
+    if (endpoints.hosts==0){
+        return endpoints;
+    }
+
     const endpointsWithChipsec = await endpointsChipsecStatus();
 
     newData = { "chipsec": 1 };
