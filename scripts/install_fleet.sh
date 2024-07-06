@@ -1,4 +1,1 @@
-VERSION=$(curl -s https://api.github.com/repos/fleetdm/fleet/releases/latest | grep tag_name | cut -d '"' -f 4)
-STRIPPED=$(echo $VERSION | cut -c 7-)
-curl -L -o fleetctl  "https://github.com/fleetdm/fleet/releases/download/$VERSION/fleetctl_$STRIPPED""_linux.tar.gz"
-#use services/fleet/getAgentEnrollCmd
+VERSION=$(curl -s https://api.github.com/repos/fleetdm/fleet/releases/latest | grep tag_name | cut -d '"' -f 4); STRIPPED=$(echo $VERSION | cut -c 7-); curl -L -o fleetctl.tar.gz "https://github.com/fleetdm/fleet/releases/download/$VERSION/fleetctl_$STRIPPED""_linux.tar.gz"; tar zxvf fleetctl.tar.gz fleetctl_${STRIPPED}_linux/fleetctl; mv ./fleetctl_${STRIPPED}_linux/fleetctl ./; rm fleetctl.tar.gz; rmdir ./fleetctl_${STRIPPED}_linux; ./fleetctl -v;

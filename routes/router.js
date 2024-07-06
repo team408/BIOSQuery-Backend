@@ -13,7 +13,7 @@ router.get("/", homepageController.homepage);
 // Endpoints
 router.get("/endpoints", endpointsController.getEndpoints);
 // Agents
-router.get("/api/agents/addNode", agentsController.addNode);
+router.post("/api/agents/addNode/:osType/:host_id", agentsController.addNode);
 
 // Dashboard
 router.get("/dashboard", dashboardController.dashboard);
