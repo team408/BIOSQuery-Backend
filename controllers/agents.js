@@ -1,5 +1,6 @@
 const fleetService = require('../services/fleet');
 const systemService = require('../services/system');
+const chipsecService = require('../services/chipsec')
 
 async function addNode(req, res) {
     try {
@@ -32,4 +33,4 @@ async function addNode(req, res) {
     }
 };
 
-module.exports = { addNode };
+module.exports = { addNode};
