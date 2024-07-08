@@ -30,7 +30,11 @@ async function listEndpoints() {
     }
 
     const endpointsWithChipsec = await endpointsChipsecStatus();
-
+    
+    if (!endpointsWithChipsec){
+        return endpoints;
+    }
+    
     newData = { "chipsec": 1 };
     endpoints.hosts = endpoints.hosts.map(host => {
         if (endpointsWithChipsec.includes(host.hostname)) {
@@ -44,10 +48,22 @@ async function listEndpoints() {
 
 async function endpointsChipsecStatus() {
     const allQueries = await listQueries();
+    if (!allQueries){
+        console.error("No queries found")
+        return null;
+    }
     const lsmodQueryID = allQueries.queries.find(query => query.name === "lsmod-chipsec").id;
+    if (!lsmodQueryID){
+        console.error("No lsmod-chipsec query found");
+        return null;
+    }
     queryResults = await getQueryResults(lsmodQueryID);
+    if (!queryResults){
+        console.error("No results found for lsmod-chipsec query");
+        return null;
+    }
     endpointsWithChipsec = queryResults.results.map(item => item.host_name);
-    return endpointsWithChipsec
+    return endpointsWithChipsec;
 }
 
 async function getQueryResults(queryId) {
