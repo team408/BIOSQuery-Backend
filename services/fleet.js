@@ -1,4 +1,5 @@
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
+// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
 
 fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
