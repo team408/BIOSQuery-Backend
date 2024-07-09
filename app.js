@@ -10,5 +10,5 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/', require('./routes/router'));
 
+console.log(`Running on port ${process.env.LISTEN_PORT || 3000}`);
 app.listen(process.env.LISTEN_PORT || 3000);
-// logger.info(`Running at Port ${process.env.LISTEN_PORT || 3000}`);
