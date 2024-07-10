@@ -3,7 +3,6 @@ const fleetService = require('../services/fleet');
 async function dashboard(req, res) {
     try {
         data = await fleetService.buildDashboard();
-        console.log(data);
         if (Array.isArray(data)) {
             res.render('dashboard', { data });
         } else {

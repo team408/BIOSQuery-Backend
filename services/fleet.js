@@ -130,7 +130,6 @@ async function listQueries() {
     queries = await fleetApiGetRequest(listQueriesUri);
     return queries;
 }
-
 /**
  * @param {string} osType OS of host to be enrolled
  */
@@ -146,5 +145,4 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard , getAgentEnrollCmd};
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd};
