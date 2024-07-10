@@ -1,7 +1,4 @@
 const fleetService = require('../services/fleet');
-// const systemService = require('../services/system');
-
-const modules = ['Banana']
 
 async function installChipsec(req, res) {
     try {

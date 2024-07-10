@@ -134,11 +134,16 @@ async function listQueries() {
 /**
  * @param {string} osType OS of host to be enrolled
  */
-async function getAgentEnrollCmd(osType = deb){
+async function getAgentEnrollCmd(osType = "deb"){
     // API call to get enrollment cli accordig to given OS Type
     getSecretUri = "/api/v1/fleet/spec/enroll_secret";
     enrollSecret = await fleetApiGetRequest(getSecretUri);
-    cmd = "fleetctl package --type=" +osType+" --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+enrollSecret.spec.secrets[0].secret +";";
+    secret = enrollSecret.spec.secrets[0].secret
+    if (!secret){
+        console.error("[!] Error fetching new enroll secret from fleet via API.");
+        throw new Error("[!] Error fetching new enroll secret from fleet via API.");
+    }
+    cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
 
