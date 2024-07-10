@@ -1,46 +1,35 @@
 <%- include('partials/header') %>
+
 <link rel="stylesheet" href="/css/dashboard.css">
-
-<div class="container">
-
-    <!-- Endpoint cards -->
-    <div class="row">
-        <% if(!endpoints.length) { %>
-        <h1>No endpoints found</h1>
-        <% } else { %>
-        <% endpoints.forEach(function(endpoint) { %>
-        <div class="col-md-3 g-3">
-            <div class="card">
-                <div class="card-body">
-                    <% if(endpoint.platform=="rhel") { %>
-                    <img src="../img/rhel_logo.png" class="card-img-top platform-img">
-                    <% } else {; %>
-                    <img src="../img/ubuntu.png" class="card-img-top platform-img">
-                    <% } %>
-                    <h5 class="card-title">
-                        <%= endpoint.hostname %>
-                    </h5>
-                    <p class="card-text">
-                        <%= endpoint.primary_ip %>
-                    </p>
-                    <p class="card-text">
-                        <%= endpoint.primary_mac %>
-                    </p>
-                    <p hidden class="endpointUuid">
-                        <%- endpoint.uuid %>
-                    </p>
-                </div>
-                <% if (endpoint.chipsec) { %>
-                <div class="card-footer text-muted">✅ Chipsec installed</div>
-                <% } else { %>
-                <div class="card-footer text-muted">⛔ Chipsec isn't installed </div>
-                <% } %>
-            </div>
-        </div>
-        <% }); %>
-        <% } %>
-    </div>
-
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>OSQuery Endpoint Script Execution</h1>
+    <p>Here we will show statistics and recommendations on CHIPSEC scripts in OSQuery.</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Endpoint</th>
+                <th>Script</th>
+                <th>Execution Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(item => { %>
+                <tr>
+                    <td><%= item.endpoint %></td>
+                    <td><%= item.script %></td>
+                    <td><%= item.execution_time %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>
 
 <%- include('partials/footer') %>
