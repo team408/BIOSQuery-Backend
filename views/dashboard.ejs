@@ -52,6 +52,25 @@
     <p>Pending: <%= statusCounts.pending %></p>
     <p>Ran: <%= statusCounts.ran %></p>
 </body>
+<h2>Most Frequently Executed Scripts</h2>
+<% const scriptCounts = {}; %>
+<% data.forEach(item => { scriptCounts[item.script] = (scriptCounts[item.script] || 0) + 1; }); %>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Script</th>
+            <th>Execution Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let script in scriptCounts) { %>
+            <tr>
+                <td><%= script %></td>
+                <td><%= scriptCounts[script] %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
 </html>
 
 
