@@ -90,7 +90,7 @@ async function listEndpoints() {
     
     newData = { "chipsec": 1 };
     endpoints.hosts = endpoints.hosts.map(host => {
-        if (endpointsWithChipsec.includes(host.hostname)) {
+        if (endpointsWithChipsec.includes(host.computer_name)) {
             return { ...host, ...newData };
         } else {
             return host;
