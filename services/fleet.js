@@ -61,7 +61,7 @@ async function getScriptByEndpoint(endpointList){
             console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
         }
     }
-    console.log(allScripts);
+    console.log(`allScripts ${allScripts}`);
     return allScripts;
 };
 
