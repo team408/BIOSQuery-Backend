@@ -20,6 +20,50 @@ async function fleetApiGetRequest(uri) {
     return response
 };
 
+async function buildDashboard(){
+    // get all endpoints in order to iterate their ids in getScriptByEndpoint
+    endpoints = await listEndpoints();
+    // sending the endpoints to the data
+    data = getScriptByEndpoint(endpoints)
+    return data;
+};
+
+async function getScriptByEndpoint(endpointList){
+    // keeping al scripts in a var
+    let allScripts = [];
+
+    // iterating each endpoint
+    for (const endpoint of endpointList) {
+
+        // building the API url with the correct endpoint id each time
+        let scriptUri = `/api/v1/fleet/hosts/${endpoint.id}/scripts`;
+        try {
+            // sending the request and listening for response
+            const response = await fleetApiGetRequest(scriptUri);
+            const scripts = response.data;
+
+            // adding all of the results to the same list
+            allScripts = allScripts.concat(scripts.map(script => ({
+                endpoint: endpoint.hostname,
+                script: script.name,
+                execution_time: script.execution_time,
+                status: script.last_execution.status
+            })));
+        } catch (error) {
+            console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
+        }
+    }
+    return allScripts;
+};
+
+//add running scripts on endpoint on demand
+//POST /api/v1/fleet/scripts/run/sync
+
+//add scripts through API
+//POST /api/v1/fleet/scripts
+
+
+
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'
     let endpoints = await fleetApiGetRequest(endpointsUri);
@@ -78,4 +122,4 @@ async function listQueries() {
     return queries;
 }
 
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints };
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard };

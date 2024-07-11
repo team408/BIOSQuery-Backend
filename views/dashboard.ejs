@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+
+<link rel="stylesheet" href="/css/dashboard.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        .status-error { color: red; }
+        .status-pending { color: orange; }
+        .status-ran { color: green; }
+    </style>
+</head>
+<body>
+    <h1>OSQuery Endpoint Script Execution</h1>
+    <p>Here we will show statistics and recommendations on CHIPSEC scripts in OSQuery.</p>
+    
+    <h2>Timeline of Scripts Executed on Each Endpoint</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Endpoint</th>
+                <th>Script</th>
+                <th>Execution Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (data.length > 0) { %>
+                <% data.forEach(item => { %>
+                    <tr>
+                        <td><%= item.endpoint %></td>
+                        <td><%= item.script %></td>
+                        <td><%= item.execution_time %></td>
+                        <td class="status-<%= item.status %>"><%= item.status %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="4">No data available</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    
+    <h2>Summary of Script Execution Statuses</h2>
+    <% const statusCounts = {error: 0, pending: 0, ran: 0}; %>
+    <% data.forEach(item => { statusCounts[item.status]++; }); %>
+    <p>Error: <%= statusCounts.error %></p>
+    <p>Pending: <%= statusCounts.pending %></p>
+    <p>Ran: <%= statusCounts.ran %></p>
+</body>
+<h2>Most Frequently Executed Scripts</h2>
+<% const scriptCounts = {}; %>
+<% data.forEach(item => { scriptCounts[item.script] = (scriptCounts[item.script] || 0) + 1; }); %>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Script</th>
+            <th>Execution Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let script in scriptCounts) { %>
+            <tr>
+                <td><%= script %></td>
+                <td><%= scriptCounts[script] %></td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+</html>
+
+
+<%- include('partials/footer') %>
