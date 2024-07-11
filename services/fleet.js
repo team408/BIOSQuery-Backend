@@ -24,6 +24,55 @@ async function fleetApiGetRequest(uri) {
     return response
 };
 
+async function buildDashboard(){
+    // get all endpoints in order to iterate their ids in getScriptByEndpoint
+    endpoints = await listEndpoints();
+    // sending the endpoints to the data
+    data = getScriptByEndpoint(endpoints.hosts);
+    return data;
+};
+
+async function getScriptByEndpoint(endpointList){
+    // keeping al scripts in a var
+    let allScripts = [];
+
+    // iterating each endpoint
+    for (const endpoint of endpointList) {
+
+        // building the API url with the correct endpoint id each time
+        let scriptUri = `/api/v1/fleet/hosts/${endpoint.id}/scripts`;
+        try {
+            // sending the request and listening for response
+            const response = await fleetApiGetRequest(scriptUri);
+            console.log(response);
+            console.log(`Scripts for endpoint ${endpoint.id}:`, response.data); // Log the response to check its structure
+            const scripts = response.data.scripts;
+            if (scripts) {
+                allScripts = allScripts.concat(scripts.map(script => ({
+                    endpoint: endpoint.hostname,
+                    script: script.name,
+                    execution_time: script.last_execution.executed_at,
+                    status: script.last_execution.status
+                })));
+            } else {
+                console.warn(`No scripts found for endpoint ${endpoint.id}`);
+            }
+        } catch (error) {
+            console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
+        }
+    }
+    console.log(`allScripts ${allScripts}`);
+    return allScripts;
+};
+
+//add running scripts on endpoint on demand
+//POST /api/v1/fleet/scripts/run/sync
+
+//add scripts through API
+//POST /api/v1/fleet/scripts
+
+
+
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'
     let endpoints = await fleetApiGetRequest(endpointsUri);
@@ -97,5 +146,4 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints , getAgentEnrollCmd};
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd};
