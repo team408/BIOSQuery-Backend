@@ -46,13 +46,13 @@ async function getScriptByEndpoint(endpointList){
             const response = await fleetApiGetRequest(scriptUri);
             console.log(response);
             console.log(`Scripts for endpoint ${endpoint.id}:`, response.data); // Log the response to check its structure
-            const scripts = response.data.scripts;
+            const scripts = response.scripts;
             if (scripts) {
                 allScripts = allScripts.concat(scripts.map(script => ({
                     endpoint: endpoint.hostname,
                     script: script.name,
-                    execution_time: script.last_execution.executed_at,
-                    status: script.last_execution.status
+                    execution_time: script.last_execution ? script.last_execution.executed_at : 'N/A',
+                    status: script.last_execution ? script.last_execution.status : 'N/A'
                 })));
             } else {
                 console.warn(`No scripts found for endpoint ${endpoint.id}`);
