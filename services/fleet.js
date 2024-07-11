@@ -1,4 +1,8 @@
+// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
+
+fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
 
 async function getRequest(url, headers = null) {
     try {
@@ -78,4 +82,20 @@ async function listQueries() {
     return queries;
 }
 
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints };
+/**
+ * @param {string} osType OS of host to be enrolled
+ */
+async function getAgentEnrollCmd(osType = "deb"){
+    // API call to get enrollment cli accordig to given OS Type
+    getSecretUri = "/api/v1/fleet/spec/enroll_secret";
+    enrollSecret = await fleetApiGetRequest(getSecretUri);
+    secret = enrollSecret.spec.secrets[0].secret
+    if (!secret){
+        console.error("[!] Error fetching new enroll secret from fleet via API.");
+        throw new Error("[!] Error fetching new enroll secret from fleet via API.");
+    }
+    cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
+    return cmd;
+}
+
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints , getAgentEnrollCmd};
