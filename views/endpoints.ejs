@@ -10,12 +10,12 @@
         <% } else { %>
         <% endpoints.forEach(function(endpoint) { %>
         <div class="col-md-3 g-3">
-            <div class="card">
+            <div class="card fixed-sized-card">
                 <div class="card-body">
                     <% if(endpoint.platform=="rhel") { %>
-                    <img src="../img/rhel_logo.png" class="card-img-top platform-img">
+                    <img src="/img/rhel_logo.png" class="card-img-top platform-img">
                     <% } else {; %>
-                    <img src="../img/ubuntu.png" class="card-img-top platform-img">
+                    <img src="/img/ubuntu.png" class="card-img-top platform-img">
                     <% } %>
                     <h5 class="card-title">
                         <%= endpoint.hostname %>
