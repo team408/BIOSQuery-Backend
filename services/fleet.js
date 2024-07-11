@@ -46,7 +46,8 @@ async function getScriptByEndpoint(endpointList){
             allScripts = allScripts.concat(scripts.map(script => ({
                 endpoint: endpoint.hostname,
                 script: script.name,
-                execution_time: script.execution_time
+                execution_time: script.execution_time,
+                status: script.last_execution.status
             })));
         } catch (error) {
             console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
