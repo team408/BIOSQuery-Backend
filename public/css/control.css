@@ -1,0 +1,54 @@
+/* Reuse styles for card components */
+.card-img-top {
+    width: 100%;
+    height: 5vw;
+    object-fit: contain;
+}
+.fixed-size-card {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+.card-body {
+    padding: 10px;
+}
+.card-title, .card-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.card-text {
+    display: block;
+    max-height: 40px;
+}
+
+/* Additional styles for Control page */
+form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+form .form-label {
+    font-weight: bold;
+}
+form .form-control {
+    margin-bottom: 10px;
+}
+form button {
+    display: block;
+    width: 100%;
+}
+
+/* Responsive styling */
+@media (min-width: 768px) {
+    form {
+        width: 75%;
+    }
+}
+@media (min-width: 992px) {
+    form {
+        width: 50%;
+    }
+}

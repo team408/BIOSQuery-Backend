@@ -15,6 +15,7 @@ router.get("/endpoints", endpointsController.getEndpoints);
 
 // Agents
 router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
+router.get("/controlPanel", agentsController.getControlPanel)
 
 // Chipsec
 router.get("/api/chipsec/install/:hostId", chipsecController.installChipsec);
