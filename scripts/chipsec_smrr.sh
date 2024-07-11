@@ -1,0 +1,1 @@
+python chipsec_main.py -m common.bios_wp;
