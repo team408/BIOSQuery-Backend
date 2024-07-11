@@ -1,0 +1,16 @@
+.image-background {
+    height: 700px; /* Adjust based on your design needs */
+    background-image: url('/img/motherboard-hover.jpg'); /* Default background image */
+    background-size: cover; /* Cover the entire area of the div */
+    background-position: center; /* Center the background image */
+    transition: background-image 0.5s ease-in-out; /* Transition effect for the background change */
+}
+.image-background:hover {
+    background-image: url('/img/motherboard-hover2.jpg'); /* Background image on hover */
+}
+
+/* h1{ font-size:5rem;} */
+
+.responsive-h1 {
+    font-size: 3.2vw; /* Responsive size based on viewport width */
+}
