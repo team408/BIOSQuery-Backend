@@ -38,4 +38,15 @@ async function addNode(req, res) {
     }
 };
 
-module.exports = { addNode};
+async function getControlPanel(req, res) {
+    try {
+        // endpoints = await fleetService.listEndpoints();
+        res.render("control.ejs");
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+module.exports = { addNode, getControlPanel};

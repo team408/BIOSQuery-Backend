@@ -130,6 +130,7 @@ async function listQueries() {
     queries = await fleetApiGetRequest(listQueriesUri);
     return queries;
 }
+
 /**
  * @param {string} osType OS of host to be enrolled
  */

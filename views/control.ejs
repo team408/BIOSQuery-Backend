@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/control.css">
+
+<div class="container">
+
+    <!-- Agent Control Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Agent Control</h2>
+            <!-- Add Node -->
+            <form id="addNodeForm" class="mb-3">
+                <div class="mb-3">
+                    <label for="os" class="form-label">Operating System</label>
+                    <select class="form-select" id="os" required>
+                        <option value="deb">deb</option>
+                        <option value="rpm">rpm</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="hostID" class="form-label">Host ID</label>
+                    <input type="text" class="form-control" id="hostID" placeholder="Enter IP or Host Name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Node</button>
+            </form>
+
+            <!-- Remove Node -->
+            <form id="rmNodeForm" class="mb-3">
+                <div class="mb-3">
+                    <label for="rmHostID" class="form-label">Host ID</label>
+                    <input type="text" class="form-control" id="rmHostID" placeholder="Enter IP or Host Name" required>
+                </div>
+                <button type="submit" class="btn btn-danger">Remove Node</button>
+            </form>
+        </div>
+
+        <!-- Chipsec Control Section -->
+        <div class="col-md-6">
+            <h2>Chipsec Control</h2>
+            <!-- Install Chipsec -->
+            <form id="installChipsecForm" class="mb-3">
+                <div class="mb-3">
+                    <label for="chipsecHostID" class="form-label">Host ID</label>
+                    <input type="text" class="form-control" id="chipsecHostID" placeholder="Enter IP or Host Name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Install Chipsec</button>
+            </form>
+
+            <!-- Run Module -->
+            <form id="runModuleForm" class="mb-3">
+                <div class="mb-3">
+                    <label for="moduleHostID" class="form-label">Host ID</label>
+                    <input type="text" class="form-control" id="moduleHostID" placeholder="Enter IP or Host Name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="moduleName" class="form-label">Module Name</label>
+                    <input type="text" class="form-control" id="moduleName" placeholder="Enter Module Name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Run Module</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<%- include('partials/footer') %>
