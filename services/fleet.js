@@ -1,4 +1,8 @@
+// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
+
+fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
 
 async function getRequest(url, headers = null) {
     try {
@@ -24,7 +28,7 @@ async function buildDashboard(){
     // get all endpoints in order to iterate their ids in getScriptByEndpoint
     endpoints = await listEndpoints();
     // sending the endpoints to the data
-    data = getScriptByEndpoint(endpoints)
+    data = getScriptByEndpoint(endpoints.hosts);
     return data;
 };
 
@@ -40,19 +44,24 @@ async function getScriptByEndpoint(endpointList){
         try {
             // sending the request and listening for response
             const response = await fleetApiGetRequest(scriptUri);
-            const scripts = response.data;
-
-            // adding all of the results to the same list
-            allScripts = allScripts.concat(scripts.map(script => ({
-                endpoint: endpoint.hostname,
-                script: script.name,
-                execution_time: script.execution_time,
-                status: script.last_execution.status
-            })));
+            console.log(response);
+            console.log(`Scripts for endpoint ${endpoint.id}:`, response.data); // Log the response to check its structure
+            const scripts = response.scripts;
+            if (scripts) {
+                allScripts = allScripts.concat(scripts.map(script => ({
+                    endpoint: endpoint.hostname,
+                    script: script.name,
+                    execution_time: script.last_execution ? script.last_execution.executed_at : 'N/A',
+                    status: script.last_execution ? script.last_execution.status : 'N/A'
+                })));
+            } else {
+                console.warn(`No scripts found for endpoint ${endpoint.id}`);
+            }
         } catch (error) {
             console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
         }
     }
+    console.log(`allScripts ${allScripts}`);
     return allScripts;
 };
 
@@ -81,7 +90,7 @@ async function listEndpoints() {
     
     newData = { "chipsec": 1 };
     endpoints.hosts = endpoints.hosts.map(host => {
-        if (endpointsWithChipsec.includes(host.hostname)) {
+        if (endpointsWithChipsec.includes(host.computer_name)) {
             return { ...host, ...newData };
         } else {
             return host;
@@ -122,4 +131,19 @@ async function listQueries() {
     return queries;
 }
 
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard };
+/**
+ * @param {string} osType OS of host to be enrolled
+ */
+async function getAgentEnrollCmd(osType = "deb"){
+    // API call to get enrollment cli accordig to given OS Type
+    getSecretUri = "/api/v1/fleet/spec/enroll_secret";
+    enrollSecret = await fleetApiGetRequest(getSecretUri);
+    secret = enrollSecret.spec.secrets[0].secret
+    if (!secret){
+        console.error("[!] Error fetching new enroll secret from fleet via API.");
+        throw new Error("[!] Error fetching new enroll secret from fleet via API.");
+    }
+    cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
+    return cmd;
+}
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd};

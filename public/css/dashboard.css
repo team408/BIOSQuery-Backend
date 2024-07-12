@@ -3,3 +3,12 @@
     height: 5vw;
     object-fit: contain;
 }
+.status-error {
+     color: red;
+}
+.status-pending {
+     color: orange;
+}
+.status-ran {
+     color: green;
+}
