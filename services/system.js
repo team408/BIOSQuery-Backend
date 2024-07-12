@@ -12,7 +12,7 @@ async function remoteEnrollLinuxHost(enrollCmd, host_id = "kali"){
     // cmd = fleetctlBashDownload + ";" + enrollCmd 
     exec("ssh-keygen -R " + host_id)
     //install fleetctl
-    // console.log("[*] Executing: " + 'type .\\scripts\\install_fleet.sh | ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id)
+    console.log("[*] Installing fleetctl.")
     // exec('cat ./scripts/install_fleet.sh | ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id , (error, stdout, stderr) => { //for linux web server
     exec('type .\\scripts\\install_fleet.sh | ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id , (error, stdout, stderr) => {
         if (error) {
@@ -22,7 +22,8 @@ async function remoteEnrollLinuxHost(enrollCmd, host_id = "kali"){
         // console.log(`stdout: ${stdout}`);
         // console.error(`stderr: ${stderr}`);
       })
-    await new Promise(r => setTimeout(r, 10000));
+    await new Promise(r => setTimeout(r, 50000));
+    console.log("[*] Enrolling Agent (Might take some time).")
     // console.log("[*] Executing: " + 'ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id  + ' \"./' + enrollCmd + ' sudo dpkg -i fleet-osquery*.deb\"')
     exec('ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id  + ' \"./' + enrollCmd + ' sudo dpkg -i fleet-osquery*.deb\"', (error, stdout, stderr) => {
     // exec('ssh -o StrictHostKeyChecking=no -i ' + secret_path + ' ' + username + '@' + host_id  + ' \"sudo dpkg -i fleet-osquery*.deb\"', (error, stdout, stderr) => { //If you already downloaded the pkg and want it to go faster, tests only
