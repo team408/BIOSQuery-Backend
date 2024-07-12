@@ -8,7 +8,7 @@ async function addNode(req, res) {
         const hostId = req.params.hostId
         const osType = req.params.osType;
         if (!hostId || !osType) {
-            return res.status(400).send({ error: 'hostID parameter is required' });
+            return res.status(400).send({ error: 'hostID or osType parameter is required' });
         }
         // const {username, password} = req.body;
     
