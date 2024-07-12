@@ -1,6 +1,7 @@
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const path = require('path');
+const chart = require('chartjs');
 const express = require("express")
 const app = express()
 require("dotenv").config()
@@ -10,8 +11,9 @@ const session = require('express-session');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/router'));
+
 // Swagger
 const swaggerDocument = YAML.load(path.join(__dirname, 'openapi.yaml'));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
