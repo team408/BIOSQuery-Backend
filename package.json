@@ -18,11 +18,14 @@
   "homepage": "https://github.com/team408/BIOSQuery-Backend#readme",
   "dependencies": {
     "axios": "^1.6.8",
+    "cart": "^1.1.2",
+    "chartjs": "^0.3.24",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "fleetctl": "^4.51.1",
+    "search": "^1.0.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   }
