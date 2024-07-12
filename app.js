@@ -21,3 +21,5 @@ app.set('view engine', 'ejs');
 
 console.log(`Running on port ${process.env.LISTEN_PORT || 3000}`);
 app.listen(process.env.LISTEN_PORT || 3000);
+
+console.log("[*] Gaia Tal and Noya are testing")

@@ -12,7 +12,7 @@ async function addNode(req, res) {
         }
         // const {username, password} = req.body;
     
-        // console.log("[*] Host to be enrolled: " + hostId)
+        console.log("[*] Host to be enrolled: " + hostId)
         // Validate correct osType request
         if (!(['deb', 'rpm', 'pkg', 'msi'].includes(osType))){
             res.status(404).send('Unknown osType')
