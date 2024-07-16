@@ -9,7 +9,6 @@
     <title>OSQuery Endpoint Script Execution</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -32,7 +31,7 @@
     </div>
 
     <h2>Timeline of Scripts Executed on Each Endpoint</h2>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Endpoint</th>
@@ -59,61 +58,10 @@
         </tbody>
     </table>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const data = <%- JSON.stringify(data) %>;
-    
-            // Summary of Script Execution Statuses Data
-            const statusCounts = { 'N/A': 0, 'error': 0, 'ran': 0 };
-            data.forEach(item => {
-                statusCounts[item.status] = (statusCounts[item.status] || 0) + 1;
-            });
-    
-            const statusData = {
-                labels: ['N/A', 'Error', 'Ran'],
-                datasets: [{
-                    data: [statusCounts['N/A'], statusCounts['error'], statusCounts['ran']],
-                    backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB'],
-                }]
-            };
-    
-            // Render the Status Chart
-            const statusCtx = document.getElementById('status-chart').getContext('2d');
-            const statusChart = new Chart(statusCtx, {
-                type: 'pie',
-                data: statusData,
-            });
-    
-    
-            // Most Frequently Executed Scripts Data
-            const scriptCounts = {};
-            data.forEach(item => {
-                scriptCounts[item.script] = (scriptCounts[item.script] || 0) + 1;
-            });
-    
-            const scriptLabels = Object.keys(scriptCounts);
-            const scriptDataValues = Object.values(scriptCounts);
-    
-            const scriptData = {
-                labels: scriptLabels,
-                datasets: [{
-                    data: scriptDataValues,
-                    backgroundColor: scriptLabels.map((label, index) => {
-                        const colors = ['#FFCE56', '#FF6384', '#36A2EB', '#4BC0C0', '#9966FF', '#FF9F40'];
-                        return colors[index % colors.length];
-                    })
-                }]
-            };
-    
-            // Render the Script Chart
-            const scriptCtx = document.getElementById('script-chart').getContext('2d');
-            new Chart(scriptCtx, {
-                type: 'pie',
-                data: scriptData,
-            });
-        });
-    </script>
-    
+    <!-- Hidden container to pass data to JavaScript -->
+    <div id="data-container" style="display:none;"><%- JSON.stringify(data) %></div>
+
+    <script src="/js/dashboard.js"></script>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
