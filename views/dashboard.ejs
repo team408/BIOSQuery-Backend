@@ -9,74 +9,64 @@
     <title>OSQuery Endpoint Script Execution</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">OSQuery Endpoint Script Execution</h1>
-        <p>Here we will show statistics and recommendations on CHIPSEC scripts in OSQuery.</p>
+    <h1>OSQuery Endpoint Script Execution</h1>
+    
+    <div id="chart-container">
+        <div id="status-chart-container" class="chart-container">
+            <h2>Script Execution Status</h2>
+            <canvas id="status-chart"></canvas>
+        </div>
 
-        <h2>Timeline of Scripts Executed on Each Endpoint</h2>
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Endpoint</th>
-                    <th>Script</th>
-                    <th>Execution Time</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (data.length > 0) { %>
-                    <% data.forEach(item => { %>
-                        <tr>
-                            <td><%= item.endpoint %></td>
-                            <td><%= item.script %></td>
-                            <td><%= item.execution_time %></td>
-                            <td class="status-<%= item.status %>"><%= item.status %></td>
-                        </tr>
-                    <% }) %>
-                <% } else { %>
-                    <tr>
-                        <td colspan="4" class="text-center">No data available</td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
-
-        <h2>Summary of Script Execution Statuses</h2>
-        <% const statusCounts = {error: 0, pending: 0, ran: 0}; %>
-        <% data.forEach(item => { statusCounts[item.status]++; }); %>
-        <p>Error: <%= statusCounts.error %></p>
-        <p>Pending: <%= statusCounts.pending %></p>
-        <p>Ran: <%= statusCounts.ran %></p>
-
-        <h2>Most Frequently Executed Scripts</h2>
-        <% const scriptCounts = {}; %>
-        <% data.forEach(item => { scriptCounts[item.script] = (scriptCounts[item.script] || 0) + 1; }); %>
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Script</th>
-                    <th>Execution Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (let script in scriptCounts) { %>
-                    <tr>
-                        <td><%= script %></td>
-                        <td><%= scriptCounts[script] %></td>
-                    </tr>
-                <% } %>
-            </tbody>
-        </table>
+        <div id="script-chart-container" class="chart-container">
+            <h2>Most Frequently Executed Scripts</h2>
+            <canvas id="script-chart"></canvas>
+        </div>
     </div>
+
+    <div id="script-list">
+        <!-- Script list will be dynamically populated -->
+    </div>
+
+    <h2>Timeline of Scripts Executed on Each Endpoint</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Endpoint</th>
+                <th>Script</th>
+                <th>Execution Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (data.length > 0) { %>
+                <% data.forEach(item => { %>
+                    <tr>
+                        <td><%= item.endpoint %></td>
+                        <td><%= item.script %></td>
+                        <td><%= item.execution_time %></td>
+                        <td class="status-<%= item.status %>"><%= item.status %></td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="4">No data available</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <!-- Hidden container to pass data to JavaScript -->
+    <div id="data-container" style="display:none;"><%- JSON.stringify(data) %></div>
+
+    <script src="/js/dashboard.js"></script>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
 
 <%- include('partials/footer') %>
