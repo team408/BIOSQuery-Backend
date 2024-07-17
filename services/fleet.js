@@ -45,7 +45,7 @@ async function getScriptByEndpoint(endpointList){
             // sending the request and listening for response
             const response = await fleetApiGetRequest(scriptUri);
             console.log(response);
-            console.log(`Scripts for endpoint ${endpoint.id}:`, response.data); // Log the response to check its structure
+            console.log(`Scripts for endpoint ${endpoint.id}:`, response); // Log the response to check its structure
             const scripts = response.scripts;
             if (scripts) {
                 allScripts = allScripts.concat(scripts.map(script => ({

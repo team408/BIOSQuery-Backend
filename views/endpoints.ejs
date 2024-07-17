@@ -10,30 +10,33 @@
         <% } else { %>
         <% endpoints.forEach(function(endpoint) { %>
         <div class="col-md-3 g-3">
-            <div class="card fixed-sized-card">
+            <div class="card fixed-size-card">
                 <div class="card-body">
                     <% if(endpoint.platform=="rhel") { %>
                     <img src="/img/rhel_logo.png" class="card-img-top platform-img">
-                    <% } else {; %>
+                    <% } else { %>
                     <img src="/img/ubuntu.png" class="card-img-top platform-img">
                     <% } %>
                     <h5 class="card-title">
-                        <%= endpoint.hostname %>
+                        Hostname: <%= endpoint.hostname %>
                     </h5>
                     <p class="card-text">
-                        <%= endpoint.primary_ip %>
+                        IP: <%= endpoint.primary_ip %>
                     </p>
                     <p class="card-text">
-                        <%= endpoint.primary_mac %>
+                        MAC: <%= endpoint.primary_mac %>
                     </p>
                     <p hidden class="endpointUuid">
-                        <%- endpoint.uuid %>
+                        UUID: <%- endpoint.uuid %>
+                    </p>
+                    <p class="card-text">
+                        Last scanned: <%= endpoint.last_scanned %>
                     </p>
                 </div>
                 <% if (endpoint.chipsec) { %>
                 <div class="card-footer text-muted">✅ Chipsec installed</div>
                 <% } else { %>
-                <div class="card-footer text-muted">⛔ Chipsec isn't installed </div>
+                <div class="card-footer text-muted">⛔ Chipsec isn't installed</div>
                 <% } %>
             </div>
         </div>
