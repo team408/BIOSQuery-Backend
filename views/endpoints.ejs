@@ -2,7 +2,6 @@
 <link rel="stylesheet" href="/css/endpoints.css">
 
 <div class="container">
-
     <!-- Endpoint cards -->
     <div class="row">
         <% if(!endpoints.length) { %>
@@ -14,23 +13,44 @@
                 <div class="card-body">
                     <% if(endpoint.platform=="rhel") { %>
                     <img src="/img/rhel_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="kali") { %>
+                    <img src="/img/kali_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="ubuntu") { %>
+                    <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="debian") { %>
+                    <img src="/img/debian_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="centos") { %>
+                    <img src="/img/centos_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="macos") { %>
+                    <img src="/img/macos_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="windows") { %>
+                    <img src="/img/windows_logo.png" class="card-img-top platform-img">
                     <% } else { %>
-                    <img src="/img/ubuntu.png" class="card-img-top platform-img">
+                    <img src="/img/generic_logo.png" class="card-img-top platform-img">
                     <% } %>
-                    <h5 class="card-title">
-                        Hostname: <%= endpoint.hostname %>
-                    </h5>
+                    <h4 class="card-title">
+                        <%= endpoint.hostname %>
+                    </h4>
                     <p class="card-text">
-                        IP: <%= endpoint.primary_ip %>
+                        <strong>IP:</strong> <%= endpoint.primary_ip %>
                     </p>
                     <p class="card-text">
-                        MAC: <%= endpoint.primary_mac %>
+                        <strong>MAC:</strong> <%= endpoint.primary_mac %>
+                    </p>
+                    <p class="card-text">
+                        <strong>OS:</strong> <%= endpoint.os_version %>
+                    </p>
+                    <p class="card-text">
+                        <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
+                    </p>
+                    <p class="card-text">
+                        <strong>Last Seen:</strong> <%= new Date(endpoint.seen_time).toLocaleString() %>
+                    </p>
+                    <p class="card-text">
+                        <strong>Last Scan:</strong> <%= endpoint.last_execution ? new Date(endpoint.last_execution).toLocaleString() : 'N/A' %>
                     </p>
                     <p hidden class="endpointUuid">
-                        UUID: <%- endpoint.uuid %>
-                    </p>
-                    <p class="card-text">
-                        Last scanned: <%= endpoint.last_scanned %>
+                        <%- endpoint.uuid %>
                     </p>
                 </div>
                 <% if (endpoint.chipsec) { %>
@@ -43,7 +63,6 @@
         <% }); %>
         <% } %>
     </div>
-
 </div>
 
 <%- include('partials/footer') %>

@@ -12,7 +12,7 @@ async function getEndpoints(req, res) {
                     host.primary_mac.toLowerCase().includes(searchQuery);
             });
         }
-
+        console.log(endpoints)
         res.render("endpoints.ejs", { endpoints: endpoints.hosts });
 
     } catch (error) {
