@@ -44,7 +44,7 @@ th.desc::after {
 }
 .chart-container {
     display: inline-block;
-    width: 35%;
+    width: 30%;
     vertical-align: top;
     margin: 0 2.5%;
 }
