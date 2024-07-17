@@ -77,4 +77,37 @@ document.addEventListener('DOMContentLoaded', function() {
         type: 'pie',
         data: scriptData,
     });
+
+    // Function to sort the table
+    function sortTable(table, col, reverse) {
+        const tbody = table.tBodies[0];
+        const rows = Array.from(tbody.rows);
+        const direction = reverse ? -1 : 1;
+
+        rows.sort((a, b) => {
+            const aText = a.cells[col].textContent.trim();
+            const bText = b.cells[col].textContent.trim();
+            
+            if (!isNaN(aText) && !isNaN(bText)) {
+                return direction * (aText - bText);
+            }
+            
+            return direction * aText.localeCompare(bText);
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Add event listeners to table headers
+    const table = document.querySelector('table');
+    const headers = table.querySelectorAll('th');
+    headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const isAscending = header.classList.contains('asc');
+            headers.forEach(h => h.classList.remove('asc', 'desc'));
+            header.classList.toggle('asc', !isAscending);
+            header.classList.toggle('desc', isAscending);
+            sortTable(table, index, isAscending);
+        });
+    });
 });

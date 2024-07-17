@@ -25,6 +25,13 @@ th, td {
 }
 th {
     background-color: #f2f2f2;
+    cursor: pointer;
+}
+th.asc::after {
+    content: ' ▲';
+}
+th.desc::after {
+    content: ' ▼';
 }
 .status-error {
     color: red;
