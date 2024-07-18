@@ -1,8 +1,16 @@
 <!-- endpoint.ejs -->
 <%- include('partials/header') %>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
 <script src="/js/endpoints.js"></script>
 <div class="container">
+    <div>
+        <button id="addNode" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
+        <button id="enableSelection" class="btn btn-secondary">Select</button>
+    </div>
     <!-- Endpoint cards -->
     <div class="row">
         <% if(!endpoints.length) { %>
@@ -12,6 +20,7 @@
         <div class="col-md-3 g-3">
             <div class="card fixed-sized-card">
                 <div class="card-body">
+                    <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>" disabled>
                     <% if(endpoint.platform == "rhel") { %>
                         <img src="/img/rhel_logo.png" class="card-img-top platform-img">
                     <% } else if(endpoint.platform == "kali") { %>
@@ -89,5 +98,110 @@
         <% } %>
     </div>
 </div>
+
+<div class="container">
+    <!-- Actions for selected endpoints -->
+    <div class="fixed-bottom-left">
+        <button id="deleteSelected" class="btn btn-danger" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-success" disabled>Install CHIPSEC on Selected</button>
+    </div>
+</div>
+<!-- Add Node Modal -->
+<div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNodeModalLabel">Add New Node</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addNodeForm">
+                    <div class="form-group">
+                        <label for="osType">Operating System</label>
+                        <select class="form-control" id="osType">
+                            <option value="deb">deb</option>
+                            <option value="rhel">rhel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hostId">Host ID</label>
+                        <input type="text" class="form-control" id="hostId" placeholder="Enter IP or Host Name">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Node</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const enableSelectionBtn = document.getElementById('enableSelection');
+        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelected');
+        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+        const addNodeForm = document.getElementById('addNodeForm');
+
+        enableSelectionBtn.addEventListener('click', () => {
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+            enableSelectionBtn.disabled = true;
+        });
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            });
+        });
+
+        deleteSelectedBtn.addEventListener('click', () => {
+            const selectedUuids = Array.from(document.querySelectorAll('.endpoint-checkbox:checked')).map(cb => cb.dataset.uuid);
+            console.log('Deleting endpoints:', selectedUuids);
+            // Implement the actual deletion logic here
+        });
+
+        installChipsecSelectedBtn.addEventListener('click', () => {
+            const selectedUuids = Array.from(document.querySelectorAll('.endpoint-checkbox:checked')).map(cb => cb.dataset.uuid);
+            console.log('Installing CHIPSEC on endpoints:', selectedUuids);
+            // Implement the actual installation logic here
+        });
+
+        addNodeForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const hostId = document.getElementById('hostId').value;
+            const osType = document.getElementById('osType').value;
+            if (hostId && osType) {
+                fetch(`/api/addNode/${hostId}/${osType}`, { method: 'POST' })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
+        document.querySelectorAll('.delete-endpoint').forEach(button => {
+            button.addEventListener('click', () => {
+                const uuid = button.dataset.uuid;
+                console.log('Deleting endpoint:', uuid);
+                // Implement the actual deletion logic here
+            });
+        });
+
+        document.querySelectorAll('.install-chipsec').forEach(button => {
+            button.addEventListener('click', () => {
+                const uuid = button.dataset.uuid;
+                console.log('Installing CHIPSEC on endpoint:', uuid);
+                // Implement the actual installation logic here
+            });
+        });
+    });
+</script>
 
 <%- include('partials/footer') %>

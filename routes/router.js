@@ -18,17 +18,15 @@ router.get("/endpoints", endpointsController.getEndpoints);
 router.get("/statistics", dashboardController.statistics);
 
 // Agents
-router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
+router.post("/api/agents/addNode/:osType/:hostId", (req, res, next) => {
+    console.log('addNode route called');
+    next();
+}, agentsController.addNode);
 
-// Chipsec
-router.get("/api/chipsec/install/:hostId", chipsecController.installChipsec);
-router.get("/api/chipsec/uninstall/:hostId", chipsecController.uninstallChipsec);
-router.get("/api/chipsec/runModule/:module/:hostId", chipsecController.runModule);
-
-
-// Agents
-router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
-router.get("/controlPanel", agentsController.getControlPanel)
+router.get("/controlPanel", (req, res, next) => {
+    console.log('getControlPanel route called');
+    next();
+}, agentsController.getControlPanel);
 
 // Chipsec
 router.get("/api/chipsec/install/:hostId", chipsecController.installChipsec);
