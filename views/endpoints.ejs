@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 <link rel="stylesheet" href="/css/endpoints.css">
-
+<script src="/js/endpoints.js"></script>
 <div class="container">
 
     <!-- Endpoint cards -->
@@ -17,17 +17,17 @@
                     <% } else {; %>
                     <img src="/img/ubuntu.png" class="card-img-top platform-img">
                     <% } %>
-                    <h5 class="card-title">
+                    <h5 id="endpoint_hostname" class="card-title">
                         <%= endpoint.hostname %>
                     </h5>
-                    <p class="card-text">
+                    <p id="endpoint_ip" class="card-text">
                         <%= endpoint.primary_ip %>
                     </p>
-                    <p class="card-text">
+                    <p id="endpoint_mac" class="card-text">
                         <%= endpoint.primary_mac %>
                     </p>
-                    <p hidden class="endpointUuid">
-                        <%- endpoint.uuid %>
+                    <p id="endpoint_id" hidden class="endpointID">
+                        <%- endpoint.id %>
                     </p>
                     <!-- Dropdown menu -->
                     <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
@@ -39,10 +39,10 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton>">
                             <% if (endpoint.chipsec) { %>
 
-                                <li><a class="dropdown-item" href="#">Execute a script</a></li>
-                                <li><a class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                                <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                                <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
                             <% } else { %>
-                                <li><a class="dropdown-item" href="#">Install chipsec</a></li>
+                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
                             <% } %>
                         </ul>
                     </div>
