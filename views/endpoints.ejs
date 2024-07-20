@@ -29,6 +29,23 @@
                     <p hidden class="endpointUuid">
                         <%- endpoint.uuid %>
                     </p>
+                    <!-- Dropdown menu -->
+                    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                        <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                              </svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton>">
+                            <% if (endpoint.chipsec) { %>
+
+                                <li><a class="dropdown-item" href="#">Execute a script</a></li>
+                                <li><a class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                            <% } else { %>
+                                <li><a class="dropdown-item" href="#">Install chipsec</a></li>
+                            <% } %>
+                        </ul>
+                    </div>
                 </div>
                 <% if (endpoint.chipsec) { %>
                 <div class="card-footer text-muted">✅ Chipsec installed</div>
