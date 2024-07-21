@@ -13,6 +13,7 @@ router.get("/", homepageController.homepage);
 
 // Endpoints
 router.get("/endpoints", endpointsController.getEndpoints);
+
 // Dashboard
 router.get("/dashboard", dashboardController.dashboard);
 

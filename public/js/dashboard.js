@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle click on status chart slices
     statusChart.canvas.onclick = function(event) {
-        console.log("statusChart:", statusChart); // Check `statusChart` context
-        console.log("Event:", event); // Check event details
 
         var segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
 
