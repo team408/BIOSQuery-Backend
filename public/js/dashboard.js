@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const data = JSON.parse(document.getElementById('data-container').textContent);
 
-    // Ensure data is correctly loaded
-    console.log("Data:", data);
-
     // Summary of Script Execution Statuses Data
     const statusCounts = { 'N/A': 0, 'error': 0, 'ran': 0 };
     data.forEach(item => {
