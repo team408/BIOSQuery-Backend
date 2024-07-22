@@ -8,8 +8,10 @@ async function installChipsec(req, res) {
         installDependenciesScriptId = scripts.find(script => script.name === "install_dependencies.sh").id
 
         hostId = req.params.hostId
-        let data=`{"host_id": ${hostId}, "script_id": ${installDependenciesScriptId}}`;
-        response = await fleetService.fleetApiPostRequest("/api/latest/fleet/scripts/run", data=data)
+        let install_deps_data=`{"host_id": ${hostId}, "script_id": ${installDependenciesScriptId}}`;
+        let install_chipsec_data=`{"host_id": ${hostId}, "script_id": ${installChipsecScriptId}}`;
+        response = await fleetService.fleetApiPostRequest("/api/latest/fleet/scripts/run", data=install_deps_data)
+        response = await fleetService.fleetApiPostRequest("/api/latest/fleet/scripts/run", data=install_chipsec_data)
         if (response.data.execution_id){
             res.status(200).send({"result": "Chipsec install command sent!"})
         } else {
