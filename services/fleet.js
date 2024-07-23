@@ -68,8 +68,6 @@ const mergeEndpointAndScripts = (endpoints, scriptsData) => {
         throw new TypeError('Expected endpoints to be an array');
     }
 
-    console.log('Scripts Data:', scriptsData); // Debug output
-
     return endpoints.map(endpoint => {
         // Fetch scripts for the current endpoint
         const scripts = scriptsData.filter(script => script.endpoint === endpoint.hostname);
@@ -95,14 +93,6 @@ const mergeEndpointAndScripts = (endpoints, scriptsData) => {
         };
     });
 };
-
-
-
-  
-  
-  
-
-
 
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'

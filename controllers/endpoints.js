@@ -1,5 +1,16 @@
 const fleetService = require('../services/fleet');
-const formatDate = require('../public/js/endpoint.js'); 
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.getUTCMonth() + 1; // Months are zero-based
+    const day = date.getUTCDate();
+    const year = date.getUTCFullYear();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+
+    return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
+}
 
 async function getEndpoints(req, res) {
     try {
@@ -23,10 +34,10 @@ async function getEndpoints(req, res) {
             });
         }
         filteredEndpoints.forEach(endpoint => {
-            endpoint.formatted_last_scan = formatDate.formatDate(endpoint.last_scan);
+            endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
         });
         filteredEndpoints.forEach(endpoint => {
-            endpoint.formatted_last_seen = formatDate.formatDate(endpoint.seen_time);
+            endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
         });
         res.render("endpoints.ejs", { endpoints: filteredEndpoints });
 
