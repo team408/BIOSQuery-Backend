@@ -145,4 +145,93 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd};
+
+//methods for fetching risks and generating reports
+
+async function getAllHostsRisks() {
+    const endpoints = await listEndpoints();
+    const risks = endpoints.hosts.map(host => {
+        return {
+            host: host.hostname,
+            risk: calculateRisk(host),
+            ip: host.primary_ip,
+            mac: host.primary_mac,
+            os: host.platform,
+            details: " ",
+            vulnerabilities: host.vulnerabilities || [], // Placeholder for actual vulnerability data
+            softwareVersion: host.softwareVersion || '1.0.0', // Placeholder for actual software version
+            securityFeatures: host.securityFeatures || ['Secure Boot'] // Placeholder for actual security features
+        };
+    });
+    return risks;
+}
+
+
+async function getMitigationAdvices() {
+    const advices = [
+        { risk: 'Risk 1', advice: 'Update BIOS to the latest version available from the vendor.' },
+        { risk: 'Risk 2', advice: 'Ensure Secure Boot is enabled in the BIOS settings.' },
+        { risk: 'Risk 3', advice: 'Run a full system scan with updated antivirus software.' },
+        { risk: 'Risk 4', advice: 'Check and disable unused hardware interfaces in BIOS.' },
+        // Add more advices as needed
+    ];
+    return advices;
+}
+
+async function generateCSVReport(risks) {
+    let csvContent = "Host,Risk,IP,MAC,OS,Details\n";
+    risks.forEach(risk => {
+        csvContent += `${risk.host},${risk.risk},${risk.ip},${risk.mac},${risk.os},${risk.details}\n`;
+    });
+    return csvContent;
+}
+
+function calculateRisk(host) {
+    let riskScore = 0;
+
+    // Example criteria (these are placeholders, replace with actual data points)
+    const vulnerabilities = host.vulnerabilities || []; // Assume this is an array of vulnerabilities
+    const criticalVulnerabilities = vulnerabilities.filter(vuln => vuln.severity === 'critical').length;
+    const outdatedSoftware = isOutdatedSoftware(host.softwareVersion); // Assume a function to check if software is outdated
+    const missingSecurityFeatures = countMissingSecurityFeatures(host); // Assume a function to count missing security features
+
+    // Example weight for each criterion
+    const weightVulnerabilities = 1;
+    const weightCriticalVulnerabilities = 3;
+    const weightOutdatedSoftware = 2;
+    const weightMissingSecurityFeatures = 2;
+
+    // Calculate risk score
+    riskScore += vulnerabilities.length * weightVulnerabilities;
+    riskScore += criticalVulnerabilities * weightCriticalVulnerabilities;
+    riskScore += outdatedSoftware * weightOutdatedSoftware;
+    riskScore += missingSecurityFeatures * weightMissingSecurityFeatures;
+
+    // Determine risk level based on risk score
+    let riskLevel;
+    if (riskScore >= 10) {
+        riskLevel = 'High';
+    } else if (riskScore >= 5) {
+        riskLevel = 'Medium';
+    } else {
+        riskLevel = 'Low';
+    }
+
+    return riskLevel;
+}
+
+function isOutdatedSoftware(softwareVersion) {
+    // Example logic to determine if the software is outdated
+    const latestVersion = '1.0.0'; // Replace with actual logic to get the latest version
+    return softwareVersion < latestVersion;
+}
+
+function countMissingSecurityFeatures(host) {
+    // Example logic to count missing security features
+    const requiredFeatures = ['Secure Boot', 'TPM'];
+    const hostFeatures = host.securityFeatures || [];
+    const missingFeatures = requiredFeatures.filter(feature => !hostFeatures.includes(feature));
+    return missingFeatures.length;
+}
+
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk};

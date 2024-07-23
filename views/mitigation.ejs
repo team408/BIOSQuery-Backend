@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/dashboard.css">
+
+<div class="container">
+    <h1>Mitigation Advices</h1>
+    <a href="/risks" class="btn btn-secondary mb-3">Back to All Hosts Risks</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Risk</th>
+                <th>Advice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% advices.forEach(function(advice) { %>
+                <tr>
+                    <td><%= advice.risk %></td>
+                    <td><%= advice.advice %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('partials/footer') %>

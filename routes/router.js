@@ -7,6 +7,8 @@ const endpointsController = require("../controllers/endpoints");
 const agentsController = require("../controllers/agents");
 const chipsecController = require("../controllers/chipsec");
 const dashboardController = require("../controllers/dashboard");
+const risksController = require("../controllers/risks");
+
 
 // Main route
 router.get("/", homepageController.homepage);
@@ -33,5 +35,10 @@ router.get("/controlPanel", agentsController.getControlPanel)
 router.get("/api/chipsec/install/:hostId", chipsecController.installChipsec);
 router.get("/api/chipsec/uninstall/:hostId", chipsecController.uninstallChipsec);
 router.get("/api/chipsec/runModule/:module/:hostId", chipsecController.runModule);
+
+//Risks
+router.get("/risks", risksController.viewAllHostsRisks);
+router.get("/risks/mitigation", risksController.viewMitigationAdvices);
+router.get("/risks/download", risksController.downloadCSVReport);
 
 module.exports = router;

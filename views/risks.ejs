@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/dashboard.css">
+
+<div class="container">
+    <h1>All Hosts Risks</h1>
+
+    <!-- Add navigation links for Mitigation Advices and CSV Download -->
+    <div class="mb-3">
+        <a href="/risks/mitigation" class="btn btn-secondary">View Mitigation Advices</a>
+        <a href="/risks/download" class="btn btn-secondary">Download CSV Report</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Host</th>
+                <th>Risk</th>
+                <th>IP Address</th>
+                <th>MAC Address</th>
+                <th>OS Platform</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% risks.forEach(function(risk) { %>
+                <tr>
+                    <td><%= risk.host %></td>
+                    <td><%= risk.risk %></td>
+                    <td><%= risk.ip %></td>
+                    <td><%= risk.mac %></td>
+                    <td><%= risk.os %></td>
+                    <td><%= risk.details %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('partials/footer') %>
