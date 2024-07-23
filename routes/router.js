@@ -6,7 +6,7 @@ const homepageController = require("../controllers/homepage");
 const endpointsController = require("../controllers/endpoints");
 const agentsController = require("../controllers/agents");
 const chipsecController = require("../controllers/chipsec");
-const dashboardController = require("../controllers/dashboard");
+const dashboardController = require("../controllers/statistics");
 
 // Main route
 router.get("/", homepageController.homepage);
@@ -15,7 +15,7 @@ router.get("/", homepageController.homepage);
 router.get("/endpoints", endpointsController.getEndpoints);
 
 // Dashboard
-router.get("/dashboard", dashboardController.dashboard);
+router.get("/statistics", dashboardController.statistics);
 
 // Agents
 router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);

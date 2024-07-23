@@ -25,6 +25,34 @@ body {
     color: var(--dark-grey);
     letter-spacing: -0.4px;
 }
+/* Container to space out the items */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Center the search bar within the navbar */
+#searchForm {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Adjust spacing and styling of the search bar */
+#searchForm input[type="search"] {
+    width: 300px; 
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#searchForm .bx-search {
+    position: relative;
+    right: -25px; 
+    cursor: pointer;
+}
+
 
 .navbar-brand img {
     width: 50px;
