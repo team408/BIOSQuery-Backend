@@ -1,8 +1,8 @@
+<!-- endpoint.ejs -->
 <%- include('partials/header') %>
 <link rel="stylesheet" href="/css/endpoints.css">
 <script src="/js/endpoints.js"></script>
 <div class="container">
-
     <!-- Endpoint cards -->
     <div class="row">
         <% if(!endpoints.length) { %>
@@ -12,19 +12,48 @@
         <div class="col-md-3 g-3">
             <div class="card fixed-sized-card">
                 <div class="card-body">
-                    <% if(endpoint.platform=="rhel") { %>
-                    <img src="/img/rhel_logo.png" class="card-img-top platform-img">
-                    <% } else {; %>
-                    <img src="/img/ubuntu.png" class="card-img-top platform-img">
+                    <% if(endpoint.platform == "rhel") { %>
+                        <img src="/img/rhel_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "kali") { %>
+                        <img src="/img/kali_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "ubuntu") { %>
+                        <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "debian") { %>
+                        <img src="/img/debian_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "windows") { %>
+                        <img src="/img/windows_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="centos") { %>
+                        <img src="/img/centos_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="macos") { %>
+                        <img src="/img/macos_logo.png" class="card-img-top platform-img">
+                    <% } else { %>
+                        <img src="/img/generic_logo.png" class="card-img-top platform-img">
                     <% } %>
                     <h5 id="endpoint_hostname" class="card-title">
                         <%= endpoint.hostname %>
                     </h5>
-                    <p id="endpoint_ip" class="card-text">
-                        <%= endpoint.primary_ip %>
+                    <p class="card-text">
+                        <strong>IP:</strong> <%= endpoint.primary_ip %>
                     </p>
-                    <p id="endpoint_mac" class="card-text">
-                        <%= endpoint.primary_mac %>
+                    <p class="card-text">
+                        <strong>MAC:</strong> <%= endpoint.primary_mac %>
+                    </p>
+                    <p class="card-text">
+                        <strong>OS:</strong> <%= endpoint.os_version %>
+                    </p>
+                    <p class="card-text">
+                        <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
+                    </p>
+                    <p class="card-text">
+                        <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
+                    </p>
+                    <p class="card-text">
+                        <strong>Last Scan:</strong> 
+                        <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
+                            <%= endpoint.formatted_last_scan %>
+                        <% } else { %>
+                            N/A
+                        <% } %>
                     </p>
                     <p id="endpoint_id" hidden class="endpointID">
                         <%- endpoint.id %>
@@ -59,7 +88,6 @@
         <% }); %>
         <% } %>
     </div>
-
 </div>
 
 <%- include('partials/footer') %>

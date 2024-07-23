@@ -4,7 +4,7 @@
     object-fit: contain;
 }
 .fixed-size-card {
-    height: 300px; /* Set a fixed height for each card */
+    height: 420px; /* Set a fixed height for each card */
     width: 100%; /* Card width is responsive to the column width */
     overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
 }
@@ -20,7 +20,6 @@
     display: block;
     max-height: 40px; /* Limit text block height */
 }
-
 custom-dropdown {
     background: transparent;
     border: none;

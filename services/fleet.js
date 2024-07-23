@@ -55,22 +55,20 @@ async function buildDashboard(){
     return data;
 };
 
-async function getScriptByEndpoint(endpointList){
-    // keeping al scripts in a var
+async function getScriptByEndpoint(endpointList) {
+    // keeping all scripts in a variable
     let allScripts = [];
 
     // iterating each endpoint
     for (const endpoint of endpointList) {
-
         // building the API url with the correct endpoint id each time
         let scriptUri = `/api/v1/fleet/hosts/${endpoint.id}/scripts`;
         try {
             // sending the request and listening for response
             const response = await fleetApiGetRequest(scriptUri);
-            console.log(response);
-            console.log(`Scripts for endpoint ${endpoint.id}:`, response.data); // Log the response to check its structure
             const scripts = response.scripts;
             if (scripts) {
+                
                 allScripts = allScripts.concat(scripts.map(script => ({
                     endpoint: endpoint.hostname,
                     script: script.name,
@@ -85,15 +83,39 @@ async function getScriptByEndpoint(endpointList){
         }
     }
     return allScripts;
+}
+
+const mergeEndpointAndScripts = (endpoints, scriptsData) => {
+    // Ensure endpoints is an array
+    if (!Array.isArray(endpoints)) {
+        throw new TypeError('Expected endpoints to be an array');
+    }
+
+    return endpoints.map(endpoint => {
+        // Fetch scripts for the current endpoint
+        const scripts = scriptsData.filter(script => script.endpoint === endpoint.hostname);
+
+        // Find the latest script whose name starts with 'chipsec'
+        const chipsecScripts = scripts.filter(script => script.script.startsWith('chipsec'));
+        const latestChipsecScript = chipsecScripts.reduce((latest, current) => {
+            return new Date(current.execution_time) > new Date(latest.execution_time) ? current : latest;
+        }, { execution_time: '1970-01-01T00:00:00Z' });
+
+        // Format the scripts
+        const formattedScripts = scripts.map(script => ({
+            script: script.script,
+            execution_time: script.execution_time,
+            status: script.status
+        }));
+
+        // Return merged data with last_scan
+        return {
+            ...endpoint,
+            scripts: formattedScripts,
+            last_scan: latestChipsecScript.execution_time || 'N/A'
+        };
+    });
 };
-
-//add running scripts on endpoint on demand
-//POST /api/v1/fleet/scripts/run/sync
-
-//add scripts through API
-//POST /api/v1/fleet/scripts
-
-
 
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'
@@ -168,4 +190,4 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, fleetApiPostRequest, listScripts};
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getScriptByEndpoint, mergeEndpointAndScripts, fleetApiPostRequest, listScripts};
