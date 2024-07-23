@@ -212,35 +212,45 @@ paths:
       responses:
         default:
           description: successful operation
-  /agent/addNode/{nodeId}:
+  /agent/addNode/:osType/:hostId:
     post:
       tags:
         - agent
       summary: Add node 
-      description: This can only be done by the logged in user. #
+      description: Enrolling a single new host to be managed by fleet and therefore by system. Either password or privateKey is required for this operation. To use default privateKey submit privateKey='default'.
       operationId: addNode
       parameters:
-        - name: nodeId
+        - name: osType
+          in: path
+          description: OS of node to be enrolled. could be one of ('deb', 'rpm', 'pkg', 'msi')
+          required: true
+          schema:
+            type: string
+        - name: hostId
           in: path
           description: The IP address or Hostname of the endpoint to install OSQuery on
           required: true
           schema:
             type: string
       requestBody:
-        description: Update an existent user in the store
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Node'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Node'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Node'
+              type: object
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                privateKey:
+                  type: string
+                  format: privateKey
       responses:
         default:
-          description: successful operation
+          description: Task send succesfuly
   /agent/rmNode/{nodeId}:
     post:
       tags:
@@ -508,9 +518,7 @@ components:
     Node:
       type: object
       properties:
-        ip:
-          type: string
-        hostname:
+        hostId:
           type: string
       xml:
         name: node
