@@ -1,5 +1,4 @@
 const fleetService = require('../services/fleet');
-const axios = require('axios').default;
 
 async function installChipsec(req, res) {
     try {
