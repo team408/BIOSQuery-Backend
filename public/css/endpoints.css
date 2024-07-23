@@ -20,3 +20,21 @@
     display: block;
     max-height: 40px; /* Limit text block height */
 }
+custom-dropdown {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.custom-dropdown::after {
+    display: none;
+}
+
+.custom-dropdown:focus {
+    outline: none;
+}
+
+.custom-dropdown-icon {
+    font-size: 30px;
+}

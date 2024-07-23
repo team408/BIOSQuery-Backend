@@ -18,11 +18,34 @@ async function getRequest(url, headers = null) {
     }
 }
 
+async function listScripts(){
+    try{
+        scriptsUri = "/api/v1/fleet/scripts";
+        scripts = await fleetApiGetRequest(scriptsUri);
+        return scripts.scripts;
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
 async function fleetApiGetRequest(uri) {
     fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
     response = await getRequest(fleetUrl + uri, headers = { "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}` })
     return response
 };
+
+async function fleetApiPostRequest(uri,data){
+    fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
+    let headers = {
+        "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`,
+        'Content-Type': 'text/plain',
+        "Accept": "application/json"
+    };
+    response = await axios.post(fleetUrl + uri, data, { headers: headers })
+    return response;
+
+}
 
 async function buildDashboard(){
     // get all endpoints in order to iterate their ids in getScriptByEndpoint
@@ -167,4 +190,4 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getScriptByEndpoint, mergeEndpointAndScripts};
+module.exports = { fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getScriptByEndpoint, mergeEndpointAndScripts, fleetApiPostRequest, listScripts};
