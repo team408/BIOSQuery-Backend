@@ -25,7 +25,9 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "fleetctl": "^4.51.1",
+    "node-ssh": "^13.2.0",
     "search": "^1.0.0",
+    "ssh2": "^1.15.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   }
