@@ -3,10 +3,31 @@
 
 <div class="container mt-5">
     <h1 class="text-center mb-5">Information Center</h1>
-    
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">App Manual</h2>
+                    <p class="card-text">Get comprehensive guidance on using our application.</p>
+                    <a href="#" class="btn btn-primary" target="_blank">Download Manual</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title">Deployment Guide</h2>
+                    <p class="card-text">Follow our step-by-step deployment guides:</p>
+                    <a href="https://www.systemcenterdudes.com/complete-sccm-installation-guide-and-configuration/" class="btn btn-outline-primary mr-2" target="_blank">SCCM Guide</a>
+                    <a href="https://fleetdm.com/docs/deploy/deploy-fleet" class="btn btn-outline-primary" target="_blank">Ansible Fleet Guide</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
                 <div class="card-body">
                     <h2 class="card-title">Best Practices</h2>
                     <ul class="list-unstyled">
@@ -17,32 +38,9 @@
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">App Manual</h2>
-                    <p class="card-text">Get comprehensive guidance on using our application.</p>
-                    <a href="#" class="btn btn-primary" target="_blank">Download Manual</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Deployment Guide</h2>
-                    <p class="card-text">Follow our step-by-step deployment guides:</p>
-                    <a href="https://www.systemcenterdudes.com/complete-sccm-installation-guide-and-configuration/" class="btn btn-outline-primary mr-2" target="_blank">SCCM Guide</a>
-                    <a href="https://fleetdm.com/docs/deploy/deploy-fleet" class="btn btn-outline-primary" target="_blank">Ansible Fleet Guide</a>
-                </div>
-            </div>
-        </div>
 
         <div class="col-md-6 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h2 class="card-title">Bootkit Understanding</h2>
                     <ul class="list-unstyled">
@@ -57,7 +55,7 @@
 
     <div class="row">
         <div class="col-12 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body" id="product-wins">
                     <h2 class="card-title">How Our Product Wins</h2>
                     <div class="row">
@@ -87,5 +85,7 @@
             </div>
         </div>
     </div>
+</div>
+
 
 <%- include('partials/footer') %>

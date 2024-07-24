@@ -18,36 +18,45 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-3">
         <div class="container">
             <a href="/" class="navbar-brand">
-                <img src="../../img/osquery-logo.png" alt="Shop Icon">
+                <img src="../../img/osquery-logo.png" alt="Shop Icon" class="img-fluid">
             </a>
-            <a href="/endpoints" class="nav-item nav-link">Endpoints</a>
-            </a>
-            <a href="/controlPanel" class="nav-item nav-link">Control</a>
-            </a>
-            <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
-            </a>
-            <a href="/risks" class="nav-item nav-link">Risks</a> 
-            <a href="/information-center" class="nav-item nav-link">Information Center</a> 
-            <form id="searchForm" class="search" role="search">
-                <input type="search" name="search" placeholder="Search" />
-                <i class="bx bx-search" aria-hidden="true"></i>
-            </form>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-item nav-link" href="/#">Statistics</a>
+                        <a href="/endpoints" class="nav-item nav-link">Endpoints</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-item nav-link" href="/api-docs">API Docs</a>
+                        <a href="/controlPanel" class="nav-item nav-link">Control</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/risks" class="nav-item nav-link">Risks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/information-center" class="nav-item nav-link">Information Center</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/#" class="nav-item nav-link">Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/api-docs" class="nav-item nav-link">API Docs</a>
                     </li>
                 </ul>
+                <form id="searchForm" class="d-flex">
+                    <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+                </form>
             </div>
         </div>
     </nav>
-
 
     <script src="/js/search.js"></script>
     <script src="/js/cart.js"></script>

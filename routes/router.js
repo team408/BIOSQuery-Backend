@@ -11,11 +11,13 @@ const risksController = require("../controllers/risks");
 const infoCenterController = require("../controllers/information_center"); 
 const managementController = require("../controllers/management");
 
+
 // Main route
 router.get("/", homepageController.homepage);
 
 // Endpoints
 router.get("/endpoints", endpointsController.getEndpoints);
+router.delete('/remove/:id', endpointsController.removeEndpoint);
 
 // Dashboard
 router.get("/dashboard", dashboardController.dashboard);

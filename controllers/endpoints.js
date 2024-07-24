@@ -46,5 +46,25 @@ async function getEndpoints(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+async function removeEndpoint(req, res) {
+    try {
+        const hostId = req.params.id;
+        const hostInfo = req.body; // This should contain hostname, username, password/privateKey
 
-module.exports = { getEndpoints };
+        // Validate hostInfo
+        if (!hostInfo.hostname || !hostInfo.username || (!hostInfo.password && !hostInfo.privateKey)) {
+            return res.status(400).json({ error: 'Missing required host information' });
+        }
+
+        // Call the removeHostById function from fleetService
+        const result = await fleetService.removeHostById(hostId, hostInfo);
+
+        res.status(200).json({ message: 'Host removed successfully', data: result });
+    } catch (error) {
+        console.error('Error removing endpoint:', error);
+        res.status(500).json({ error: 'Failed to remove host' });
+    }
+}
+
+
+module.exports = { getEndpoints, removeEndpoint  };

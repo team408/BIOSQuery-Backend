@@ -1,8 +1,10 @@
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
+const { remoteUninstallFleetAgent } = require('./system');
 
-fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
+
+fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
 
 async function getRequest(url, headers = null) {
     try {
@@ -203,9 +205,9 @@ async function getAllHostsRisks() {
             mac: host.primary_mac,
             os: host.platform,
             details: " ",
-            vulnerabilities: host.vulnerabilities || [], // Placeholder for actual vulnerability data
-            softwareVersion: host.softwareVersion || '1.0.0', // Placeholder for actual software version
-            securityFeatures: host.securityFeatures || ['Secure Boot'] // Placeholder for actual security features
+            vulnerabilities: host.vulnerabilities || [], // we need to replace it with actual vulnerability data
+            softwareVersion: host.softwareVersion || '1.0.0', // we need to replace it with actual software version
+            securityFeatures: host.securityFeatures || ['Secure Boot'] // we need to replace it with actual security features
         };
     });
     return risks;
@@ -218,7 +220,7 @@ async function getMitigationAdvices() {
         { risk: 'Risk 2', advice: 'Ensure Secure Boot is enabled in the BIOS settings.' },
         { risk: 'Risk 3', advice: 'Run a full system scan with updated antivirus software.' },
         { risk: 'Risk 4', advice: 'Check and disable unused hardware interfaces in BIOS.' },
-        // Add more advices as needed
+        // we need to add more advices and update to real risks
     ];
     return advices;
 }
@@ -234,7 +236,7 @@ async function generateCSVReport(risks) {
 function calculateRisk(host) {
     let riskScore = 0;
 
-    // Example criteria (these are placeholders, replace with actual data points)
+    // Example criteria ( we need to replace with actual data points)
     const vulnerabilities = host.vulnerabilities || []; // Assume this is an array of vulnerabilities
     const criticalVulnerabilities = vulnerabilities.filter(vuln => vuln.severity === 'critical').length;
     const outdatedSoftware = isOutdatedSoftware(host.softwareVersion); // Assume a function to check if software is outdated
@@ -279,15 +281,33 @@ function countMissingSecurityFeatures(host) {
     return missingFeatures.length;
 }
 
-async function removeHostById(hostId) {
-    // Implement the logic to remove the host from the system
-    // Example logic, replace with actual API call or database query
-    const response = await fetch(`http://fleet-api-endpoint/hosts/${hostId}`, {
-        method: 'DELETE'
-    });
-    if (!response.ok) {
-        throw new Error('Failed to remove host');
+
+
+async function removeHostById(hostId, hostInfo) {
+    const headers = {
+        "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`,
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        // Uninstall the Fleet agent from the host
+        console.log(`Attempting to uninstall Fleet agent on host: ${hostInfo.hostname}`);
+        const uninstallResponse = await remoteUninstallFleetAgent(hostInfo.hostname, hostInfo.username, hostInfo.password, hostInfo.privateKey);
+        console.log(`Uninstall response: ${JSON.stringify(uninstallResponse)}`);
+
+        // Remove the host from Fleet
+        console.log(`Attempting to remove host with ID: ${hostId}`);
+        const response = await axios.delete(`${fleetUrl}/api/v1/fleet/hosts/${hostId}`, { headers: headers });
+        console.log(`Response status: ${response.status}`);
+        if (response.status !== 200) {
+            throw new Error(`Failed to remove host with status code: ${response.status}`);
+        }
+        return response.data;
+    } catch (error) {
+        console.error(`Error removing host: ${error.message}`);
+        throw error;
     }
 }
 
-module.exports = { mergeEndpointAndScripts, fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById};
+
+module.exports = { mergeEndpointAndScripts, fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById };
