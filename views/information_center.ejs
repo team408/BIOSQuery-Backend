@@ -1,0 +1,91 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/information_center.css">
+
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Information Center</h1>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Best Practices</h2>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check-circle"></i> <a href="https://www.intel.com/content/www/us/en/gaming/resources/how-to-update-bios.html" target="_blank">Keep BIOS/UEFI firmware up to date</a></li>
+                        <li><i class="fas fa-lock"></i> <a href="https://www.techrepublic.com/article/how-to-create-strong-passwords/" target="_blank">Use strong passwords for BIOS settings</a></li>
+                        <li><i class="fas fa-power-off"></i> <a href="https://help.fortinet.com/fmgr/50hlp/56/5-6-2/FMG-FAZ/0600_Network/0205_Disabling%20Ports.htm" target="_blank">Disable unused ports and interfaces</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">App Manual</h2>
+                    <p class="card-text">Get comprehensive guidance on using our application.</p>
+                    <a href="#" class="btn btn-primary" target="_blank">Download Manual</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Deployment Guide</h2>
+                    <p class="card-text">Follow our step-by-step deployment guides:</p>
+                    <a href="https://www.systemcenterdudes.com/complete-sccm-installation-guide-and-configuration/" class="btn btn-outline-primary mr-2" target="_blank">SCCM Guide</a>
+                    <a href="https://fleetdm.com/docs/deploy/deploy-fleet" class="btn btn-outline-primary" target="_blank">Ansible Fleet Guide</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Bootkit Understanding</h2>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-shield-alt"></i> <a href="https://nordvpn.com/cybersecurity/glossary/uefi-rootkit/" target="_blank">Prevention of UEFI Rootkits</a></li>
+                        <li><i class="fas fa-lock"></i> <a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-secure-boot" target="_blank">Secure Boot Implementation</a></li>
+                        <li><i class="fas fa-laptop-code"></i> <a href="https://www.linkedin.com/pulse/firmware-attacks-why-top-security-threat-how-protect-yourself-/" target="_blank">Incident Response for Firmware Attacks</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body" id="product-wins">
+                    <h2 class="card-title">How Our Product Wins</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                                <h3>Comprehensive Security</h3>
+                                <p>End-to-end security monitoring for BIOS/UEFI</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature">
+                                <i class="fas fa-rocket fa-2x mb-2"></i>
+                                <h3>Ease of Deployment</h3>
+                                <p>Seamless integration with SCCM and Ansible</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature">
+                                <i class="fas fa-bell fa-2x mb-2"></i>
+                                <h3>Real-time Alerts</h3>
+                                <p>Swift incident response with real-time threat detection</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%- include('partials/footer') %>

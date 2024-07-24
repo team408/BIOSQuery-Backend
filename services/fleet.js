@@ -279,4 +279,15 @@ function countMissingSecurityFeatures(host) {
     return missingFeatures.length;
 }
 
-module.exports = { mergeEndpointAndScripts, fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint};
+async function removeHostById(hostId) {
+    // Implement the logic to remove the host from the system
+    // Example logic, replace with actual API call or database query
+    const response = await fetch(`http://fleet-api-endpoint/hosts/${hostId}`, {
+        method: 'DELETE'
+    });
+    if (!response.ok) {
+        throw new Error('Failed to remove host');
+    }
+}
+
+module.exports = { mergeEndpointAndScripts, fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById};

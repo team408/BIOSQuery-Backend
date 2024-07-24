@@ -83,6 +83,7 @@
                 <% } else { %>
                 <div class="card-footer text-muted">⛔ Chipsec isn't installed </div>
                 <% } %>
+                <button class="btn btn-danger remove-host" data-host-id="<%= endpoint.uuid %>">Remove Host</button> 
             </div>
         </div>
         <% }); %>
@@ -91,3 +92,25 @@
 </div>
 
 <%- include('partials/footer') %>
+
+<script>
+    document.querySelectorAll('.remove-host').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const hostId = event.target.dataset.hostId;
+            if (confirm('Are you sure you want to remove this host?')) {
+                try {
+                    const response = await fetch(`/api/management/removeHost/${hostId}`, { method: 'POST' });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message);
+                        location.reload(); // Reload the page to reflect changes
+                    } else {
+                        alert(result.error);
+                    }
+                } catch (error) {
+                    alert('Failed to remove host');
+                }
+            }
+        });
+    });
+    </script>
