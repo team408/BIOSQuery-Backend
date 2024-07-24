@@ -1,3 +1,4 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap");
 
 * {
@@ -37,11 +38,6 @@ body {
     margin-bottom: 15px;
 }
 
-.navbar-brand .active {
-    font-weight: bold;
-    font-size: larger;
-}
-
 .nav-item {
     display: flex;
     justify-content: center;
@@ -50,13 +46,17 @@ body {
 
 .nav-link {
     font-weight: 500;
-    font-size: large;
+    font-size: 1.5rem; /* Increase the font size here */
     display: inline;
     color: rgba(0, 0, 0, .7);
+    text-decoration: none;
+    padding: 0 15px;
+
 }
 
 .navbar-light .navbar-nav .nav-link {
     color: rgba(0, 0, 0, .7);
+    text-decoration: none;
 }
 
 span.nav-link {
@@ -67,27 +67,120 @@ span.nav-link {
 .nav-link:hover {
     font-weight: bold;
     color: rgba(51, 51, 51, .9);
+    text-decoration: underline;
 }
 
 .search input {
-    background-image: url("/img/icons8-search.svg");
-    background-repeat: no-repeat;
-    background-position: 2% 50%;
     background-color: var(--ash);
     border: none;
     border-radius: 6px;
     padding: 0.7rem;
-    padding-left: 2.4rem;
     font-size: 16px;
-    width: 100%;
+    width: 200px;
+    margin-right: 10px;
     border: var(--border);
 }
 
-.search .bx-search {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    font-size: 1.3rem;
-    transform: translateY(-50%);
-    opacity: 0.6;
+.search .fa-search {
+    font-size: 1.2rem;
+    margin-left: -30px;
+}
+
+.btn-outline-success {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* Common Styles from information_center.css */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 30px;
+}
+
+ul {
+    padding-left: 0;
+}
+
+ul li {
+    margin-bottom: 15px;
+}
+
+.fas {
+    color: #007bff;
+    margin-right: 10px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.feature {
+    text-align: center;
+    padding: 20px;
+}
+
+.feature h3 {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #00008B; /* Dark Blue */
+}
+
+.feature p {
+    font-size: 0.9rem;
+}
+
+.feature .fas {
+    color: #00008B; /* Dark Blue */
+}
+
+#product-wins {
+    text-align: center;
+}
+
+#product-wins .card-title {
+    margin-bottom: 30px;
 }
