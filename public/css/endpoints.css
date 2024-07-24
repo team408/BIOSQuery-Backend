@@ -27,13 +27,13 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow: hidden;
 }
 
 .platform-img {
-    width: 40px;
-    height: 40px;
-    display: block;
-    margin: 0 auto 10px;
+    width: 100%;
+    height: 5vw;
+    object-fit: contain;
 }
 
 
@@ -45,6 +45,7 @@
 
 
 .card-body {
+    padding: 10px;
     display: relative;
     flex-direction: column;
     justify-content: space-between;
@@ -53,7 +54,10 @@
 }
 
 .chipsec-status {
-    margin-top: 10px;
+    margin-top: auto;
+    background-color: #f8f9fa; /* Adjust background color as needed */
+    padding: 10px;
+    text-align: center;
 }
 
 
@@ -72,6 +76,9 @@
 .card-text {
     display: block;
     max-height: 40px; /* Limit text block height */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add an ellipsis to text that overflows */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
 }
 custom-dropdown {
     background: transparent;

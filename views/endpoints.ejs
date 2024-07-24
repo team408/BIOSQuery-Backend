@@ -1,4 +1,3 @@
-<!-- endpoint.ejs -->
 <%- include('partials/header') %>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -6,98 +5,96 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
 <script src="/js/endpoints.js"></script>
+
 <div class="container">
     <div>
-        <button id="addNode" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
-        <button id="enableSelection" class="btn btn-secondary">Select</button>
+        <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
     </div>
     <!-- Endpoint cards -->
     <div class="row">
-        <% if(!endpoints.length) { %>
-        <h1>No endpoints found</h1>
+        <% if (!endpoints.length) { %>
+            <h1>No endpoints found</h1>
         <% } else { %>
-        <% endpoints.forEach(function(endpoint) { %>
-        <div class="col-md-3 g-3">
-            <div class="card fixed-sized-card">
-                <div class="card-body">
-                    <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>" disabled>
-                    <% if(endpoint.platform == "rhel") { %>
-                        <img src="/img/rhel_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "kali") { %>
-                        <img src="/img/kali_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "ubuntu") { %>
-                        <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "debian") { %>
-                        <img src="/img/debian_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "windows") { %>
-                        <img src="/img/windows_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform=="centos") { %>
-                        <img src="/img/centos_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform=="macos") { %>
-                        <img src="/img/macos_logo.png" class="card-img-top platform-img">
-                    <% } else { %>
-                        <img src="/img/generic_logo.png" class="card-img-top platform-img">
-                    <% } %>
-                    <h5 id="endpoint_hostname" class="card-title">
-                        <%= endpoint.hostname %>
-                    </h5>
-                    <p class="card-text">
-                        <strong>IP:</strong> <%= endpoint.primary_ip %>
-                    </p>
-                    <p class="card-text">
-                        <strong>MAC:</strong> <%= endpoint.primary_mac %>
-                    </p>
-                    <p class="card-text">
-                        <strong>OS:</strong> <%= endpoint.os_version %>
-                    </p>
-                    <p class="card-text">
-                        <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
-                    </p>
-                    <p class="card-text">
-                        <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
-                    </p>
-                    <div class="chipsec-status">
-                        <% if (endpoint.chipsec) { %>
-                            <div class="card-footer text-muted">✅ Chipsec installed</div>
+            <% endpoints.forEach(function (endpoint) { %>
+                <div class="col-md-3 g-3">
+                    <div class="card fixed-sized-card">
+                        <div class="card-body">
+                            <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>">
+                            <% if (endpoint.platform == "rhel") { %>
+                                <img src="/img/rhel_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "kali") { %>
+                                <img src="/img/kali_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "ubuntu") { %>
+                                <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "debian") { %>
+                                <img src="/img/debian_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "windows") { %>
+                                <img src="/img/windows_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "centos") { %>
+                                <img src="/img/centos_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "macos") { %>
+                                <img src="/img/macos_logo.png" class="card-img-top platform-img">
                             <% } else { %>
-                            <div class="card-footer text-muted">⛔ Chipsec isn't installed</div>
+                                <img src="/img/generic_logo.png" class="card-img-top platform-img">
                             <% } %>
-                    </div>
-                    <p class="card-text">
-                        <strong>Last Scan:</strong> 
-                        <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
-                            <%= endpoint.formatted_last_scan %>
-                        <% } else { %>
-                            N/A
-                        <% } %>
-                    </p>
-                    <p id="endpoint_id" hidden class="endpointID">
-                        <%- endpoint.id %>
-                    </p>
-                    <!-- Dropdown menu -->
-                    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                        <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                              </svg>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton>">
+                            <h5 id="endpoint_hostname" class="card-title">
+                                <%= endpoint.hostname %>
+                            </h5>
+                            <p class="card-text">
+                                <strong>IP:</strong> <%= endpoint.primary_ip %>
+                            </p>
+                            <p class="card-text">
+                                <strong>MAC:</strong> <%= endpoint.primary_mac %>
+                            </p>
+                            <p class="card-text">
+                                <strong>OS:</strong> <%= endpoint.os_version %>
+                            </p>
+                            <p class="card-text">
+                                <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
+                            </p>
+                            <p class="card-text">
+                                <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
+                            </p>
+                            <p class="card-text">
+                                <strong>Last Scan:</strong>
+                                <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
+                                    <%= endpoint.formatted_last_scan %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </p>
+                            <p id="endpoint_id" hidden class="endpointID">
+                                <%- endpoint.id %>
+                            </p>
+                            <!-- Dropdown menu -->
+                            <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                                <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= endpoint.uuid %>">
+                                    <% if (endpoint.chipsec) { %>
+                                        <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                                        <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
+                                    <% } else { %>
+                                        <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
                             <% if (endpoint.chipsec) { %>
-
-                                <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
-                                <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
-                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
-                                <li><a id="Delete_host" class="dropdown-item" href="#">Delete_host</a></li>
-
+                                <div class="text-muted chipsec-status">✅ Chipsec installed</div>
                             <% } else { %>
-                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                                <div class="text-muted chipsec-status">⛔ Chipsec isn't installed </div>
                             <% } %>
-                        </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <% }); %>
+            <% }); %>
         <% } %>
     </div>
 </div>
@@ -105,107 +102,98 @@
 <div class="container">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="btn btn-danger" disabled>Delete Selected</button>
-        <button id="installChipsecSelected" class="btn btn-success" disabled>Install CHIPSEC on Selected</button>
-    </div>
-</div>
-<!-- Add Node Modal -->
-<div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addNodeModalLabel">Add New Node</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addNodeForm">
-                    <div class="form-group">
-                        <label for="osType">Operating System</label>
-                        <select class="form-control" id="osType">
-                            <option value="deb">deb</option>
-                            <option value="rhel">rhel</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="hostId">Host ID</label>
-                        <input type="text" class="form-control" id="hostId" placeholder="Enter IP or Host Name">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Node</button>
-                </form>
-            </div>
-        </div>
+        <button id="deleteSelected" class="btn btn-outline-dark" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
     </div>
 </div>
 
+    <!-- Modal for Add Node -->
+    <div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNodeModalLabel">Add New Host</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addNodeForm">
+                        <div class="form-group">
+                            <label for="osType">OS Type</label>
+                            <select class="form-control" id="osType">
+                                <option value="deb">Debian</option>
+                                <option value="rpm">rpm</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hostId">Host ID</label>
+                            <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Host</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const enableSelectionBtn = document.getElementById('enableSelection');
         const checkboxes = document.querySelectorAll('.endpoint-checkbox');
         const deleteSelectedBtn = document.getElementById('deleteSelected');
         const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
         const addNodeForm = document.getElementById('addNodeForm');
-
-        enableSelectionBtn.addEventListener('click', () => {
-            checkboxes.forEach(checkbox => {
-                checkbox.disabled = false;
-            });
-            enableSelectionBtn.disabled = true;
-        });
-
+    
         checkboxes.forEach(checkbox => {
+            checkbox.disabled = false;
             checkbox.addEventListener('change', () => {
                 const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
                 deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
                 installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
             });
         });
-
+    
         deleteSelectedBtn.addEventListener('click', () => {
-            const selectedUuids = Array.from(document.querySelectorAll('.endpoint-checkbox:checked')).map(cb => cb.dataset.uuid);
-            console.log('Deleting endpoints:', selectedUuids);
-            // Implement the actual deletion logic here
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle delete action
+            console.log('Deleting selected endpoints:', selectedIds);
         });
-
+    
         installChipsecSelectedBtn.addEventListener('click', () => {
-            const selectedUuids = Array.from(document.querySelectorAll('.endpoint-checkbox:checked')).map(cb => cb.dataset.uuid);
-            console.log('Installing CHIPSEC on endpoints:', selectedUuids);
-            // Implement the actual installation logic here
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle install chipsec action
+            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
         });
-
-        addNodeForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const hostId = document.getElementById('hostId').value;
+    
+        addNodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             const osType = document.getElementById('osType').value;
-            if (hostId && osType) {
-                fetch(`/api/addNode/${hostId}/${osType}`, { method: 'POST' })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                        location.reload();
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-        });
-
-        document.querySelectorAll('.delete-endpoint').forEach(button => {
-            button.addEventListener('click', () => {
-                const uuid = button.dataset.uuid;
-                console.log('Deleting endpoint:', uuid);
-                // Implement the actual deletion logic here
-            });
-        });
-
-        document.querySelectorAll('.install-chipsec').forEach(button => {
-            button.addEventListener('click', () => {
-                const uuid = button.dataset.uuid;
-                console.log('Installing CHIPSEC on endpoint:', uuid);
-                // Implement the actual installation logic here
+            const hostId = document.getElementById('hostId').value;
+    
+            console.log('Submitting form with data:', { osType, hostId }); // Add log here
+    
+            // Send AJAX request to add the new host
+            $.ajax({
+                url: '/endpoints.js/addNode',
+                method: 'POST',
+                data: {
+                    osType,
+                    hostId
+                },
+                success: function(response) {
+                    // Handle success (e.g., refresh the list of endpoints)
+                    console.log('Host added successfully:', response);
+                    location.reload();
+                },
+                error: function(error) {
+                    // Handle error
+                    console.error('Error adding host:', error);
+                }
             });
         });
     });
 </script>
-
-</div>
+    
 <%- include('partials/footer') %>
