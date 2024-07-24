@@ -26,11 +26,22 @@
     height: 5vw;
     object-fit: contain;
 }
-.fixed-size-card {
-    height: 420px; /* Set a fixed height for each card */
-    width: 100%; /* Card width is responsive to the column width */
-    overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
+
+.platform-img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin: 0 auto 10px;
 }
+
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+
 .card-body {
     padding: 10px;
 }
