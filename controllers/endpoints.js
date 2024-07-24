@@ -1,4 +1,6 @@
 const fleetService = require('../services/fleet');
+const systemService = require('../services/system');
+const chipsecService = require('../services/chipsec');
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -44,27 +46,51 @@ async function getEndpoints(req, res) {
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
-    }
+    }
 }
-async function removeEndpoint(req, res) {
-    try {
-        const hostId = req.params.id;
-        const hostInfo = req.body; // This should contain hostname, username, password/privateKey
 
-        // Validate hostInfo
-        if (!hostInfo.hostname || !hostInfo.username || (!hostInfo.password && !hostInfo.privateKey)) {
-            return res.status(400).json({ error: 'Missing required host information' });
+
+async function addNode(req, res) {
+    try {
+        console.log('Received request to add host with data:', req.body); // Add log here
+
+        // validate hostId
+        const { hostId, osType } = req.body;
+        if (!hostId || !osType) {
+            return res.status(400).send({ error: 'hostID parameter is required' });
         }
 
-        // Call the removeHostById function from fleetService
-        const result = await fleetService.removeHostById(hostId, hostInfo);
+        // Validate correct osType request
+        if (!(['deb', 'rpm'].includes(osType))) {
+            res.status(404).send('Unknown osType');
+            return;
+        }
 
-        res.status(200).json({ message: 'Host removed successfully', data: result });
+        // Get EnrollmentCmd
+        const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
+
+        // Fetch endpoints
+        const endpointsData = await fleetService.listEndpoints();
+
+        // Execute enrollment command
+        await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
+        res.send("Node enrolled successfully");
+
     } catch (error) {
-        console.error('Error removing endpoint:', error);
-        res.status(500).json({ error: 'Failed to remove host' });
+        console.error('Error in addNode:', error);
+        res.status(500).send('Internal Server Error');
     }
 }
 
 
-module.exports = { getEndpoints, removeEndpoint  };
+
+async function getControlPanel(req, res) {
+    try {
+        res.render("control.ejs");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports = { getEndpoints, addNode, getControlPanel };

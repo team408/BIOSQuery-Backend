@@ -1,8 +1,8 @@
 const fleetService = require('../services/fleet');
 
-async function dashboard(req, res) {
+async function statistics(req, res) {
     try {
-        data = await fleetService.buildDashboard();
+        data = await fleetService.buildStatistics();
         const statusCounts = { 'N/A': 0, 'error': 0, 'ran': 0 };
         const scriptCounts = {};
         data.forEach(item => {
@@ -11,9 +11,9 @@ async function dashboard(req, res) {
         });
         
         if (Array.isArray(data)) {
-            res.render('dashboard', { data: data, statusCounts: statusCounts, scriptCounts: scriptCounts });
+            res.render('statistics', { data: data, statusCounts: statusCounts, scriptCounts: scriptCounts });
         } else {
-            res.render('dashboard', { data: [] , statusCounts: statusCounts, scriptCounts: scriptCounts}); // Render an empty array if data is not an array
+            res.render('statistics', { data: [] , statusCounts: statusCounts, scriptCounts: scriptCounts}); // Render an empty array if data is not an array
         }
     } catch (error) {
         console.log(error)
@@ -21,4 +21,4 @@ async function dashboard(req, res) {
     }
 };
 
-module.exports = { dashboard };
+module.exports = { statistics };

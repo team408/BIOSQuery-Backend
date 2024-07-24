@@ -1,109 +1,101 @@
 <%- include('partials/header') %>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
 <script src="/js/endpoints.js"></script>
 
 <div class="container">
+    <div>
+        <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
+    </div>
     <!-- Endpoint cards -->
     <div class="row">
-        <% if(!endpoints.length) { %>
-        <h1>No endpoints found</h1>
+        <% if (!endpoints.length) { %>
+            <h1>No endpoints found</h1>
         <% } else { %>
-        <% endpoints.forEach(function(endpoint) { %>
-        <div class="col-md-3 g-3">
-            <div class="card fixed-sized-card position-relative">
-                <div class="card-body">
-                    <% if(endpoint.platform == "rhel") { %>
-                        <img src="/img/rhel_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "kali") { %>
-                        <img src="/img/kali_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "ubuntu") { %>
-                        <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "debian") { %>
-                        <img src="/img/debian_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform == "windows") { %>
-                        <img src="/img/windows_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform=="centos") { %>
-                        <img src="/img/centos_logo.png" class="card-img-top platform-img">
-                    <% } else if(endpoint.platform=="macos") { %>
-                        <img src="/img/macos_logo.png" class="card-img-top platform-img">
-                    <% } else { %>
-                        <img src="/img/generic_logo.png" class="card-img-top platform-img">
-                    <% } %>
-                    <h5 id="endpoint_hostname" class="card-title">
-                        <%= endpoint.hostname %>
-                    </h5>
-                    <p class="card-text">
-                        <strong>IP:</strong> <%= endpoint.primary_ip %>
-                    </p>
-                    <p class="card-text">
-                        <strong>MAC:</strong> <%= endpoint.primary_mac %>
-                    </p>
-                    <p class="card-text">
-                        <strong>OS:</strong> <%= endpoint.os_version %>
-                    </p>
-                    <p class="card-text">
-                        <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
-                    </p>
-                    <p class="card-text">
-                        <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
-                    </p>
-                    <p class="card-text">
-                        <strong>Last Scan:</strong> 
-                        <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
-                            <%= endpoint.formatted_last_scan %>
-                        <% } else { %>
-                            N/A
-                        <% } %>
-                    </p>
-                    <p id="endpoint_id" hidden class="endpointID">
-                        <%- endpoint.id %>
-                    </p>
-                    <!-- Dropdown menu -->
-                    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                        <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                              </svg>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= endpoint.uuid %>">
-                            <% if (endpoint.chipsec) { %>
-                                <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
-                                <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
+            <% endpoints.forEach(function (endpoint) { %>
+                <div class="col-md-3 g-3">
+                    <div class="card fixed-sized-card">
+                        <div class="card-body">
+                            <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>">
+                            <% if (endpoint.platform == "rhel") { %>
+                                <img src="/img/rhel_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "kali") { %>
+                                <img src="/img/kali_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "ubuntu") { %>
+                                <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "debian") { %>
+                                <img src="/img/debian_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "windows") { %>
+                                <img src="/img/windows_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "centos") { %>
+                                <img src="/img/centos_logo.png" class="card-img-top platform-img">
+                            <% } else if (endpoint.platform == "macos") { %>
+                                <img src="/img/macos_logo.png" class="card-img-top platform-img">
                             <% } else { %>
-                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                                <img src="/img/generic_logo.png" class="card-img-top platform-img">
                             <% } %>
-                            <li><a class="dropdown-item remove-host" href="#" data-host-id="<%= endpoint.id %>" data-host-name="<%= endpoint.hostname %>">Remove Host</a></li>       
-                         </ul>
+                            <h5 id="endpoint_hostname" class="card-title">
+                                <%= endpoint.hostname %>
+                            </h5>
+                            <p class="card-text">
+                                <strong>IP:</strong> <%= endpoint.primary_ip %>
+                            </p>
+                            <p class="card-text">
+                                <strong>MAC:</strong> <%= endpoint.primary_mac %>
+                            </p>
+                            <p class="card-text">
+                                <strong>OS:</strong> <%= endpoint.os_version %>
+                            </p>
+                            <p class="card-text">
+                                <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
+                            </p>
+                            <p class="card-text">
+                                <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
+                            </p>
+                            <p class="card-text">
+                                <strong>Last Scan:</strong>
+                                <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
+                                    <%= endpoint.formatted_last_scan %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </p>
+                            <p id="endpoint_id" hidden class="endpointID">
+                                <%- endpoint.id %>
+                            </p>
+                            <!-- Dropdown menu -->
+                            <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                                <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= endpoint.uuid %>">
+                                    <% if (endpoint.chipsec) { %>
+                                        <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                                        <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
+                                    <% } else { %>
+                                        <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <% if (endpoint.chipsec) { %>
+                                <div class="text-muted chipsec-status">✅ Chipsec installed</div>
+                            <% } else { %>
+                                <div class="text-muted chipsec-status">⛔ Chipsec isn't installed </div>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
-                <% if (endpoint.chipsec) { %>
-                <div class="card-footer text-muted">✅ Chipsec installed</div>
-                <% } else { %>
-                <div class="card-footer text-muted">⛔ Chipsec isn't installed </div>
-                <% } %>
-            </div>
-        </div>
-        <% }); %>
+            <% }); %>
         <% } %>
-    </div>
-</div>
-
-<!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Confirm Removal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to remove this host?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmRemove">Remove</button>
-            </div>
-        </div>
     </div>
 </div>
 

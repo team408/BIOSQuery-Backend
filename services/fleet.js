@@ -49,7 +49,7 @@ async function fleetApiPostRequest(uri,data){
 
 }
 
-async function buildDashboard(){
+async function buildStatistics(){
     // get all endpoints in order to iterate their ids in getScriptByEndpoint
     endpoints = await listEndpoints();
     // sending the endpoints to the data
