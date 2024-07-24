@@ -1,10 +1,11 @@
+<!-- endpoint.ejs -->
 <%- include('partials/header') %>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
-
+<script src="/js/endpoints.js"></script>
 <div class="container">
     <div>
         <button id="addNode" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
@@ -20,22 +21,40 @@
             <div class="card fixed-sized-card">
                 <div class="card-body">
                     <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>" disabled>
-                    <% if(endpoint.platform=="rhel") { %>
-                    <img src="/img/rhel_logo.png" class="card-img-top platform-img endpoint-icon">
+                    <% if(endpoint.platform == "rhel") { %>
+                        <img src="/img/rhel_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "kali") { %>
+                        <img src="/img/kali_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "ubuntu") { %>
+                        <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "debian") { %>
+                        <img src="/img/debian_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform == "windows") { %>
+                        <img src="/img/windows_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="centos") { %>
+                        <img src="/img/centos_logo.png" class="card-img-top platform-img">
+                    <% } else if(endpoint.platform=="macos") { %>
+                        <img src="/img/macos_logo.png" class="card-img-top platform-img">
                     <% } else { %>
-                    <img src="/img/ubuntu.png" class="card-img-top platform-img endpoint-icon">
+                        <img src="/img/generic_logo.png" class="card-img-top platform-img">
                     <% } %>
-                    <h5 class="card-title">
+                    <h5 id="endpoint_hostname" class="card-title">
                         <%= endpoint.hostname %>
                     </h5>
                     <p class="card-text">
-                        <%= endpoint.primary_ip %>
+                        <strong>IP:</strong> <%= endpoint.primary_ip %>
                     </p>
                     <p class="card-text">
-                        <%= endpoint.primary_mac %>
+                        <strong>MAC:</strong> <%= endpoint.primary_mac %>
                     </p>
-                    <p hidden class="endpointUuid">
-                        <%- endpoint.uuid %>
+                    <p class="card-text">
+                        <strong>OS:</strong> <%= endpoint.os_version %>
+                    </p>
+                    <p class="card-text">
+                        <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
+                    </p>
+                    <p class="card-text">
+                        <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
                     </p>
                     <div class="chipsec-status">
                         <% if (endpoint.chipsec) { %>
@@ -47,6 +66,35 @@
                     <div class="card-buttons">
                         <button class="btn btn-danger delete-endpoint" data-uuid="<%= endpoint.uuid %>">Delete</button>
                         <button class="btn btn-success install-chipsec" data-uuid="<%= endpoint.uuid %>">Install CHIPSEC</button>
+                    <p class="card-text">
+                        <strong>Last Scan:</strong> 
+                        <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
+                            <%= endpoint.formatted_last_scan %>
+                        <% } else { %>
+                            N/A
+                        <% } %>
+                    </p>
+                    <p id="endpoint_id" hidden class="endpointID">
+                        <%- endpoint.id %>
+                    </p>
+                    <!-- Dropdown menu -->
+                    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                        <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                              </svg>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton>">
+                            <% if (endpoint.chipsec) { %>
+
+                                <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                                <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+
+                            <% } else { %>
+                                <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                            <% } %>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -161,4 +209,5 @@
     });
 </script>
 
+</div>
 <%- include('partials/footer') %>

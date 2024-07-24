@@ -5,9 +5,21 @@ async function addNode(req, res) {
     try {
         const hostId = req.params.hostId;
         const osType = req.params.osType;
-        if (!hostId || !osType) {
+        const username = req.body.username;
+        const password = req.body.password;
+        const privateKey = req.body.privateKey;
+        if (!hostId) {
             return res.status(400).send({ error: 'hostID parameter is required' });
         }
+        if (!osType) {
+                return res.status(400).send({ error: 'osType parameter is required' });
+        }
+        if (!password && !privateKey) {
+            return res.status(400).send({ error: 'either password or privateKey parameter is required' });
+        }
+    
+        console.log("[*] Host to be enrolled: " + hostId)
+        // Validate correct osType request
 
         if (!(['deb', 'rpm', 'pkg', 'msi'].includes(osType))){
             res.status(404).send('Unknown osType');
@@ -18,9 +30,12 @@ async function addNode(req, res) {
             return;
         }
 
-        const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
-        await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
-        res.send("Node enrolled successfully");
+        // get EnrollmentCmd before 
+        enrollCmd = await fleetService.getAgentEnrollCmd(osType);
+        // Executing
+        systemService.remoteEnrollLinuxHost(hostId, username, enrollCmd, password , privateKey)
+        const msg = 'Task Submitted, trying to enroll' + hostId;
+        res.send(msg);
 
     } catch (error) {
         console.error(error);

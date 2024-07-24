@@ -2,14 +2,51 @@ const fleetService = require('../services/fleet');
 const systemService = require('../services/system');
 const chipsecService = require('../services/chipsec');
 
-async function getEndpoints(req, res) {
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = date.getUTCMonth() + 1; // Months are zero-based
+    const day = date.getUTCDate();
+    const year = date.getUTCFullYear();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+
+    return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
+}
+
+sync function getEndpoints(req, res) {
     try {
-        const endpoints = await fleetService.listEndpoints(); // ודא שיש לך את someService להחזרת נקודות הקצה
-        res.render("endpoints.ejs", { endpoints: endpoints.hosts });
+        // Fetch endpoints
+        const endpointsData = await fleetService.listEndpoints();
+
+        // Fetch scripts for each endpoint
+        const scriptsData = await fleetService.getScriptByEndpoint(endpointsData.hosts);
+
+        // Map scripts to their respective endpoints
+        const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpointsData.hosts, scriptsData)
+
+        // Apply search filter if present
+        let filteredEndpoints = endpointsWithScripts;
+        if (req.query.search) {
+            const searchQuery = req.query.search.toLowerCase();
+            filteredEndpoints = endpointsWithScripts.filter(host => {
+                return host.hostname.toLowerCase().includes(searchQuery) ||
+                    host.primary_ip.toLowerCase().includes(searchQuery) ||
+                    host.primary_mac.toLowerCase().includes(searchQuery);
+            });
+        }
+        filteredEndpoints.forEach(endpoint => {
+            endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
+        });
+        filteredEndpoints.forEach(endpoint => {
+            endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
+        });
+        res.render("endpoints.ejs", { endpoints: filteredEndpoints });
+
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).send('Internal Server Error');
-    }
+    }
 }
 
 async function addNode(req, res) {
@@ -34,6 +71,9 @@ async function addNode(req, res) {
         // Get EnrollmentCmd
         const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
 
+        // Fetch endpoints
+        const endpointsData = await fleetService.listEndpoints();
+
         // Execute enrollment command
         await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
         res.send("Node enrolled successfully");
@@ -54,3 +94,4 @@ async function getControlPanel(req, res) {
 }
 
 module.exports = { getEndpoints, addNode, getControlPanel };
+

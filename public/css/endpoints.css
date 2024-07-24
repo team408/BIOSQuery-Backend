@@ -36,10 +36,17 @@
     margin: 0 auto 10px;
 }
 
+
 .card-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: auto;
+
+.fixed-size-card {
+    height: 420px; /* Set a fixed height for each card */
+    width: 100%; /* Card width is responsive to the column width */
+    overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
+
 }
 
 .card-body {
@@ -54,8 +61,10 @@
     margin-top: 10px;
 }
 
+
 .card-footer {
     margin-top: 10px;
+    padding-bottom: 4px; 
 }
 
 .card-buttons .btn {
@@ -64,8 +73,27 @@
     margin: 2px;
 }
 
-.card-footer {
-    padding-bottom: 4px; 
+
+.card-text {
+    display: block;
+    max-height: 40px; /* Limit text block height */
+}
+custom-dropdown {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 
+.custom-dropdown::after {
+    display: none;
+}
+
+.custom-dropdown:focus {
+    outline: none;
+}
+
+.custom-dropdown-icon {
+    font-size: 30px;
+}
 
