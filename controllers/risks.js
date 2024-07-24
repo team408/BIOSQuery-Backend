@@ -33,4 +33,5 @@ async function downloadCSVReport(req, res) {
     }
 }
 
+
 module.exports = { viewAllHostsRisks, viewMitigationAdvices, downloadCSVReport };

@@ -99,46 +99,101 @@
     </div>
 </div>
 
-<%- include('partials/footer') %>
+<div class="container">
+    <!-- Actions for selected endpoints -->
+    <div class="fixed-bottom-left">
+        <button id="deleteSelected" class="btn btn-outline-dark" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
+    </div>
+</div>
+
+    <!-- Modal for Add Node -->
+    <div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNodeModalLabel">Add New Host</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addNodeForm">
+                        <div class="form-group">
+                            <label for="osType">OS Type</label>
+                            <select class="form-control" id="osType">
+                                <option value="deb">Debian</option>
+                                <option value="rpm">rpm</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hostId">Host ID</label>
+                            <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Host</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script>
-    let hostIdToRemove;
-    let hostInfoToRemove;
-
-    document.querySelectorAll('.remove-host').forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.preventDefault();
-            hostIdToRemove = event.target.dataset.hostId;
-            hostInfoToRemove = {
-                hostname: event.target.dataset.hostName,
-                username: '<HOST_USERNAME>',
-                password: '<HOST_PASSWORD>', // Or use privateKey if applicable
-                privateKey: '<HOST_PRIVATE_KEY>'
-            };
-            new bootstrap.Modal(document.getElementById('confirmModal')).show();
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelected');
+        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+        const addNodeForm = document.getElementById('addNodeForm');
+    
+        checkboxes.forEach(checkbox => {
+            checkbox.disabled = false;
+            checkbox.addEventListener('change', () => {
+                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            });
+        });
+    
+        deleteSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle delete action
+            console.log('Deleting selected endpoints:', selectedIds);
+        });
+    
+        installChipsecSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle install chipsec action
+            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
+        });
+    
+        addNodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const osType = document.getElementById('osType').value;
+            const hostId = document.getElementById('hostId').value;
+    
+            console.log('Submitting form with data:', { osType, hostId }); // Add log here
+    
+            // Send AJAX request to add the new host
+            $.ajax({
+                url: '/endpoints.js/addNode',
+                method: 'POST',
+                data: {
+                    osType,
+                    hostId
+                },
+                success: function(response) {
+                    // Handle success (e.g., refresh the list of endpoints)
+                    console.log('Host added successfully:', response);
+                    location.reload();
+                },
+                error: function(error) {
+                    // Handle error
+                    console.error('Error adding host:', error);
+                }
+            });
         });
     });
-
-    document.getElementById('confirmRemove').addEventListener('click', async () => {
-        if (hostIdToRemove) {
-            try {
-                const response = await fetch(`/router/remove/${hostIdToRemove}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(hostInfoToRemove)
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.message);
-                    location.reload(); // Reload the page to reflect changes
-                } else {
-                    alert(result.error);
-                }
-            } catch (error) {
-                alert('Failed to remove host');
-            }
-        }
-    });
 </script>
+    
+<%- include('partials/footer') %>

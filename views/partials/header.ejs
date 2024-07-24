@@ -17,35 +17,27 @@
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container">
-            <a href="/" class="navbar-brand">
-                <img src="../../img/osquery-logo.png" alt="Shop Icon">
-            </a>
-            <a href="/endpoints" class="nav-item nav-link">Endpoints</a>
-            </a>
-            <a href="/controlPanel" class="nav-item nav-link">Control</a>
-            </a>
-            <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
-            </a>
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="navbar-brand">
+                <a href="/">
+                    <img src="../../img/osquery-logo.png" alt="Shop Icon">
+                </a>
+                <a href="/endpoints" class="nav-item nav-link">Endpoints</a>
+                <a href="/risks" class="nav-item nav-link">Risks</a>
+                <a href="/information-center" class="nav-item nav-link">Information Center</a>
+            </div>
             <form id="searchForm" class="search" role="search">
                 <input type="search" name="search" placeholder="Search" />
                 <i class="bx bx-search" aria-hidden="true"></i>
             </form>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-item nav-link" href="/#">Statistics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-item nav-link" href="/api-docs">API Docs</a>
-                    </li>
-                </ul>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/statistics">Statistics</a>
+                <a class="nav-item nav-link" href="/api-docs">API Docs</a>
             </div>
         </div>
     </nav>
-
+</body>
 
 <script src="/js/search.js"></script>
 <script src="/js/cart.js"></script>

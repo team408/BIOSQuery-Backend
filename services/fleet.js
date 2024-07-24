@@ -1,10 +1,8 @@
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
-const { remoteUninstallFleetAgent } = require('./system');
 
-
-fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
+fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
 
 async function getRequest(url, headers = null) {
     try {
@@ -192,9 +190,6 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-
-//methods for fetching risks and generating reports
-
 async function getAllHostsRisks() {
     const endpoints = await listEndpoints();
     const risks = endpoints.hosts.map(host => {
@@ -310,4 +305,5 @@ async function removeHostById(hostId, hostInfo) {
 }
 
 
-module.exports = { mergeEndpointAndScripts, fleetApiGetRequest, getRequest, listEndpoints, buildDashboard, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, buildDashboard, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById };
+module.exports = { mergeEndpointAndScripts,listScripts,fleetApiPostRequest, fleetApiGetRequest, getRequest, buildStatistics, listEndpoints, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById };
+
