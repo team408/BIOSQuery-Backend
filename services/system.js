@@ -31,7 +31,7 @@ async function getSSHCon(host, username, password = null, privateKey = null) {
 //sshCon must be an [ssh = new NodeSSH(); ssh.connect(connectionConfig)] type.
 async function executeRemoteCommand(sshCon, command) {
   const result = await sshCon.execCommand(command);
-  return result;
+  return result; // result.stdout and result.stderr
 }
 
 /**
