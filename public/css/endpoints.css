@@ -30,8 +30,8 @@
 }
 
 .platform-img {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     display: block;
     margin: 0 auto 10px;
 }
@@ -41,13 +41,8 @@
     display: flex;
     justify-content: space-between;
     margin-top: auto;
-
-.fixed-size-card {
-    height: 420px; /* Set a fixed height for each card */
-    width: 100%; /* Card width is responsive to the column width */
-    overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
-
 }
+
 
 .card-body {
     display: relative;

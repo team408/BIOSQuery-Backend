@@ -14,7 +14,7 @@ function formatDate(dateString) {
     return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
-sync function getEndpoints(req, res) {
+async function getEndpoints(req, res) {
     try {
         // Fetch endpoints
         const endpointsData = await fleetService.listEndpoints();

@@ -63,9 +63,6 @@
                             <div class="card-footer text-muted">⛔ Chipsec isn't installed</div>
                             <% } %>
                     </div>
-                    <div class="card-buttons">
-                        <button class="btn btn-danger delete-endpoint" data-uuid="<%= endpoint.uuid %>">Delete</button>
-                        <button class="btn btn-success install-chipsec" data-uuid="<%= endpoint.uuid %>">Install CHIPSEC</button>
                     <p class="card-text">
                         <strong>Last Scan:</strong> 
                         <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
@@ -90,6 +87,7 @@
                                 <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
                                 <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
                                 <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                                <li><a id="Delete_host" class="dropdown-item" href="#">Delete_host</a></li>
 
                             <% } else { %>
                                 <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
