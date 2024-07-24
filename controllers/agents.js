@@ -7,10 +7,18 @@ async function addNode(req, res) {
         //validate hostId
         const hostId = req.params.hostId
         const osType = req.params.osType;
-        if (!hostId || !osType) {
-            return res.status(400).send({ error: 'hostID or osType parameter is required' });
+        const username = req.body.username;
+        const password = req.body.password;
+        const privateKey = req.body.privateKey;
+        if (!hostId) {
+            return res.status(400).send({ error: 'hostID parameter is required' });
         }
-        // const {username, password} = req.body;
+        if (!osType) {
+                return res.status(400).send({ error: 'osType parameter is required' });
+        }
+        if (!password && !privateKey) {
+            return res.status(400).send({ error: 'either password or privateKey parameter is required' });
+        }
     
         console.log("[*] Host to be enrolled: " + hostId)
         // Validate correct osType request
@@ -23,15 +31,11 @@ async function addNode(req, res) {
             return
         }
         // get EnrollmentCmd before 
-        // console.log("[*] Querieng enrollmentCmd for osType: "+osType);
         enrollCmd = await fleetService.getAgentEnrollCmd(osType);
-        // console.log("[*] enrollmentCmd: " + enrollCmd);
         // Executing
-        systemService.remoteEnrollLinuxHost(enrollCmd, hostId)
-        res.send("Hello agents");
-        // endpoints = await fleetService.listEndpoints();
-        // res.render("endpoints.ejs", { endpoints: endpoints.hosts });
-
+        systemService.remoteEnrollLinuxHost(hostId, username, enrollCmd, password , privateKey)
+        const msg = 'Task Submitted, trying to enroll' + hostId;
+        res.send(msg);
     } catch (error) {
         console.error(error)
         res.status(500).send('Internal Server Error');
