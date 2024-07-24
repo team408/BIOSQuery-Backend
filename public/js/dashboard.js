@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const data = JSON.parse(document.getElementById('data-container').textContent);
 
-    // Ensure data is correctly loaded
-    console.log("Data:", data);
-
     // Summary of Script Execution Statuses Data
     const statusCounts = { 'N/A': 0, 'error': 0, 'ran': 0 };
     data.forEach(item => {
@@ -27,8 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle click on status chart slices
     statusChart.canvas.onclick = function(event) {
-        console.log("statusChart:", statusChart); // Check `statusChart` context
-        console.log("Event:", event); // Check event details
 
         var segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
 
