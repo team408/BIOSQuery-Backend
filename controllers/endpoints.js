@@ -1,4 +1,6 @@
 const fleetService = require('../services/fleet');
+const systemService = require('../services/system');
+const chipsecService = require('../services/chipsec');
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -44,7 +46,51 @@ async function getEndpoints(req, res) {
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
+    }
+}
+
+
+async function addNode(req, res) {
+    try {
+        console.log('Received request to add host with data:', req.body); // Add log here
+
+        // validate hostId
+        const { hostId, osType } = req.body;
+        if (!hostId || !osType) {
+            return res.status(400).send({ error: 'hostID parameter is required' });
+        }
+
+        // Validate correct osType request
+        if (!(['deb', 'rpm'].includes(osType))) {
+            res.status(404).send('Unknown osType');
+            return;
+        }
+
+        // Get EnrollmentCmd
+        const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
+
+        // Fetch endpoints
+        const endpointsData = await fleetService.listEndpoints();
+
+        // Execute enrollment command
+        await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
+        res.send("Node enrolled successfully");
+
+    } catch (error) {
+        console.error('Error in addNode:', error);
+        res.status(500).send('Internal Server Error');
     }
 }
 
-module.exports = { getEndpoints };
+
+
+async function getControlPanel(req, res) {
+    try {
+        res.render("control.ejs");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports = { getEndpoints, addNode, getControlPanel };
