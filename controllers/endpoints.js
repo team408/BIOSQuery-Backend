@@ -46,22 +46,20 @@ async function getEndpoints(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+
 async function addNode(req, res) {
     try {
-        //validate hostId
-        const hostId = req.params.hostId;
-        const osType = req.params.osType;
+        console.log('Received request to add host with data:', req.body); // Add log here
+
+        // validate hostId
+        const { hostId, osType } = req.body;
         if (!hostId || !osType) {
             return res.status(400).send({ error: 'hostID parameter is required' });
         }
 
         // Validate correct osType request
-        if (!(['deb', 'rpm', 'pkg', 'msi'].includes(osType))) {
+        if (!(['deb', 'rpm'].includes(osType))) {
             res.status(404).send('Unknown osType');
-            return;
-        }
-        if ((['pkg', 'msi'].includes(osType))) {
-            res.status(404).send('unsupported osType, yet.');
             return;
         }
 
@@ -73,10 +71,12 @@ async function addNode(req, res) {
         res.send("Node enrolled successfully");
 
     } catch (error) {
-        console.error(error);
+        console.error('Error in addNode:', error);
         res.status(500).send('Internal Server Error');
     }
 }
+
+
 
 async function getControlPanel(req, res) {
     try {
