@@ -33,8 +33,8 @@ async function getSSHCon(host, username, password = null, privateKey = null) {
 async function executeRemoteCommand(sshCon, command) {
   console.log(`Executing command: ${command}`);
   const result = await sshCon.execCommand(command);
-  console.log(`Command stdout: ${result.stdout}`);
-  console.log(`Command stderr: ${result.stderr}`);
+  console.log(`Command stdout: ${result.stdout}`);//check
+  console.log(`Command stderr: ${result.stderr}`);//check
   return result; // result.stdout and result.stderr
 }
 
