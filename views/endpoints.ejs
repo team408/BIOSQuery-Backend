@@ -107,35 +107,58 @@
     </div>
 </div>
 
-    <!-- Modal for Add Node -->
-    <div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addNodeModalLabel">Add New Host</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addNodeForm">
-                        <div class="form-group">
-                            <label for="osType">OS Type</label>
-                            <select class="form-control" id="osType">
-                                <option value="deb">Debian</option>
-                                <option value="rpm">rpm</option>
-                            </select>
+<!-- Modal for Add Node -->
+<div class="modal fade" id="addNodeModal" tabindex="-1" role="dialog" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNodeModalLabel">Add New Host</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addNodeForm">
+                    <div class="form-group">
+                        <label for="osType">OS Type</label>
+                        <select class="form-control" id="osType">
+                            <option value="deb">Debian</option>
+                            <option value="rpm">rpm</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hostId">Host ID (IP/Hostname)</label>
+                        <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="hostId">Authentication Method</label>
+                        <select class="form-control" id="authMeth">
+                            <option value="key">PrivateKey</option>
+                            <option value="pass">Credentials</option>
+                        </select>
+                    </div>
+                    <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter Username">
+                    <div class="form-group" id="credentials">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                    </div>
+                    <div class="form-group" id="privateKeySection" style="display:none;">
+                        <label for="privateKey">Private Key</label>
+                        <textarea class="form-control" id="privateKey" placeholder="Paste Private Key"></textarea>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="defaultKeyCheckbox">
+                            <label class="form-check-label" for="defaultKeyCheckbox">
+                                Use Default Key
+                            </label>
                         </div>
-                        <div class="form-group">
-                            <label for="hostId">Host ID</label>
-                            <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Host</button>
-                    </form>
-                </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Host</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -193,6 +216,27 @@
                 }
             });
         });
+    });
+    document.getElementById('authMeth').addEventListener('change', function() {
+        var authMeth = this.value;
+        var credentialsSection = document.getElementById('credentials');
+        var privateKeySection = document.getElementById('privateKeySection');
+        if (authMeth === 'pass') {
+            credentialsSection.style.display = 'block';
+            privateKeySection.style.display = 'none';
+        } else if (authMeth === 'key') {
+            credentialsSection.style.display = 'none';
+            privateKeySection.style.display = 'block';
+        }
+    });
+    
+    document.getElementById('defaultKeyCheckbox').addEventListener('change', function() {
+        var privateKeyInput = document.getElementById('privateKey');
+        if (this.checked) {
+            privateKeyInput.disabled = true;
+        } else {
+            privateKeyInput.disabled = false;
+        }
     });
 </script>
     
