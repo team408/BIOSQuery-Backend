@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+h1, .card-title {
+    color: #000;
+    font-weight: bold;
+}
+
+#product-wins {
+    text-align: center;
+}
+
+#product-wins .card-title {
+    margin-bottom: 30px;
+}

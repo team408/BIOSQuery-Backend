@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/risks.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1>Mitigation Advices</h1>
+    </div>
+    
+    <div class="mb-4">
+        <a href="/risks" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left"></i> Back to All Risks
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Risk</th>
+                            <th>Mitigation Advice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% advices.forEach(function(advice) { %>
+                            <tr>
+                                <td>
+                                        <%= advice.risk %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-shield-alt text-primary me-2"></i>
+                                    <%= advice.advice %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getRiskColor(risk) {
+        switch(risk.toLowerCase()) {
+            case 'high': return 'danger';
+            case 'medium': return 'warning';
+            case 'low': return 'success';
+            default: return 'secondary';
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>
