@@ -1,5 +1,8 @@
 <!-- Modal -->
 <link rel="stylesheet" href="/css/chipsec_modules.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 
 <div class="modal fade" id="contentModal" tabindex="-1" role="dialog" aria-labelledby="contentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -9,7 +12,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="modal-content-box" class="overflow-auto" style="max-height: 400px;"></div>
+                <pre>
+                    <code class="language-shell" id="modal-content-box">
+                    </code>
+                </pre>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -56,11 +62,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function showContent(content) {
-        document.getElementById('modal-content-box').textContent = content;
-        var contentModal = new bootstrap.Modal(document.getElementById('contentModal'));
-        contentModal.show();
-    }
-</script>

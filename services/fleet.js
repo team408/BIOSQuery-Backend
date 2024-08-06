@@ -78,9 +78,9 @@ async function getScriptByEndpoint(endpointList) {
                     status: script.last_execution ? script.last_execution.status : 'N/A',
                     execution_id: script.execution_id,
                     message: script.message,
-                    output: script.output,
+                    output: Buffer.from(script.output).toString('base64'),
                     exit_code: script.exit_code,
-                    script_contents: script.script_contents,
+                    script_contents: Buffer.from(script.script_contents).toString('base64'),
                 })));
             } else {
                 console.warn(`No scripts found for endpoint ${endpoint.id}`);

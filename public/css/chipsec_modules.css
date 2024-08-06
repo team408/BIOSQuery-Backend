@@ -9,3 +9,8 @@
 .toast {
     background-color: rgba(122, 213, 165, 0.9);
 }
+
+code {
+    background-color: #f4f4f417;
+    font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+  }
