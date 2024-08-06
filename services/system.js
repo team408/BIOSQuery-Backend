@@ -1,13 +1,13 @@
 const { error } = require('console');
-const fs = require('fs');
+const fs = require('fs')
 const path = require('path');
 const { NodeSSH } = require('node-ssh');
 const exec = require('child_process').exec
-const fleetctlBashDownload = fs.readFileSync('./scripts/install_fleet.sh').toString();
-const defaultPrivateKey = fs.readFileSync('./secrets/default.key').toString();
+const fleetctlBashDownload = fs.readFileSync('./scripts/install_fleet.sh').toString()
+const defaultPrivateKey = fs.readFileSync('./secrets/default.key').toString()
 
-const secret_path = process.env.SSH_SECRET_PATH;
-const username = process.env.SSH_USERNAME;
+const secret_path = process.env.SSH_SECRET_PATH
+const username = process.env.SSH_USERNAME
 
 async function getSSHCon(host, username, password = null, privateKey = null) {
   const ssh = new NodeSSH();
@@ -15,7 +15,7 @@ async function getSSHCon(host, username, password = null, privateKey = null) {
     throw new Error('Either "password" or "privateKey" parameter is required.');
   }
   if (privateKey === "default"){
-    privateKey = defaultPrivateKey;
+    privateKey = defaultPrivateKey
   }
   const connectionConfig = {
       host: host,
@@ -23,18 +23,14 @@ async function getSSHCon(host, username, password = null, privateKey = null) {
       ...(password ? { password: password } : { privateKey: privateKey })
       // privateKeyPath: secret_path
   };
-  console.log(`Connecting to host ${host} as user ${username}`);
+
   await ssh.connect(connectionConfig);
-  console.log('SSH connection established');
   return ssh;
 }
 
 //sshCon must be an [ssh = new NodeSSH(); ssh.connect(connectionConfig)] type.
 async function executeRemoteCommand(sshCon, command) {
-  console.log(`Executing command: ${command}`);
   const result = await sshCon.execCommand(command);
-  console.log(`Command stdout: ${result.stdout}`);//check
-  console.log(`Command stderr: ${result.stderr}`);//check
   return result; // result.stdout and result.stderr
 }
 
@@ -48,42 +44,24 @@ async function executeRemoteCommand(sshCon, command) {
 async function remoteEnrollLinuxHost(host_id, username, enrollCmd, password = null, privateKey = null){
   const sshConn = await getSSHCon(host_id, username, password, privateKey);
   try{
-    console.log('Enrolling Fleet agent on ${host_id}');
+    console.log("[*] Enrolling Fleet agent on " + host_id)
     let response = await executeRemoteCommand(sshConn, fleetctlBashDownload);
-    response = await executeRemoteCommand(sshConn, './fleetctl -v');
-    response = await executeRemoteCommand(sshConn, "./" + enrollCmd);
+    response = await executeRemoteCommand(sshConn, './fleetctl -v')
+    response = await executeRemoteCommand(sshConn, "./" + enrollCmd)
     if (password){
-      response = await executeRemoteCommand(sshConn, path.join("echo ", password, " | sudo -S dpkg -i fleet-osquery*.deb"));
-    } else {
-      response = await executeRemoteCommand(sshConn, "sudo dpkg -i fleet-osquery*.deb");
-  }
-} catch (err) {
-  console.error(err);
-  return;
-} finally {
-  sshConn.dispose();
+      response = await executeRemoteCommand(sshConn, path.join("echo ", password, " | sudo -S dpkg -i fleet-osquery*.deb"))
+    }
+    else{
+      response = await executeRemoteCommand(sshConn, "sudo dpkg -i fleet-osquery*.deb")
     }
   }
-    
-  async function remoteUninstallFleetAgent(host_id, username, password = null, privateKey = null) {
-    const sshConn = await getSSHCon(host_id, username, password, privateKey);
-    try {
-        console.log(`Uninstalling Fleet agent on ${host_id}`);
-        let response;
-        if (password) {
-            response = await executeRemoteCommand(sshConn, `echo ${password} | sudo -S dpkg -r fleet-osquery`);
-        } else {
-            response = await executeRemoteCommand(sshConn, "sudo dpkg -r fleet-osquery");
-        }
-        console.log(response);
-        return response;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    } finally {
-        sshConn.dispose();
-    }
+  catch(err){
+    console.error(err)
+    return
+  }
+  finally{
+    sshConn.dispose()
+  }
 }
 
-
-module.exports = {remoteEnrollLinuxHost, remoteUninstallFleetAgent };
+module.exports = {remoteEnrollLinuxHost}

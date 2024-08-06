@@ -9,7 +9,6 @@ const chipsecController = require("../controllers/chipsec");
 const dashboardController = require("../controllers/statistics");
 const risksController = require("../controllers/risks"); 
 const infoCenterController = require("../controllers/information_center");
-const managementController = require("../controllers/management");
 
 
 // Main route
