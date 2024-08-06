@@ -52,40 +52,37 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smm</button></td>
-                                 <!-- <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
-                                    Tooltip on left
-                                  </button></td> -->
+                                <td><button id="common-smm" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smm</button></td>
                                 <td>Compatibility SMRAM is not locked</td>
                                 <td>This CHIPSEC module simply reads SMRAMC and checks that D_LCK is set</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_desc</button></td>
+                                <td><button id="common-spi-desc" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_desc</button></td>
                                 <td>SPI flash descriptor is not protected</td>
                                 <td>This module simply reads the Flash Descriptor and checks that software cannot modify the Flash Descriptor itself. If software can write to the Flash Descriptor, then software could bypass any protection defined by it.</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_lock</button></td>
+                                <td><button id="common-spi-lock" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_lock</button></td>
                                 <td>SPI flash controller is not locked</td>
                                 <td>The configuration of the SPI controller, including protected ranges (PR0-PR4), is locked by HSFS[FLOCKDN] until reset. If not locked, the controller configuration may be bypassed by reprogramming these registers.</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_wp</button></td>
+                                <td><button id="common-bios-wp" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_wp</button></td>
                                 <td>SMM BIOS write protection is not correctly used</td>
                                 <td>The BIOS region in flash can be protected either using SMM-based protection or using configuration in the SPI controller (PRR). This module checks both mechanisms.</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_ts</button></td>
+                                <td><button id="common-bios-ts" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_ts</button></td>
                                 <td>BIOS interface is not locked</td>
                                 <td>Checks for BIOS Interface Lock including Top Swap Mode.</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smrr</button></td>
+                                <td><button id="common-smrr" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smrr</button></td>
                                 <td>SMM cache attack</td>
                                 <td>This module checks to see that SMRRs (range registers) are enabled and configured.</td>
                             </tr>
                             <tr>
-                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">tools.smm.smm_ptr</button></td>
+                                <td><button id="tools-smm-smm-ptr" type="button" class="chipsec-module-btn btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">tools.smm.smm_ptr</button></td>
                                 <td>SMI handlers use pointers/addresses from OS without validation</td>
                                 <td>A tool to test SMI handlers for pointer validation vulnerabilities.</td>
                             </tr>
@@ -136,3 +133,5 @@
     </div>
     </div>
 </div>
+
+<script src="/js/chipsec_modules.js"></script>

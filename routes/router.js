@@ -35,7 +35,7 @@ router.get("/controlPanel", (req, res, next) => {
 // Chipsec
 router.get("/api/chipsec/install/:hostId", chipsecController.installChipsec);
 router.get("/api/chipsec/uninstall/:hostId", chipsecController.uninstallChipsec);
-router.get("/api/chipsec/runModule/:module/:hostId", chipsecController.runModule);
+router.get("/api/chipsec/run/:hostId/:module", chipsecController.runModule);
 
 // Risks
 router.get("/risks", risksController.viewAllHostsRisks);
