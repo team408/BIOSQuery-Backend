@@ -14,3 +14,8 @@
 .responsive-h1 {
     font-size: 3.2vw; /* Responsive size based on viewport width */
 }
+
+.link {
+    color:white;
+    text-decoration: underline;
+}
