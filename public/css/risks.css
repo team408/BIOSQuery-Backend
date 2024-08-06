@@ -1,0 +1,58 @@
+.btn-block {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.badge {
+    font-size: 0.9em;
+}
+
+.bg-high {
+    background-color: #dc3545;
+}
+
+.bg-danger {
+    background-color: #dc3545;
+}
+
+.bg-medium {
+    background-color: #ffc107;
+}
+
+.bg-low {
+    background-color: #28a745;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.risk-row:hover {
+    background-color: #f8f9fa;
+}
+
+.bg-warning {
+    background-color: #ffc107;
+}
+
+.bg-success {
+    background-color: #28a745;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
+.card-body {
+    padding: 2rem;
+}
+.btn-outline-primary {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
