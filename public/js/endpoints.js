@@ -81,22 +81,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
         const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
         // handle delete action
-        console.log('Deleting selected endpoints:', selectedIds);
     });
 
     installChipsecSelectedBtn.addEventListener('click', () => {
         const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
         const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
         // handle install chipsec action
-        console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
     });
 
     addNodeForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const osType = document.getElementById('osType').value;
         const hostId = document.getElementById('hostId').value;
-
-        console.log('Submitting form with data:', { osType, hostId }); // Add log here
 
         // Send AJAX request to add the new host
         $.ajax({
@@ -108,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             success: function(response) {
                 // Handle success (e.g., refresh the list of endpoints)
-                console.log('Host added successfully:', response);
                 location.reload();
             },
             error: function(error) {
@@ -162,9 +157,6 @@ addNodeForm.addEventListener('submit', function(event) {
             data.privateKey = "default";
         }
     }
-
-    // Here, make your API call with the `data` object
-    console.log('Form data:', data);
 
     // Example API call (uncomment and modify as needed)
     fetch('/api/agents/addNode/' + osType + "/" + hostId, {
