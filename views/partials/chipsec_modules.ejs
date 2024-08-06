@@ -18,40 +18,43 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <h1>Scripts Data</h1>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Script</th>
-                <th>Execution ID</th>
-                <th>Execution Time</th>
-                <th>Exit Code</th>
-                <th>Message</th>
-                <th>Output</th>
-                <th>Script Contents</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% scripts.forEach(script => { %>
-                <tr>
-                    <td><%= script.script %></td>
-                    <td><%= script.execution_id %></td>
-                    <td><%= script.execution_time %></td>
-                    <td><%= script.exit_code %></td>
-                    <td><%= script.message %></td>
-                    <td>
-                        <button type="button" class="btn btn-primary" onclick="showContent('<%= script.output %>')">View Output</button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-primary" onclick="showContent('<%= script.script_contents %>')">View Script</button>
-                    </td>
-                    <td><%= script.status %></td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
+<div class="mt-5">
+    <h1>Scripts</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Script</th>
+                            <th>Execution Time</th>
+                            <th>Exit Code</th>
+                            <th>Output</th>
+                            <th>Script Contents</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% scripts.forEach(script => { %>
+                            <tr>
+                                <td><%= script.script %></td>
+                                <td><%= script.execution_time %></td>
+                                <td><%= script.exit_code %></td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" onclick="showContent('<%= script.output %>')">View Output</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" onclick="showContent('<%= script.script_contents %>')">View Script</button>
+                                </td>
+                                <td><%= script.status %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
