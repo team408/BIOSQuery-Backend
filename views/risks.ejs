@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/risks.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="container mt-4">
+    <h1 class=" text-center mb-5">Host Risk Assessment</h1>
+   
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <a href="/risks/mitigation" class="btn btn-primary btn-lg btn-block">
+                <i class="fas fa-shield-alt"></i> View Mitigation Advices
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="/risks/download" class="btn btn-success btn-lg btn-block">
+                <i class="fas fa-download"></i> Download CSV Report
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Host</th>
+                            <th>Risk Level</th>
+                            <th>IP Address</th>
+                            <th>MAC Address</th>
+                            <th>OS Platform</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% risks.forEach(function(risk) { %>
+                            <tr class="risk-row" data-risk="<%= risk.risk.toLowerCase() %>">
+                                <td><%= risk.host %></td>
+                                <td>
+                                    <span class="badge rounded-pill bg-<%= risk.risk.toLowerCase() %>">
+                                        <%= risk.risk %>
+                                    </span>
+                                </td>
+                                <td><%= risk.ip %></td>
+                                <td><%= risk.mac %></td>
+                                <td><%= risk.os %></td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="<%= risk.details %>">
+                                        <i class="fas fa-info-circle"></i> Info
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').tooltip();
+        
+        // Filter functionality
+        $('#riskFilter').on('change', function() {
+            var selectedRisk = $(this).val();
+            if(selectedRisk === 'all') {
+                $('.risk-row').show();
+            } else {
+                $('.risk-row').hide();
+                $('.risk-row[data-risk="' + selectedRisk + '"]').show();
+            }
+        });
+    });
+
+    function getOSIcon(os) {
+        switch(os.toLowerCase()) {
+            case 'windows': return 'windows';
+            case 'linux': return 'linux';
+            case 'mac': return 'apple';
+            default: return 'desktop';
+        }
+    }
+</script>
+
+<%- include('partials/footer') %>
