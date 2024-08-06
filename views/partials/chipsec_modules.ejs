@@ -38,52 +38,55 @@
     <div class="tab-pane active" id="simple-tabpanel-0" role="tabpanel" aria-labelledby="simple-tab-0">
         <div class="card">
             <div class="card-header">
-                <h2>Chipsec Modules</h2>
+                <h2>Execute Chipsec Modules</h2>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Module</th>
+                                <th>Execute Module</th>
+                                <th>Vulnerability</th>
                                 <th>Description</th>
-                                <th>Execute</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smm</button></td>
+                                 <!-- <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+                                    Tooltip on left
+                                  </button></td> -->
                                 <td>Compatibility SMRAM is not locked</td>
-                                <td>common.smm</td>
-                                <td>This CHIPSEC module simply reads SMRAMC and checks that D_LCK is set. A great explanation: BIOS and SMM Internals</td>
+                                <td>This CHIPSEC module simply reads SMRAMC and checks that D_LCK is set</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_desc</button></td>
                                 <td>SPI flash descriptor is not protected</td>
-                                <td>common.spi_desc</td>
                                 <td>This module simply reads the Flash Descriptor and checks that software cannot modify the Flash Descriptor itself. If software can write to the Flash Descriptor, then software could bypass any protection defined by it.</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.spi_lock</button></td>
                                 <td>SPI flash controller is not locked</td>
-                                <td>common.spi_lock</td>
                                 <td>The configuration of the SPI controller, including protected ranges (PR0-PR4), is locked by HSFS[FLOCKDN] until reset. If not locked, the controller configuration may be bypassed by reprogramming these registers.</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_wp</button></td>
                                 <td>SMM BIOS write protection is not correctly used</td>
-                                <td>common.bios_wp</td>
                                 <td>The BIOS region in flash can be protected either using SMM-based protection or using configuration in the SPI controller (PRR). This module checks both mechanisms.</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.bios_ts</button></td>
                                 <td>BIOS interface is not locked</td>
-                                <td>common.bios_ts</td>
                                 <td>Checks for BIOS Interface Lock including Top Swap Mode.</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">common.smrr</button></td>
                                 <td>SMM cache attack</td>
-                                <td>common.smrr</td>
                                 <td>This module checks to see that SMRRs (range registers) are enabled and configured.</td>
                             </tr>
                             <tr>
+                                <td><button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Execute Module">tools.smm.smm_ptr</button></td>
                                 <td>SMI handlers use pointers/addresses from OS without validation</td>
-                                <td>tools.smm.smm_ptr</td>
                                 <td>A tool to test SMI handlers for pointer validation vulnerabilities.</td>
                             </tr>
                         </tbody>
