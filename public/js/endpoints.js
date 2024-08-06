@@ -14,51 +14,46 @@ $(document).ready(function() {
                 api_url = `/api/chipsec/install/${endpoint_host_id}`;
                 break;
             case 'uninstall_chipsec':
-                // TODO: implement
                 api_url = `/api/chipsec/uninstall/${endpoint_host_id}`;
                 break;
-            case 'execute_script':
-                // TODO: implement
-                api_url = `/api/chipsec/run/${endpoint_host_id}`;
-                break;
             default:
-                toast_message = '';
+                return;
         }
 
-        $.ajax({
-            // url: `/api/chipsec/install/${$(this).closest('.card-body').find('#endpoint_id').text().trim()}`,
-            url: api_url,
-            method: 'GET',
-            success: function (response) {
-                // Handle success response
-                const container = document.getElementById('toast-container');
-                const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
-                const newToast = targetElement.cloneNode(true);
-                
-                // Update title and message
-                newToast.classList.add('toast-success');
-                newToast.querySelector('.toast-header strong').textContent = customTitle;
-                newToast.querySelector('.toast-body').textContent = response.result;
-        
-                container.append(newToast);
-                const toast = bootstrap.Toast.getOrCreateInstance(newToast);
-                toast.show();
-            },
-            error: function (error) {
-                const container = document.getElementById('toast-container');
-                const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
-                const newToast = targetElement.cloneNode(true);
+        if (api_url !== '') {
+            $.ajax({
+                url: api_url,
+                method: 'GET',
+                success: function (response) {
+                    // Handle success response
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
+                    
+                    // Update title and message
+                    newToast.classList.add('toast-success');
+                    newToast.querySelector('.toast-header strong').textContent = customTitle;
+                    newToast.querySelector('.toast-body').textContent = response.result;
+            
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
+                },
+                error: function (error) {
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
 
-                newToast.classList.add('toast-error');
-                newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
-                newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+                    newToast.classList.add('toast-error');
+                    newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+                    newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
 
-                container.append(newToast);
-                const toast = bootstrap.Toast.getOrCreateInstance(newToast);
-                toast.show();
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
 
-                console.log(error);
-            }
-        });
+                    console.log(error);
+                }
+            });
 
-    });});
+    }});});

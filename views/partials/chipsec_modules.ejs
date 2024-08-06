@@ -1,0 +1,63 @@
+<!-- Modal -->
+<link rel="stylesheet" href="/css/chipsec_modules.css">
+
+<div class="modal fade" id="contentModal" tabindex="-1" role="dialog" aria-labelledby="contentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contentModalLabel">Content</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content-box" class="overflow-auto" style="max-height: 400px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h1>Scripts Data</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Script</th>
+                <th>Execution ID</th>
+                <th>Execution Time</th>
+                <th>Exit Code</th>
+                <th>Message</th>
+                <th>Output</th>
+                <th>Script Contents</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% scripts.forEach(script => { %>
+                <tr>
+                    <td><%= script.script %></td>
+                    <td><%= script.execution_id %></td>
+                    <td><%= script.execution_time %></td>
+                    <td><%= script.exit_code %></td>
+                    <td><%= script.message %></td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="showContent('<%= script.output %>')">View Output</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="showContent('<%= script.script_contents %>')">View Script</button>
+                    </td>
+                    <td><%= script.status %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function showContent(content) {
+        document.getElementById('modal-content-box').textContent = content;
+        var contentModal = new bootstrap.Modal(document.getElementById('contentModal'));
+        contentModal.show();
+    }
+</script>
