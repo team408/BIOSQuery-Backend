@@ -69,11 +69,19 @@ async function getScriptByEndpoint(endpointList) {
             const scripts = response.scripts;
             if (scripts) {
                 
-                allScripts = allScripts.concat(scripts.map(script => ({
+                scriptsWithExecutionDetails = await fillScriptExecutionDetails(scripts);
+                allScripts = allScripts.concat(scriptsWithExecutionDetails.map(script => (
+                    {
+                    endpoint_id: endpoint.id,
                     endpoint: endpoint.hostname,
                     script: script.name,
                     execution_time: script.last_execution ? script.last_execution.executed_at : 'N/A',
-                    status: script.last_execution ? script.last_execution.status : 'N/A'
+                    status: script.last_execution ? script.last_execution.status : 'N/A',
+                    execution_id: script.execution_id,
+                    message: script.message,
+                    output: script.output ? Buffer.from(script.output).toString('base64') : null,
+                    exit_code: script.exit_code,
+                    script_contents: script.script_contents ? Buffer.from(script.script_contents).toString('base64') : null,
                 })));
             } else {
                 console.warn(`No scripts found for endpoint ${endpoint.id}`);
@@ -83,6 +91,34 @@ async function getScriptByEndpoint(endpointList) {
         }
     }
     return allScripts;
+}
+
+async function fillScriptExecutionDetails(scripts) {
+    const scriptsWithExecutionDetailsPromises = scripts.map(async script => {
+        if (!script.last_execution) {
+            return script;  // Return the original script if there are no results
+        }
+        
+        // Get the results of the script
+        const scriptResultsUri = `/api/v1/fleet/scripts/results/${script.last_execution.execution_id}`;
+        const scriptResults = await fleetApiGetRequest(scriptResultsUri);
+
+        // If there are results, add the details to the script
+        if (scriptResults) {
+            return {
+                ...script,
+                execution_id: scriptResults.execution_id,
+                message: scriptResults.message,
+                output: scriptResults.output,
+                exit_code: scriptResults.exit_code,
+                script_contents: scriptResults.script_contents,
+            };
+        }
+        return script;  // Return the original script if there are no results
+    });
+
+    const scriptsWithExecutionDetails = await Promise.all(scriptsWithExecutionDetailsPromises);
+    return scriptsWithExecutionDetails;
 }
 
 const mergeEndpointAndScripts = (endpoints, scriptsData) => {
@@ -305,5 +341,18 @@ async function removeHostById(hostId, hostInfo) {
 }
 
 
-module.exports = { mergeEndpointAndScripts,listScripts,fleetApiPostRequest, fleetApiGetRequest, getRequest, buildStatistics, listEndpoints, getAgentEnrollCmd, getAllHostsRisks, getMitigationAdvices, generateCSVReport, listEndpoints, getAgentEnrollCmd, calculateRisk, getScriptByEndpoint, removeHostById };
+module.exports = { fleetApiGetRequest,
+    getRequest, 
+    listEndpoints, 
+    buildStatistics,
+    getAllHostsRisks,
+    getMitigationAdvices,
+    generateCSVReport,
+    removeHostById,
+    getAgentEnrollCmd, 
+    getScriptByEndpoint, 
+    mergeEndpointAndScripts, 
+    fleetApiPostRequest, 
+    listScripts
+   };
 

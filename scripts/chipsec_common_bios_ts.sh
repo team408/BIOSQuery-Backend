@@ -1,0 +1,1 @@
+python /tmp/chipsec-1.13.0/chipsec_main.py -m common.bios_ts;
