@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const data = JSON.parse(document.getElementById('data-container').textContent);
 
+    // Chart options
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    };
+
     // Summary of Script Execution Statuses Data
     const statusCounts = { 'N/A': 0, 'error': 0, 'ran': 0 };
     data.forEach(item => {
@@ -11,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         labels: ['N/A', 'Error', 'Ran'],
         datasets: [{
             data: [statusCounts['N/A'], statusCounts['error'], statusCounts['ran']],
-            backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB'],
+            backgroundColor: ['#6c757d', '#FF6384', '#36A2EB'],
         }]
     };
 
@@ -20,16 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusChart = new Chart(statusCtx, {
         type: 'pie',
         data: statusData,
+        options: chartOptions
     });
 
     // Handle click on status chart slices
     statusChart.canvas.onclick = function(event) {
-
         var segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
-
         if (segments.length > 0) {
             var clickedSegment = segments[0];
-            var statusLabel = clickedSegment.element.$context.raw; // Access label of the clicked segment
+            var statusLabel = statusChart.data.labels[clickedSegment.index];
 
             if (statusLabel === 'Ran') {
                 var ranScripts = data.filter(function(item) {
@@ -71,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(scriptCtx, {
         type: 'pie',
         data: scriptData,
+        options: chartOptions
     });
 
     // Function to sort the table
