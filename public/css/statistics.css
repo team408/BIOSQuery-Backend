@@ -1,60 +1,64 @@
-.card-img-top {
-    width: 100%;
-    height: 5vw;
-    object-fit: contain;
-}
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
 }
-h1, h2 {
-    text-align: center;
+
+h1 {
+    color: #343a40;
 }
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background-color: #fff;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-th {
-    background-color: #f2f2f2;
-    cursor: pointer;
-}
-th.asc::after {
-    content: ' ▲';
-}
-th.desc::after {
-    content: ' ▼';
-}
-.status-error {
-    color: red;
-}
-.status-pending {
-    color: orange;
-}
-.status-ran {
-    color: green;
-}
-.chart-container {
-    display: inline-block;
-    width: 30%;
-    vertical-align: top;
-    margin: 0 2.5%;
-}
-#chart-container {
-    text-align: center;
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
-#status-chart-container h2, #script-chart-container h2 {
-    margin-bottom: 10px;
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
 }
-#script-list {
-    margin-top: 20px;
+
+.card-title {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+    display: inline-block;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 300px;
+    width: 300px;
+}
+
+.table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.75em;
+}
+
+.badge-error {
+    background-color: #FF6384;
+    color: white;
+}
+
+.badge-ran {
+    background-color: #36A2EB;
+    color: white;
+}
+
+.badge-n\/a {
+    background-color: #6c757d;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 200px;
+        width: 200px;
+    }
 }

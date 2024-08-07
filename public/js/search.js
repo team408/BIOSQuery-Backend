@@ -6,7 +6,7 @@ $(document).ready(function () {
         event.preventDefault(); // Prevent the default form submission
 
         // Get the search query entered by the user
-        const searchQuery = searchForm.elements.search.value;
+        const searchQuery = searchForm.elements[0].value;
 
         // Redirect the user to the desired URL with the search query
         window.location.href = `/endpoints?search=${encodeURIComponent(searchQuery)}`;
