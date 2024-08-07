@@ -16,6 +16,7 @@ router.get("/", homepageController.homepage);
 
 // Endpoints
 router.get("/endpoints", endpointsController.getEndpoints);
+router.get("/api/hosts/:hostId/scripts", endpointsController.getHostScripts); 
 
 // Dashboard
 router.get("/statistics", dashboardController.statistics);

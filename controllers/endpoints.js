@@ -16,14 +16,12 @@ function formatDate(dateString) {
 
 async function getEndpoints(req, res) {
     try {
-        // Fetch endpoints
         const endpointsData = await fleetService.listEndpoints();
-
-        // Fetch scripts for each endpoint
         const scriptsData = await fleetService.getScriptByEndpoint(endpointsData.hosts);
+        const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpointsData.hosts, scriptsData);
 
-        // Map scripts to their respective endpoints
-        const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpointsData.hosts, scriptsData)
+        // Fetch risks data
+        const risks = await fleetService.getAllHostsRisks();
 
         // Apply search filter if present
         let filteredEndpoints = endpointsWithScripts;
@@ -41,14 +39,15 @@ async function getEndpoints(req, res) {
         filteredEndpoints.forEach(endpoint => {
             endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
         });
-        res.render("endpoints.ejs", { endpoints: filteredEndpoints });
+
+        // Pass the risks data to the view
+        res.render("endpoints.ejs", { endpoints: filteredEndpoints, risks });
 
     } catch (error) {
         console.log(error);
         res.status(500).send('Internal Server Error');
-    }
+    }
 }
-
 
 async function addNode(req, res) {
     try {
@@ -82,8 +81,6 @@ async function addNode(req, res) {
     }
 }
 
-
-
 async function getControlPanel(req, res) {
     try {
         res.render("control.ejs");
@@ -93,4 +90,15 @@ async function getControlPanel(req, res) {
     }
 }
 
-module.exports = { getEndpoints, addNode, getControlPanel };
+async function getHostScripts(req, res) {
+    try {
+        const hostId = req.params.hostId;
+        const scripts = await fleetService.getScriptsByHost(hostId);
+        res.json(scripts);
+    } catch (error) {
+        console.error('Error fetching host scripts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports = { getEndpoints, addNode, getControlPanel, getHostScripts };

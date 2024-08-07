@@ -36,22 +36,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle click on status chart slices
     statusChart.canvas.onclick = function(event) {
-        var segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+        const segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
         if (segments.length > 0) {
-            var clickedSegment = segments[0];
-            var statusLabel = statusChart.data.labels[clickedSegment.index];
+            const clickedSegment = segments[0];
+            const statusLabel = statusChart.data.labels[clickedSegment.index];
+            const scriptList = document.getElementById('status-script-list');
+            scriptList.innerHTML = '';
 
             if (statusLabel === 'Ran') {
-                var ranScripts = data.filter(function(item) {
-                    return item.status === 'ran';
+                const ranScripts = data.filter(item => item.status === 'ran');
+                ranScripts.forEach(script => {
+                    scriptList.innerHTML += `<li>${script.script} - ${formatExecutionTime(script.execution_time)}</li>`;
                 });
-
-                var scriptList = document.getElementById('script-list');
-                scriptList.innerHTML = "<h2>Most Recently Executed Scripts</h2><ul>";
-                ranScripts.forEach(function(script) {
-                    scriptList.innerHTML += "<li>" + script.script + " - " + script.execution_time + "</li>";
-                });
-                scriptList.innerHTML += "</ul>";
             }
         }
     };
@@ -78,12 +74,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Render the Script Chart
     const scriptCtx = document.getElementById('script-chart').getContext('2d');
-    new Chart(scriptCtx, {
+    const scriptChart = new Chart(scriptCtx, {
         type: 'pie',
         data: scriptData,
         options: chartOptions
     });
 
+    // Function to format execution time
+    function formatExecutionTime(executionTime) {
+        const date = new Date(executionTime);
+        return date.toLocaleString();
+    }
+    
     // Function to sort the table
     function sortTable(table, col, reverse) {
         const tbody = table.tBodies[0];
