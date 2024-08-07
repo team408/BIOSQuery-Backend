@@ -88,31 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
         // handle install chipsec action
     });
-
-    addNodeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const osType = document.getElementById('osType').value;
-        const hostId = document.getElementById('hostId').value;
-
-        // Send AJAX request to add the new host
-        $.ajax({
-            url: '/endpoints.js/addNode',
-            method: 'POST',
-            data: {
-                osType,
-                hostId
-            },
-            success: function(response) {
-                // Handle success (e.g., refresh the list of endpoints)
-                location.reload();
-            },
-            error: function(error) {
-                // Handle error
-                console.error('Error adding host:', error);
-            }
-        });
-    });
 });
+
 
 document.getElementById('authMeth').addEventListener('change', function() {
     var authMeth = this.value;
