@@ -62,3 +62,92 @@ $(document).ready(function() {
         });
 
     });});
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+    const deleteSelectedBtn = document.getElementById('deleteSelected');
+    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+    const addNodeForm = document.getElementById('addNodeForm');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = false;
+        checkbox.addEventListener('change', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
+        });
+    });
+
+    deleteSelectedBtn.addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+        // handle delete action
+    });
+
+    installChipsecSelectedBtn.addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+        // handle install chipsec action
+    });
+});
+
+
+document.getElementById('authMeth').addEventListener('change', function() {
+    var authMeth = this.value;
+    var credentialsSection = document.getElementById('credentials');
+    var privateKeySection = document.getElementById('privateKeySection');
+    if (authMeth === 'pass') {
+        credentialsSection.style.display = 'block';
+        privateKeySection.style.display = 'none';
+    } else if (authMeth === 'key') {
+        credentialsSection.style.display = 'none';
+        privateKeySection.style.display = 'block';
+    }
+});
+
+document.getElementById('defaultKeyCheckbox').addEventListener('change', function() {
+    var privateKeyInput = document.getElementById('privateKey');
+    if (this.checked) {
+        privateKeyInput.disabled = true;
+    } else {
+        privateKeyInput.disabled = false;
+    }
+});
+
+addNodeForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    var osType = document.getElementById('osType').value;
+    var hostId = document.getElementById('hostId').value;
+    var authMeth = document.getElementById('authMeth').value;
+    var data = { osType: osType, hostId: hostId};
+    var username = document.getElementById('username').value;
+    data.username = username;
+    if (authMeth === 'pass') {
+        var password = document.getElementById('password').value;
+        data.password = password;
+    } else if (authMeth === 'key') {
+        var useDefaultKey = document.getElementById('defaultKeyCheckbox').checked;
+        if (!useDefaultKey) {
+            var privateKey = document.getElementById('privateKey').value;
+            data.privateKey = privateKey;
+        }
+        else {
+            data.privateKey = "default";
+        }
+    }
+
+    // Example API call (uncomment and modify as needed)
+    fetch('/api/agents/addNode/' + osType + "/" + hostId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        //Toast Success
+    }).catch((error) => {
+        console.error('Error:', error);
+        //Toast Failure
+    });
+});
