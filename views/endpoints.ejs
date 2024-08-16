@@ -3,7 +3,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
-<script src="/js/endpoints.js"></script>
 
 <div class="container">
     <% if (!singleEndpoint){ %>
@@ -153,9 +152,9 @@
                     </div>
                     <div class="form-group">
                         <label for="hostId">Authentication Method</label>
-                        <select class="form-control" id="authMeth">
-                            <option value="key">PrivateKey</option>
+                        <select class="form-control" id="authMeth" selected="pass">
                             <option value="pass">Credentials</option>
+                            <option value="key">PrivateKey</option>
                         </select>
                     </div>
                     <label for="username">Username</label>
@@ -181,84 +180,5 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-        const deleteSelectedBtn = document.getElementById('deleteSelected');
-        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-        const addNodeForm = document.getElementById('addNodeForm');
-    
-        checkboxes.forEach(checkbox => {
-            checkbox.disabled = false;
-            checkbox.addEventListener('change', () => {
-                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
-                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
-            });
-        });
-    
-        deleteSelectedBtn.addEventListener('click', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-            // handle delete action
-            console.log('Deleting selected endpoints:', selectedIds);
-        });
-    
-        installChipsecSelectedBtn.addEventListener('click', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-            // handle install chipsec action
-            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
-        });
-    
-        addNodeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const osType = document.getElementById('osType').value;
-            const hostId = document.getElementById('hostId').value;
-    
-            console.log('Submitting form with data:', { osType, hostId }); // Add log here
-    
-            // Send AJAX request to add the new host
-            $.ajax({
-                url: '/endpoints.js/addNode',
-                method: 'POST',
-                data: {
-                    osType,
-                    hostId
-                },
-                success: function(response) {
-                    // Handle success (e.g., refresh the list of endpoints)
-                    console.log('Host added successfully:', response);
-                    location.reload();
-                },
-                error: function(error) {
-                    // Handle error
-                    console.error('Error adding host:', error);
-                }
-            });
-        });
-    });
-    document.getElementById('authMeth').addEventListener('change', function() {
-        var authMeth = this.value;
-        var credentialsSection = document.getElementById('credentials');
-        var privateKeySection = document.getElementById('privateKeySection');
-        if (authMeth === 'pass') {
-            credentialsSection.style.display = 'block';
-            privateKeySection.style.display = 'none';
-        } else if (authMeth === 'key') {
-            credentialsSection.style.display = 'none';
-            privateKeySection.style.display = 'block';
-        }
-    });
-    
-    document.getElementById('defaultKeyCheckbox').addEventListener('change', function() {
-        var privateKeyInput = document.getElementById('privateKey');
-        if (this.checked) {
-            privateKeyInput.disabled = true;
-        } else {
-            privateKeyInput.disabled = false;
-        }
-    });
-</script>
-    
+<script src="/js/endpoints.js"></script>
 <%- include('partials/footer') %>
