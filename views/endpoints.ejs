@@ -5,36 +5,54 @@
 <link rel="stylesheet" href="/css/endpoints.css">
 
 <div class="container">
+    <% if (!singleEndpoint){ %>
     <div>
         <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
     </div>
+    <% } %>
     <!-- Endpoint cards -->
     <div class="row">
         <% if (!endpoints.length) { %>
             <h1>No endpoints found</h1>
         <% } else { %>
             <% endpoints.forEach(function (endpoint) { %>
-                <div class="col-md-3 g-3">
+                <% if (!singleEndpoint){ %>
+                    <div class="col-md-3 g-3">
+                <% } else { %>
+                    <div class=”cust-grid-col”>
+                <% } %>
                     <div class="card fixed-sized-card">
                         <div class="card-body">
-                            <input type="checkbox" class="endpoint-checkbox" data-uuid="<%= endpoint.uuid %>">
-                            <% if (endpoint.platform == "rhel") { %>
-                                <img src="/img/rhel_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "kali") { %>
-                                <img src="/img/kali_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "ubuntu") { %>
-                                <img src="/img/ubuntu_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "debian") { %>
-                                <img src="/img/debian_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "windows") { %>
-                                <img src="/img/windows_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "centos") { %>
-                                <img src="/img/centos_logo.png" class="card-img-top platform-img">
-                            <% } else if (endpoint.platform == "macos") { %>
-                                <img src="/img/macos_logo.png" class="card-img-top platform-img">
-                            <% } else { %>
-                                <img src="/img/generic_logo.png" class="card-img-top platform-img">
-                            <% } %>
+                            <% 
+                            let platformLogo;
+                            switch (endpoint.platform) {
+                                case "rhel":
+                                    platformLogo = "/img/rhel_logo.png";
+                                    break;
+                                case "kali":
+                                    platformLogo = "/img/kali_logo.png";
+                                    break;
+                                case "ubuntu":
+                                    platformLogo = "/img/ubuntu_logo.png";
+                                    break;
+                                case "debian":
+                                    platformLogo = "/img/debian_logo.png";
+                                    break;
+                                case "windows":
+                                    platformLogo = "/img/windows_logo.png";
+                                    break;
+                                case "centos":
+                                    platformLogo = "/img/centos_logo.png";
+                                    break;
+                                case "macos":
+                                    platformLogo = "/img/macos_logo.png";
+                                    break;
+                                default:
+                                    platformLogo = "/img/generic_logo.png";
+                                    break;
+                            }
+                            %>
+                            <a href="/endpoints/<%= endpoint.id %>"><img src="<%= platformLogo %>" class="card-img-top platform-img"></a>
                             <h5 id="endpoint_hostname" class="card-title">
                                 <%= endpoint.hostname %>
                             </h5>
@@ -74,6 +92,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= endpoint.uuid %>">
                                     <% if (endpoint.chipsec) { %>
                                         <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                                        <li><a id="run_module" class="dropdown-item" href="/endpoints/<%= endpoint.id %>">Run a chipsec module</a></li>
                                         <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
                                         <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
                                     <% } else { %>
@@ -95,12 +114,15 @@
             <% }); %>
         <% } %>
     </div>
+    <% if (singleEndpoint){ %>
+        <%- include('partials/chipsec_modules') %>
+    <% } %>
 </div>
 
-<div class="container">
+<div class="container py-5">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="btn btn-outline-dark" disabled>Delete Selected</button>
+        <button id="deleteSelected" class="px-3 mr-3 btn btn-outline-dark" disabled>Delete Selected</button>
         <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
     </div>
 </div>
