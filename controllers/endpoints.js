@@ -16,12 +16,28 @@ function formatDate(dateString) {
 
 async function getEndpoints(req, res) {
     try {
-        const endpointsData = await fleetService.listEndpoints();
-        const scriptsData = await fleetService.getScriptByEndpoint(endpointsData.hosts);
-        const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpointsData.hosts, scriptsData);
+        // Fetch endpoints
+        var endpoints = await fleetService.listEndpoints();
 
-        // Fetch risks data
-        const risks = await fleetService.getAllHostsRisks();
+        // Act for a single endpoint in case of a id in the query
+        if (req.params.id) {
+            const endpointId = req.params.id;
+            endpoints.hosts = endpoints.hosts.filter(host => host.id === parseInt(endpointId));
+            if (!endpoints) {
+                return res.status(404).send('Endpoint not found');
+            } else{
+                const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
+                format_endpoints(endpoints.hosts);
+                res.render("endpoints.ejs", { endpoints: endpoints.hosts , scripts: scriptsData, singleEndpoint: true });
+                return;
+            }
+        }
+
+        // Fetch scripts for each endpoint
+        const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
+
+        // Map scripts to their respective endpoints
+        const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpoints.hosts, scriptsData)
 
         // Apply search filter if present
         let filteredEndpoints = endpointsWithScripts;
@@ -33,15 +49,9 @@ async function getEndpoints(req, res) {
                     host.primary_mac.toLowerCase().includes(searchQuery);
             });
         }
-        filteredEndpoints.forEach(endpoint => {
-            endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
-        });
-        filteredEndpoints.forEach(endpoint => {
-            endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
-        });
-
-        // Pass the risks data to the view
-        res.render("endpoints.ejs", { endpoints: filteredEndpoints, risks });
+        
+        format_endpoints(filteredEndpoints);
+        res.render("endpoints.ejs", { endpoints: filteredEndpoints , singleEndpoint: false });
 
     } catch (error) {
         console.log(error);
@@ -78,6 +88,14 @@ async function addNode(req, res) {
     } catch (error) {
         console.error('Error in addNode:', error);
         res.status(500).send('Internal Server Error');
+    }
+}
+
+function format_endpoints(endpoints) {
+    for (endpoint of endpoints) {
+        endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
+        endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
+
     }
 }
 
