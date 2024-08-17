@@ -14,7 +14,7 @@ function formatDate(dateString) {
     return `${month}/${day}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
-async function getEndpoints(req, res) {
+async function getSingleEndpoint(req, res) {
     try {
         // Fetch endpoints
         var endpoints = await fleetService.listEndpoints();
@@ -25,13 +25,22 @@ async function getEndpoints(req, res) {
             endpoints.hosts = endpoints.hosts.filter(host => host.id === parseInt(endpointId));
             if (!endpoints) {
                 return res.status(404).send('Endpoint not found');
-            } else{
+            } else {
                 const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
                 format_endpoints(endpoints.hosts);
-                res.render("endpoints.ejs", { endpoints: endpoints.hosts , scripts: scriptsData, singleEndpoint: true });
-                return;
+                res.render("endpoints.ejs", {endpoints: endpoints.hosts, scripts: scriptsData, singleEndpoint: true});
             }
         }
+    } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+    }
+}
+
+async function getEndpoints(req, res) {
+    try {
+        // Fetch endpoints
+        var endpoints = await fleetService.listEndpoints();
 
         // Fetch scripts for each endpoint
         const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
@@ -109,4 +118,4 @@ async function getControlPanel(req, res) {
     }
 }
 
-module.exports = { getEndpoints, addNode, getControlPanel };
+module.exports = { getEndpoints, getSingleEndpoint, addNode, getControlPanel };
