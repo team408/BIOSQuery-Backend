@@ -1,6 +1,5 @@
 const fleetService = require('../services/fleet');
 const systemService = require('../services/system');
-const chipsecService = require('../services/chipsec');
 
 function formatDate(dateString) {
     const date = new Date(dateString);
