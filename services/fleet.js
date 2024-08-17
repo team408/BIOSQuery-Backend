@@ -228,19 +228,21 @@ async function getAgentEnrollCmd(osType = "deb"){
 }
 async function getAllHostsRisks() {
     const endpoints = await listEndpoints();
-    const risks = endpoints.hosts.map(host => {
-        return {
-            host: host.hostname,
-            risk: calculateRisk(host),
-            ip: host.primary_ip,
-            mac: host.primary_mac,
-            os: host.platform,
-            details: " ",
-            vulnerabilities: host.vulnerabilities || [], // we need to replace it with actual vulnerability data
-            softwareVersion: host.softwareVersion || '1.0.0', // we need to replace it with actual software version
-            securityFeatures: host.securityFeatures || ['Secure Boot'] // we need to replace it with actual security features
-        };
-    });
+    const risks = await Promise.all(
+        endpoints.hosts.map(async (host) => {
+            return {
+                host: host.hostname,
+                risk: await calculateRisk(host),
+                ip: host.primary_ip,
+                mac: host.primary_mac,
+                os: host.platform,
+                details: " ",
+                vulnerabilities: host.vulnerabilities || [], // we need to replace it with actual vulnerability data
+                softwareVersion: host.softwareVersion || '1.0.0', // we need to replace it with actual software version
+                securityFeatures: host.securityFeatures || ['Secure Boot'] // we need to replace it with actual security features
+            };
+        })
+    );
     return risks;
 }
 
@@ -264,54 +266,54 @@ async function generateCSVReport(risks) {
     return csvContent;
 }
 
-function calculateRisk(host) {
-    let riskScore = 0;
+function getLatestChipsecExecutions(scriptsExecutionDetails, wantedScripts) {
+    const scriptsExecutionDetailsWithoutNA = scriptsExecutionDetails.map(execution => {
+        return {
+            ...execution,
+            execution_time: execution.execution_time === 'N/A' ? new Date('1970-01-01T00:00:00Z') : new Date(execution.execution_time),
+            status: execution.status === 'N/A' ? 'error' : execution.status
+        };})
 
-    // Example criteria ( we need to replace with actual data points)
-    const vulnerabilities = host.vulnerabilities || []; // Assume this is an array of vulnerabilities
-    const criticalVulnerabilities = vulnerabilities.filter(vuln => vuln.severity === 'critical').length;
-    const outdatedSoftware = isOutdatedSoftware(host.softwareVersion); // Assume a function to check if software is outdated
-    const missingSecurityFeatures = countMissingSecurityFeatures(host); // Assume a function to count missing security features
+    lastChipsecExecutions = {};
+    for (const script of wantedScripts) {
+        lastChipsecExecutions[script] = scriptsExecutionDetailsWithoutNA
+            .filter(execution => execution.script === script)
+            .sort((a, b) => b.execution_time - a.execution_time)
+            [0];
+    }
+    return lastChipsecExecutions;
+}
 
-    // Example weight for each criterion
-    const weightVulnerabilities = 1;
-    const weightCriticalVulnerabilities = 3;
-    const weightOutdatedSoftware = 2;
-    const weightMissingSecurityFeatures = 2;
+async function calculateRisk(host) {
+    let succeededModules = 0;
+    let executionScriptsDetails = await getScriptByEndpoint([host]);
+    let wantedScripts = [
+        'chipsec_common_bios_ts.sh',
+        'chipsec_common_bios_wp.sh',
+        'chipsec_common_smm.sh',
+        'chipsec_common_smrr.sh',
+        'chipsec_common_spi_desc.sh',
+        'chipsec_common_spi_lock.sh',
+        'chipsec_tools_smm_smm_ptr.sh',
+    ]
+    let lastScriptExecutions = getLatestChipsecExecutions(executionScriptsDetails, wantedScripts);
+    // Calculate risk score: number of 'Ran' out of all scripts
+    for (const script in lastScriptExecutions) {
+        if (lastScriptExecutions[script].status === 'ran') {
+            succeededModules += 1;
+        }
+    }
 
-    // Calculate risk score
-    riskScore += vulnerabilities.length * weightVulnerabilities;
-    riskScore += criticalVulnerabilities * weightCriticalVulnerabilities;
-    riskScore += outdatedSoftware * weightOutdatedSoftware;
-    riskScore += missingSecurityFeatures * weightMissingSecurityFeatures;
-
-    // Determine risk level based on risk score
     let riskLevel;
-    if (riskScore >= 10) {
+    if (succeededModules <= 2) {
         riskLevel = 'High';
-    } else if (riskScore >= 5) {
+    } else if (succeededModules <= 4) {
         riskLevel = 'Medium';
     } else {
         riskLevel = 'Low';
     }
-
     return riskLevel;
 }
-
-function isOutdatedSoftware(softwareVersion) {
-    // Example logic to determine if the software is outdated
-    const latestVersion = '1.0.0'; // Replace with actual logic to get the latest version
-    return softwareVersion < latestVersion;
-}
-
-function countMissingSecurityFeatures(host) {
-    // Example logic to count missing security features
-    const requiredFeatures = ['Secure Boot', 'TPM'];
-    const hostFeatures = host.securityFeatures || [];
-    const missingFeatures = requiredFeatures.filter(feature => !hostFeatures.includes(feature));
-    return missingFeatures.length;
-}
-
 
 
 async function removeHostById(hostId, hostInfo) {
