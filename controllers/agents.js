@@ -2,8 +2,8 @@ const { response } = require('express');
 const fleetService = require('../services/fleet');
 const systemService = require('../services/system');
 
-fleetPlatformString = {"debian": "ubuntu", "kali": "ubuntu", "ubuntu" : "ubuntu", "centos" : "centos", "rhel" : "centos"}
-os_to_delete_script = {"ubuntu": "removeFleetUbuntu.sh", "centos" : "RemoveFleetCentos.sh"}
+const fleetPlatformString = {"debian": "ubuntu", "kali": "ubuntu", "ubuntu" : "ubuntu", "centos" : "centos", "rhel" : "centos"}
+const osToDeleteScript = {"ubuntu": "remove_fleet_ubuntu.sh", "centos" : "remove_fleet_centos.sh"}
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -57,7 +57,6 @@ async function rmNode(req, res) {
         if (!hostId) {
             return res.status(400).send({ error: 'hostID parameter is required' });
         }
-        console.log("[*] Host to be removed: " + hostId)
         //check if host exists
         const host = (await fleetService.getEndpoint(hostId));
         if (!host){
@@ -70,14 +69,15 @@ async function rmNode(req, res) {
         const osType = fleetPlatformString[host.platform]
 
         // get uninstall scriptID for requested OS
-        const scriptName = os_to_delete_script[osType]
+        const scriptName = osToDeleteScript[osType]
         let execution_id = await fleetService.runScriptByName(hostId, scriptName)
         // check if script has been ran correctly? 
         if (!execution_id){
             console.error("[!] Error deleting host")
         }
         let response;
-        //validate script has finished:
+
+        //validate script has finished
         do{
             await sleep(5000)
             response = await fleetService.fleetApiGetRequest("/api/v1/fleet/scripts/results/" + execution_id)
