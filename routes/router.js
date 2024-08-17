@@ -27,6 +27,11 @@ router.post("/api/agents/addNode/:osType/:hostId", (req, res, next) => {
     next();
 }, agentsController.addNode);
 
+router.get("/api/agents/rmNode/:hostId", (req, res, next) => {
+    console.log('rmNode route called');
+    next();
+}, agentsController.rmNode);
+
 router.get("/controlPanel", (req, res, next) => {
     console.log('getControlPanel route called');
     next();
