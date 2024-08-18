@@ -1,7 +1,6 @@
 $(document).ready(function() {
     $('.dropdown-item').click(function () {
         
-
         // Custom title and message
         const customTitle = 'Started action on endpoint\t🚀';
         let api_url = '';
@@ -15,6 +14,9 @@ $(document).ready(function() {
                 break;
             case 'uninstall_chipsec':
                 api_url = `/api/chipsec/uninstall/${endpoint_host_id}`;
+                break;
+            case 'delete_host':
+                api_url = `/api/agents/rmNode/${endpoint_host_id}`;
                 break;
             default:
                 return;
@@ -55,7 +57,7 @@ $(document).ready(function() {
                     console.log(error);
                 }
             });
-
+            
     }});});
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -137,12 +139,52 @@ addNodeForm.addEventListener('submit', function(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    }).then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        //Toast Success
+    })
+    .then(response => {
+        if (response.ok){
+            // Handle success response
+            const container = document.getElementById('toast-container');
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+            const newToast = targetElement.cloneNode(true);
+
+            // Update title and message
+            newToast.classList.add('toast-success');
+            newToast.querySelector('.toast-header strong').textContent = 'Started action on endpoint\t🚀';
+            newToast.querySelector('.toast-body').textContent = response.result;
+
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
+        }
+        else{
+            const container = document.getElementById('toast-container');
+        const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+        const newToast = targetElement.cloneNode(true);
+
+        newToast.classList.add('toast-error');
+        newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+        newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+        container.append(newToast);
+        const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+        toast.show();
+
+        console.log(error);
+        }
     }).catch((error) => {
-        console.error('Error:', error);
-        //Toast Failure
+        const container = document.getElementById('toast-container');
+        const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+        const newToast = targetElement.cloneNode(true);
+
+        newToast.classList.add('toast-error');
+        newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+        newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+        container.append(newToast);
+        const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+        toast.show();
+
+        console.log(error);
     });
+    document.getElementById('addNodeModal').ariaHidden = true;
 });

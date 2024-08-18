@@ -1,5 +1,13 @@
+const { response } = require('express');
 const fleetService = require('../services/fleet');
 const systemService = require('../services/system');
+
+const fleetPlatformString = {"debian": "ubuntu", "kali": "ubuntu", "ubuntu" : "ubuntu", "centos" : "centos", "rhel" : "centos"}
+const osToDeleteScript = {"ubuntu": "remove_fleet_ubuntu.sh", "centos" : "remove_fleet_centos.sh"}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function addNode(req, res) {
     try {
@@ -35,7 +43,51 @@ async function addNode(req, res) {
         // Executing
         systemService.remoteEnrollLinuxHost(hostId, username, enrollCmd, password , privateKey)
         const msg = 'Task Submitted, trying to enroll' + hostId;
-        res.send(msg);
+        res.status(200).send(msg);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+async function rmNode(req, res) {
+    try {
+        const hostId = req.params.hostId;
+        if (!hostId) {
+            return res.status(400).send({ error: 'hostID parameter is required' });
+        }
+        //check if host exists
+        const host = (await fleetService.getEndpoint(hostId));
+        if (!host){
+            res.status(404).send("Unknown host to delete.")
+            return
+        }
+        let msg = 'Task Submitted, trying to remove ' + hostId;
+        res.status(200).send(msg);
+        // get host os
+        const osType = fleetPlatformString[host.platform]
+
+        // get uninstall scriptID for requested OS
+        const scriptName = osToDeleteScript[osType]
+        let execution_id = await fleetService.runScriptByName(hostId, scriptName)
+        // check if script has been ran correctly? 
+        if (!execution_id){
+            console.error("[!] Error deleting host")
+        }
+        let response;
+
+        //validate script has finished
+        do{
+            await sleep(5000)
+            response = await fleetService.fleetApiGetRequest("/api/v1/fleet/scripts/results/" + execution_id)
+        }while(response.exit_code == null)
+
+        // delete via fleet api
+        response = await fleetService.removeHostFromFleetById(hostId);
+        if (!response) {
+            throw new Error(`Failed to remove host with response data: ${response}`);
+        }
 
     } catch (error) {
         console.error(error);
@@ -52,4 +104,4 @@ async function getControlPanel(req, res) {
     }
 }
 
-module.exports = { addNode, getControlPanel };
+module.exports = { addNode, rmNode, getControlPanel };

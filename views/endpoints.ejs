@@ -118,7 +118,7 @@
         <%- include('partials/chipsec_modules') %>
     <% } %>
 </div>
-
+<% if (!singleEndpoint){ %>
 <div class="container py-5">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
@@ -173,12 +173,12 @@
                             </label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Host</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+<% } %>
 <script src="/js/endpoints.js"></script>
 <%- include('partials/footer') %>
