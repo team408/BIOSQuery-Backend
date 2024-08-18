@@ -93,8 +93,6 @@ async function addNode(req, res) {
 
 async function rmNode(req, res) {
     try {
-        console.log('Received request to remove host with data:', req.body); // Add log here
-
         // validate hostId
         const { hostId, osType } = req.body;
         if (!hostId || !osType) {
