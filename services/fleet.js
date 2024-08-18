@@ -231,6 +231,7 @@ async function getAllHostsRisks() {
     const risks = endpoints.hosts.map(host => {
         return {
             host: host.hostname,
+            hostId: host.id,
             risk: calculateRisk(host),
             ip: host.primary_ip,
             mac: host.primary_mac,
@@ -340,6 +341,23 @@ async function removeHostById(hostId, hostInfo) {
     }
 }
 
+async function getScriptsByHost(hostId) {
+    const scriptUri = `/api/v1/fleet/hosts/${hostId}/scripts`;
+    try {
+        const response = await fleetApiGetRequest(scriptUri);
+        if (!response || !response.scripts) {
+            throw new Error('No scripts found');
+        }
+        return response.scripts.map(script => ({
+            script: script.name,
+            execution_time: script.last_execution ? script.last_execution.executed_at : 'N/A',
+            status: script.last_execution ? script.last_execution.status : 'N/A'
+        }));
+    } catch (error) {
+        console.error(`Error fetching scripts for host ${hostId}:`, error);
+        throw error;
+    }
+}
 
 module.exports = { fleetApiGetRequest,
     getRequest, 
@@ -353,6 +371,7 @@ module.exports = { fleetApiGetRequest,
     getScriptByEndpoint, 
     mergeEndpointAndScripts, 
     fleetApiPostRequest, 
-    listScripts
+    listScripts,
+    getScriptsByHost
    };
 

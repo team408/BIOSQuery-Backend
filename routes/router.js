@@ -44,4 +44,6 @@ router.get("/risks/download", risksController.downloadCSVReport);
 // Information Center
 router.get("/information-center", infoCenterController.showInfoCenter); 
 
+router.get("/api/hosts/:hostId/scripts", endpointsController.getHostScripts);
+
 module.exports = router;
