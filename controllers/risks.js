@@ -1,8 +1,9 @@
-const fleetService = require('../services/fleet');
+const fleetSerivce = require('../services/fleet');
+const risksSerivce = require('../services/risks');
 
 async function viewAllHostsRisks(req, res) {
     try {
-        const risks = await fleetService.getAllHostsRisks();
+        const risks = await risksSerivce.getAllHostsRisks();
         res.render("risks.ejs", { risks });
     } catch (error) {
         console.error(error);
@@ -12,7 +13,7 @@ async function viewAllHostsRisks(req, res) {
 
 async function viewMitigationAdvices(req, res) {
     try {
-        const advices = await fleetService.getMitigationAdvices();
+        const advices = await risksSerivce.getMitigationAdvices();
         res.render("mitigation.ejs", { advices });
     } catch (error) {
         console.error(error);
@@ -22,8 +23,8 @@ async function viewMitigationAdvices(req, res) {
 
 async function downloadCSVReport(req, res) {
     try {
-        const risks = await fleetService.getAllHostsRisks();
-        const csvReport = await fleetService.generateCSVReport(risks);
+        const risks = await risksSerivce.getAllHostsRisks();
+        const csvReport = await risksSerivce.generateCSVReport(risks);
         res.header('Content-Type', 'text/csv');
         res.attachment('risks_report.csv');
         res.send(csvReport);
