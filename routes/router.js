@@ -9,6 +9,7 @@ const chipsecController = require("../controllers/chipsec");
 const dashboardController = require("../controllers/statistics");
 const risksController = require("../controllers/risks"); 
 const infoCenterController = require("../controllers/information_center");
+const notificationsController = require("../controllers/notifications");
 
 
 // Main route
@@ -40,7 +41,11 @@ router.get("/api/chipsec/run/:hostId/:module", chipsecController.runModule);
 router.get("/risks", risksController.viewAllHostsRisks);
 router.get("/risks/mitigation", risksController.viewMitigationAdvices);
 router.get("/risks/download", risksController.downloadCSVReport);
+
 // Information Center
 router.get("/information-center", infoCenterController.showInfoCenter); 
+
+// Notifications
+router.get("/notifications/all", notificationsController.getAllNotifications)
 
 module.exports = router;

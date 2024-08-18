@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId, MongoOIDCError } = require('mongodb');
 const mongodbs = require('../services/mongodbs');
 const notificaitonsCollectionName = "notifications"
 
@@ -49,17 +49,23 @@ async function markReadAllNotification(readBool){
  * @param {string} id notification id to update read status
  * @return {JSON} notification json array
  */
-async function getAllNotifications(startDate, endDate){
+async function getAllNotifications(){
     return await mongodbs.queryCollection(notificaitonsCollectionName, {});
 }
 
-// /**
-//  * @param {Date} startDate to read from
-//  * @param {Date} endDate to read to 
-//  */
-// function getNotificationsByDate(startDate, endDate){
-
-// }
+/**
+ * @param {Date} startDate to read from
+ * @param {Date} endDate to read to 
+ */
+async function getNotificationsByDate(startDate, endDate){
+    query = {
+        timestamp: {
+            $gt: new Date(startDate),  // Greater than startTimestamp
+            $lt: new Date(endDate)     // Less than endTimestamp
+        }
+    }
+    return await mongodbs.queryCollection(notificaitonsCollectionName, query)
+}
 
 module.exports = {
     newNotification, 
