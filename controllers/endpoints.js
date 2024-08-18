@@ -138,6 +138,7 @@ async function getHostScripts(req, res) {
     try {
         const hostId = req.params.hostId;
         const scripts = await fleetService.getScriptsByHost(hostId);
+        console.log("Scripts fetched:", scripts);  // Debugging line
         res.json(scripts);
     } catch (error) {
         console.error('Error fetching scripts:', error);
