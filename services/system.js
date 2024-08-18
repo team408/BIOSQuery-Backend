@@ -1,8 +1,6 @@
-const { error } = require('console');
 const fs = require('fs')
 const path = require('path');
 const { NodeSSH } = require('node-ssh');
-const exec = require('child_process').exec
 const fleetctlBashDownload = fs.readFileSync('./scripts/install_fleet.sh').toString()
 const defaultPrivateKey = fs.readFileSync('./secrets/default.key').toString()
 
