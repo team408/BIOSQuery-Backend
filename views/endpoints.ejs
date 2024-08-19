@@ -20,7 +20,7 @@
                 <% if (!singleEndpoint){ %>
                     <div class="col-md-3 g-3">
                 <% } else { %>
-                    <div class=”cust-grid-col”>
+                    <div class="cust-grid-col">
                 <% } %>
                     <div class="card fixed-sized-card">
                         <div class="card-body">
@@ -174,13 +174,13 @@
                             <label class="form-check-label" for="defaultKeyCheckbox">Use Default Key</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Host</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+<% } %>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const checkboxes = document.querySelectorAll('.endpoint-checkbox');
@@ -240,8 +240,6 @@
     });
 </script>
 
-
-<% } %>
 </body>
-<%- include('partials/footer') %>
 <script src="/js/endpoints.js"></script>
+<%- include('partials/footer') %>
