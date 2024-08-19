@@ -21,6 +21,7 @@
 }
 .endpoint-card {
     cursor: pointer;
+    position: relative;
 }
 
 .fixed-size-card {
@@ -45,10 +46,15 @@
 
 
 custom-dropdown {
+    position: relative;
+    display: inline-block;
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
+}
+.dropdown-menu {
+    z-index: 1050; /* וודא שהוא מעל האלמנטים האחרים */
 }
 
 .green-hover:hover {
