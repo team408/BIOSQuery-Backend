@@ -289,7 +289,6 @@ async function getScriptsByHost(hostId) {
         const response = await fleetApiGetRequest(scriptUri);
         
         // If the response contains scripts, return them; otherwise, return an empty array
-        console.log(`Scripts for host ${hostId}:`, response.scripts);  // Debugging line
         return response.scripts || [];
     } catch (error) {
         console.error(`Error fetching scripts for host ${hostId}:`, error);
