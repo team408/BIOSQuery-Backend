@@ -47,6 +47,13 @@ async function fleetApiPostRequest(uri,data){
 
 }
 
+async function fleetApiDeleteRequest(uri){
+    fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
+    let headers = {"Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`};
+    response = await axios.delete(fleetUrl + uri, { headers: headers })
+    return response;
+}
+
 async function buildStatistics(){
     // get all endpoints in order to iterate their ids in getScriptByEndpoint
     endpoints = await listEndpoints();
@@ -152,6 +159,18 @@ const mergeEndpointAndScripts = (endpoints, scriptsData) => {
         };
     });
 };
+async function getEndpoint(hostID) {
+    let endpointsUri = '/api/v1/fleet/hosts/' + hostID
+    let endpoint = await fleetApiGetRequest(endpointsUri);
+    
+    // No endpoints found
+    if (!endpoint.hasOwnProperty("host")){
+        return null;
+    }
+
+    return endpoint.host;
+}
+
 
 async function listEndpoints() {
     let endpointsUri = '/api/v1/fleet/hosts'
@@ -226,42 +245,53 @@ async function getAgentEnrollCmd(osType = "deb"){
     cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
-
-async function removeHostById(hostId, hostInfo) {
-    const headers = {
-        "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`,
-        'Content-Type': 'application/json'
-    };
-
-    try {
-        // Uninstall the Fleet agent from the host
-        console.log(`Attempting to uninstall Fleet agent on host: ${hostInfo.hostname}`);
-        const uninstallResponse = await remoteUninstallFleetAgent(hostInfo.hostname, hostInfo.username, hostInfo.password, hostInfo.privateKey);
-        console.log(`Uninstall response: ${JSON.stringify(uninstallResponse)}`);
-
-        // Remove the host from Fleet
-        console.log(`Attempting to remove host with ID: ${hostId}`);
-        const response = await axios.delete(`${fleetUrl}/api/v1/fleet/hosts/${hostId}`, { headers: headers });
-        console.log(`Response status: ${response.status}`);
-        if (response.status !== 200) {
-            throw new Error(`Failed to remove host with status code: ${response.status}`);
+async function getScriptIdByName(scriptName){
+    const scripts = await listScripts();
+        const script = scripts.find(script => script.name === scriptName);
+        if (!script){
+            return null
         }
-        return response.data;
-    } catch (error) {
-        console.error(`Error removing host: ${error.message}`);
-        throw error;
-    }
+        return script.id
 }
 
+async function runScriptByName(hostId, scriptName){
+    const scriptId = await getScriptIdByName(scriptName);
+    return await runScriptById(hostId, scriptId);
+}
+
+async function runScriptById(hostId, scriptId){
+    let module_data=`{"host_id": ${hostId}, "script_id": ${scriptId}}`;
+    const response = await fleetApiPostRequest("/api/latest/fleet/scripts/run", data=module_data)
+    // check if script has been ran correctly?
+    if (response.status != 202){
+        console.error("[!] Error running script")
+        return null
+    }
+    return response.data.execution_id;
+}
+async function removeHostFromFleetById(hostId) {
+
+    // Remove the host from Fleet
+    const response = await fleetApiDeleteRequest(`/api/v1/fleet/hosts/${hostId}`)
+    console.log(`Response status: ${response.status}`);
+    if (response.status !== 200) {
+        throw new Error(`Failed to remove host with status code: ${response.status}`);
+    }
+    return true;
+}
 
 module.exports = {
     listEndpoints, 
+    getEndpoint,
     buildStatistics,
-    removeHostById,
     getAgentEnrollCmd,
     getScriptByEndpoint,
     mergeEndpointAndScripts, 
     fleetApiPostRequest, 
-    listScripts
+    fleetApiDeleteRequest,
+    listScripts,
+    getScriptIdByName,
+    runScriptByName,
+    removeHostFromFleetById
    };
 

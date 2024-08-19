@@ -1,0 +1,1 @@
+sudo rpm -e fleet-osquery-X.Y.Z.x86_64

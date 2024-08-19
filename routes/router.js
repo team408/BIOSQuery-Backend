@@ -22,10 +22,9 @@ router.get("/endpoints/:id", endpointsController.getEndpoints);
 router.get("/statistics", dashboardController.statistics);
 
 // Agents
-router.post("/api/agents/addNode/:osType/:hostId", (req, res, next) => {
-    console.log('addNode route called');
-    next();
-}, agentsController.addNode);
+router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
+
+router.get("/api/agents/rmNode/:hostId", agentsController.rmNode);
 
 router.get("/controlPanel", (req, res, next) => {
     console.log('getControlPanel route called');
