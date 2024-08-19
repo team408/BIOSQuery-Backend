@@ -25,13 +25,6 @@ body {
     background-color: var(--white);
     color: var(--dark-grey);
     letter-spacing: -0.4px;
-     /* הוספת הגדרות הרקע */
-     background-image: url('/img/background.png');
-     background-size: cover;
-     background-position: center;
-     background-repeat: no-repeat;
-     margin: 0;
-     padding: 0;
 }
 
 .navbar-brand img {

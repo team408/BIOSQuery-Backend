@@ -4,16 +4,6 @@
     object-fit: contain;
 }
 
-.endpoint-page  {
-    background-image: url('/img/background.png');
-    background-size: cover; /* מכסה את כל המסך */
-    background-position: center; /* ממקם את התמונה במרכז */
-    background-repeat: no-repeat; /* מונע חזרה על התמונה */
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
 
 .container {
     padding: 20px;
