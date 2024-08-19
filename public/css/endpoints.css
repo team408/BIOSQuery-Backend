@@ -3,6 +3,26 @@
     height: 5vw;
     object-fit: contain;
 }
+
+.endpoint-page  {
+    background-image: url('/img/background.png');
+    background-size: cover; /* מכסה את כל המסך */
+    background-position: center; /* ממקם את התמונה במרכז */
+    background-repeat: no-repeat; /* מונע חזרה על התמונה */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+.container {
+    padding: 20px;
+    position: relative;
+}
+.endpoint-card {
+    cursor: pointer;
+}
+
 .fixed-size-card {
     height: 420px; /* Set a fixed height for each card */
     width: 100%; /* Card width is responsive to the column width */
@@ -21,11 +41,24 @@
     display: block;
     max-height: 40px; /* Limit text block height */
 }
+
+
+
 custom-dropdown {
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
+}
+
+.green-hover:hover {
+    background-color: green;
+    color: white;
+}
+
+.red-hover:hover {
+    background-color: red;
+    color: white;
 }
 
 .custom-dropdown::after {

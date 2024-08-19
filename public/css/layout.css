@@ -25,6 +25,13 @@ body {
     background-color: var(--white);
     color: var(--dark-grey);
     letter-spacing: -0.4px;
+     /* הוספת הגדרות הרקע */
+     background-image: url('/img/background.png');
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;
+     margin: 0;
+     padding: 0;
 }
 
 .navbar-brand img {
@@ -45,8 +52,8 @@ body {
 }
 
 .nav-link {
-    font-weight: 500;
-    font-size: 1.5rem; /* Increase the font size here */
+    font-weight: 400;
+    font-size: 1.3rem; /* Increase the font size here */
     display: inline;
     color: rgba(0, 0, 0, .7);
     text-decoration: none;

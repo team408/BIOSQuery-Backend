@@ -4,6 +4,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
 
+<body class="endpoint-page">
 <div class="container">
     <% if (!singleEndpoint){ %>
     <div>
@@ -124,8 +125,8 @@
 <div class="container py-5">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="btn btn-outline-dark" disabled>Delete Selected</button>
-        <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
+        <button id="deleteSelected" class="btn btn-light red-hover" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-light green-hover" disabled>Install CHIPSEC on Selected</button>
     </div>
 </div>
 
@@ -241,5 +242,6 @@
 
 
 <% } %>
+</body>
 <%- include('partials/footer') %>
 <script src="/js/endpoints.js"></script>
