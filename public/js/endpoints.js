@@ -158,7 +158,8 @@ addNodeForm.addEventListener('submit', function(event) {
         }
         else{
             const container = document.getElementById('toast-container');
-            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');            const newToast = targetElement.cloneNode(true);
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');            
+            const newToast = targetElement.cloneNode(true);
 
             newToast.classList.add('toast-error');
             newToast.querySelector('.toast-header strong').textContent = 'Action Failed';

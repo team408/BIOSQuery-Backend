@@ -55,7 +55,6 @@ async function insertOneCollection(collectionName, document) {
 
         // Query a document from the collection
         const insertResult = await collection.insertOne(document);
-        // console.log("New document inserted with _id:", insertResult.insertedId);
 
         // Return the inserted _id as a response
         return insertResult.insertedId;
@@ -146,23 +145,9 @@ async function modifyAllInCollection(collectionName, query, setJson) {
     }
 }
 
-
-async function test(){
-    // console.log(await queryCollection("notifications", {}));
-    doc = {
-        timestamp: new Date(),
-        category: "agents",
-        title: "New host added successfuly!",
-        desc: "Host 192.168.300.1 has been added succesfuly! Further information and actions may be viewd in the Endpoints panel.",
-        read: false
-    }
-    console.log(await insertOneCollection("notifications", doc))
-}
-
 module.exports = {
     queryCollection,
     insertOneCollection,
     modifyOneInCollection,
-    modifyAllInCollection,
-    test
+    modifyAllInCollection
 }
