@@ -3,9 +3,29 @@
     height: 5vw;
     object-fit: contain;
 }
+
+
+.container {
+    width: 100%; /* Make sure the container takes the full width */
+    max-width: 60%; /* Disable any max-width limits */
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distribute the cards across the full width */
+    gap: 10px; /* Add some space between the cards */
+}
+
+.endpoint-card {
+    cursor: pointer;
+    position: relative;
+}
+
 .fixed-size-card {
-    height: 420px; /* Set a fixed height for each card */
-    width: 100%; /* Card width is responsive to the column width */
+    height: 150px; /* Set a fixed height for each card */
+    width: 45%; /* Card width is responsive to the column width */
     overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
 }
 .card-body {
@@ -21,11 +41,41 @@
     display: block;
     max-height: 40px; /* Limit text block height */
 }
+
+.fixed-bottom-left {
+    position: fixed;
+    bottom: 20px; /* Adjust this value to set the distance from the bottom */
+    left: 20px;  /* Adjust this value to set the distance from the left */
+    z-index: 1000; /* Ensures the buttons appear on top of other content if needed */
+}
+.fixed-top-left {
+    position: fixed;
+    top: 100px;  /* Adjust this value to set the distance from the top */
+    left: 20px; /* Adjust this value to set the distance from the left */
+    z-index: 1000; /* Ensures the button appears on top of other content */
+}
+
+
 custom-dropdown {
+    position: relative;
+    display: inline-block;
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
+}
+.dropdown-menu {
+    z-index: 1050; /* וודא שהוא מעל האלמנטים האחרים */
+}
+
+.green-hover:hover {
+    background-color: green;
+    color: white;
+}
+
+.red-hover:hover {
+    background-color: red;
+    color: white;
 }
 
 .custom-dropdown::after {
@@ -37,5 +87,5 @@ custom-dropdown {
 }
 
 .custom-dropdown-icon {
-    font-size: 30px;
+    font-size: 24px;
 }

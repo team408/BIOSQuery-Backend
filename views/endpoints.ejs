@@ -4,11 +4,12 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/endpoints.css">
 
+<body class="endpoint-page">
 <div class="container">
     <% if (!singleEndpoint){ %>
-    <div>
+    <div class="fixed-top-left">
         <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
-    </div>
+    </div>        
     <% } %>
     <!-- Endpoint cards -->
     <div class="row">
@@ -19,10 +20,12 @@
                 <% if (!singleEndpoint){ %>
                     <div class="col-md-3 g-3">
                 <% } else { %>
-                    <div class=”cust-grid-col”>
+                    <div class="cust-grid-col">
                 <% } %>
                     <div class="card fixed-sized-card">
                         <div class="card-body">
+                            <!-- Multi-select checkbox -->
+                            <input type="checkbox" class="endpoint-checkbox" data-endpoint-id="<%= endpoint.id %>">
                             <% 
                             let platformLogo;
                             switch (endpoint.platform) {
@@ -122,8 +125,8 @@
 <div class="container py-5">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="px-3 mr-3 btn btn-outline-dark" disabled>Delete Selected</button>
-        <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
+        <button id="deleteSelected" class="btn btn-light red-hover" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-light green-hover" disabled>Install CHIPSEC on Selected</button>
     </div>
 </div>
 
@@ -168,9 +171,7 @@
                         <textarea class="form-control" id="privateKey" placeholder="Paste Private Key"></textarea>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="defaultKeyCheckbox">
-                            <label class="form-check-label" for="defaultKeyCheckbox">
-                                Use Default Key
-                            </label>
+                            <label class="form-check-label" for="defaultKeyCheckbox">Use Default Key</label>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
@@ -180,6 +181,66 @@
     </div>
 </div>
 <% } %>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelected');
+        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+        const addNodeForm = document.getElementById('addNodeForm');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.disabled = false;
+            checkbox.addEventListener('change', () => {
+                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            });
+        });
+    
+        deleteSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle delete action
+            console.log('Deleting selected endpoints:', selectedIds);
+        });
+    
+        installChipsecSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            // handle install chipsec action
+            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
+        });
+        
+        addNodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const osType = document.getElementById('osType').value;
+            const hostId = document.getElementById('hostId').value;
+    
+            console.log('Submitting form with data:', { osType, hostId }); // Add log here
+    
+            // Send AJAX request to add the new host
+            $.ajax({
+                url: '/endpoints.js/addNode',
+                method: 'POST',
+                data: {
+                    osType,
+                    hostId
+                },
+                success: function(response) {
+                    // Handle success (e.g., refresh the list of endpoints)
+                    console.log('Host added successfully:', response);
+                    location.reload();
+                },
+                error: function(error) {
+                    // Handle error
+                    console.error('Error adding host:', error);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
 <script src="/js/endpoints.js"></script>
 <%- include('partials/footer') %>
 </div>
