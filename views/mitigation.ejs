@@ -45,49 +45,5 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.mark-mitigated').forEach(button => {
-            button.addEventListener('click', async function() {
-                const risk = this.getAttribute('data-risk');
-                
-                try {
-                    const response = await fetch('/api/risks/mark-mitigated', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ risk }),
-                    });
-
-                    if (response.ok) {
-                        this.innerHTML = '<i class="fas fa-check-circle"></i> Mitigated';
-                        this.classList.remove('btn-success');
-                        this.classList.add('btn-secondary');
-                        this.disabled = true;
-                    } else {
-                        console.error('Failed to mark risk as mitigated');
-                    }
-                } catch (error) {
-                    console.error('Error marking risk as mitigated:', error);
-                }
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        // Toggle mitigation status on button click
-        $('.mitigation-btn').click(function() {
-            let btn = $(this);
-            if (btn.hasClass('mitigated')) {
-                btn.removeClass('mitigated').text('Mark as Mitigated');
-            } else {
-                btn.addClass('mitigated').text('Mitigated');
-            }
-        });
-    });
-</script>
-
-
+<script src=/js/risks.js></script>
 <%- include('partials/footer') %>
