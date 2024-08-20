@@ -72,19 +72,27 @@ async function calculateRisk(host) {
 
 async function getMitigationAdvices() {
     const advices = [
-        { risk: 'Risk 1', advice: 'Update BIOS to the latest version available from the vendor.' },
-        { risk: 'Risk 2', advice: 'Ensure Secure Boot is enabled in the BIOS settings.' },
-        { risk: 'Risk 3', advice: 'Run a full system scan with updated antivirus software.' },
-        { risk: 'Risk 4', advice: 'Check and disable unused hardware interfaces in BIOS.' },
-        // we need to add more advices and update to real risks
-    ];
+        { risk: 'Outdated Firmware', advice: 'Update BIOS to the latest version available from the vendor.' },
+        { risk: 'Insecure Boot Configuration', advice: 'Ensure Secure Boot is enabled in the BIOS settings.' },
+        { risk: 'Vulnerable Software', advice: 'Run a full system scan with updated antivirus software.' },
+        { risk: 'Exposed Interfaces', advice: 'Check and disable unused hardware interfaces in BIOS.' },
+        { risk: 'Unencrypted Storage', advice: 'Enable disk encryption to protect data at rest.' },
+        { risk: 'Weak Password Policies', advice: 'Enforce complex passwords and regular password changes.' },
+        { risk: 'Unpatched Vulnerabilities', advice: 'Apply the latest security patches and updates for the operating system and applications.' },
+        { risk: 'Insufficient Logging', advice: 'Enable detailed logging and monitor logs for suspicious activity.' },
+        { risk: 'Misconfigured Access Controls', advice: 'Review and correct access controls to ensure the principle of least privilege is followed.' },
+        { risk: 'Lack of Multi-Factor Authentication', advice: 'Implement multi-factor authentication (MFA) for all critical systems.' }
+        ];
     return advices;
 }
 
 async function generateCSVReport(risks) {
-    let csvContent = "Host,Risk,IP,MAC,OS,Details\n";
+    let csvContent = "Host,Risk,IP,MAC,OS,Details,Vulnerabilities,Software Version,Security Features\n";
     risks.forEach(risk => {
-        csvContent += `${risk.host},${risk.risk},${risk.ip},${risk.mac},${risk.os},${risk.details}\n`;
+        let vulnerabilities = risk.vulnerabilities.join(", ") || "None";
+        let securityFeatures = risk.securityFeatures.join(", ") || "None";
+        
+        csvContent += `${risk.host},${risk.risk},${risk.ip},${risk.mac},${risk.os},${risk.details},${vulnerabilities},${risk.softwareVersion},${securityFeatures}\n`;
     });
     return csvContent;
 }
