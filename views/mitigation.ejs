@@ -21,19 +21,21 @@
                         <tr>
                             <th>Risk</th>
                             <th>Mitigation Advice</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% advices.forEach(function(advice) { %>
                             <tr>
+                                <td><%= advice.risk %></td>
+                                <td><%= advice.advice %></td>
+                               
                                 <td>
-                                        <%= advice.risk %>
-                                    </span>
+                                    <button class="btn btn-sm btn-warning mitigation-btn">
+                                        Mark as Mitigated
+                                    </button>
                                 </td>
-                                <td>
-                                    <i class="fas fa-shield-alt text-primary me-2"></i>
-                                    <%= advice.advice %>
-                                </td>
+                                
                             </tr>
                         <% }); %>
                     </tbody>
@@ -44,14 +46,48 @@
 </div>
 
 <script>
-    function getRiskColor(risk) {
-        switch(risk.toLowerCase()) {
-            case 'high': return 'danger';
-            case 'medium': return 'warning';
-            case 'low': return 'success';
-            default: return 'secondary';
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.mark-mitigated').forEach(button => {
+            button.addEventListener('click', async function() {
+                const risk = this.getAttribute('data-risk');
+                
+                try {
+                    const response = await fetch('/api/risks/mark-mitigated', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ risk }),
+                    });
+
+                    if (response.ok) {
+                        this.innerHTML = '<i class="fas fa-check-circle"></i> Mitigated';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-secondary');
+                        this.disabled = true;
+                    } else {
+                        console.error('Failed to mark risk as mitigated');
+                    }
+                } catch (error) {
+                    console.error('Error marking risk as mitigated:', error);
+                }
+            });
+        });
+    });
 </script>
+<script>
+    $(document).ready(function() {
+        // Toggle mitigation status on button click
+        $('.mitigation-btn').click(function() {
+            let btn = $(this);
+            if (btn.hasClass('mitigated')) {
+                btn.removeClass('mitigated').text('Mark as Mitigated');
+            } else {
+                btn.addClass('mitigated').text('Mitigated');
+            }
+        });
+    });
+</script>
+
 
 <%- include('partials/footer') %>

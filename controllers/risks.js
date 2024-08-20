@@ -33,6 +33,22 @@ async function downloadCSVReport(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+async function markRiskAsMitigated(req, res) {
+    const { risk } = req.body;
 
+    try {
+        // Implement the logic to mark the risk as mitigated
+        await risksSerivce.markRiskAsMitigated(risk);
+        res.status(200).send('Risk marked as mitigated');
+    } catch (error) {
+        console.error('Error marking risk as mitigated:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
 
-module.exports = { viewAllHostsRisks, viewMitigationAdvices, downloadCSVReport };
+module.exports = {
+    viewAllHostsRisks,
+    viewMitigationAdvices,
+    downloadCSVReport,
+    markRiskAsMitigated,
+};

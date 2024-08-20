@@ -45,4 +45,6 @@ router.get("/information-center", infoCenterController.showInfoCenter);
 
 router.get("/api/hosts/:hostId/scripts", endpointsController.getHostScripts);
 
+router.post('/api/risks/mark-mitigated', risksController.markRiskAsMitigated);
+
 module.exports = router;

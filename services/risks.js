@@ -89,4 +89,19 @@ async function generateCSVReport(risks) {
     return csvContent;
 }
 
-module.exports = { getAllHostsRisks, getMitigationAdvices, generateCSVReport};
+let mitigatedRisks = []; // This should ideally be stored in a database
+
+async function markRiskAsMitigated(risk) {
+    // Add logic to store the mitigated status of the risk
+    mitigatedRisks.push(risk);
+    console.log(`Risk "${risk}" marked as mitigated.`);
+}
+
+module.exports = { 
+    getAllHostsRisks, 
+    getMitigationAdvices, 
+    generateCSVReport, 
+    markRiskAsMitigated 
+};
+
+
