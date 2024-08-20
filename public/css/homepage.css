@@ -1,21 +1,56 @@
-.image-background {
-    height: 700px; /* Adjust based on your design needs */
-    background-image: url('/img/motherboard-hover.jpg'); /* Default background image */
-    background-size: cover; /* Cover the entire area of the div */
-    background-position: center; /* Center the background image */
-    transition: background-image 0.5s ease-in-out; /* Transition effect for the background change */
-}
-.image-background:hover {
-    background-image: url('/img/motherboard-hover2.jpg'); /* Background image on hover */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
 }
 
-/* h1{ font-size:5rem;} */
+/* Background image behind all content */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/img/desktop.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1; /* Ensures that the background is behind all content */
+}
 
+/* Other styles */
 .responsive-h1 {
-    font-size: 3.2vw; /* Responsive size based on viewport width */
+    font-size: 3.2vw;
 }
 
 .link {
-    color:white;
+    color: white;
     text-decoration: underline;
 }
+
+/* Change text color to white */
+h1.responsive-h1, p.lead, .card-text, .card-title, .card-header {
+    color: rgb(255, 255, 255);
+}
+
+.card .btn {
+    color: white; /* Ensure the button text is white */
+}
+
+/* Ensure links inside cards are also white */
+.card a {
+    color: white;
+    text-decoration: underline; /* Optional: keep underline on links */
+}
+
+/* Optional: add hover effects for links */
+.card a:hover {
+    color: #ddd; /* A slightly lighter color on hover */
+}
+.lead {
+    font-size: 1.5rem; /* Adjust the value as needed */
+    color: white; /* Ensure it remains visible against the background */
+}
+
+
