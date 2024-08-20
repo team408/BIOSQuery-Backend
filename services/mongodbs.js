@@ -28,7 +28,8 @@ async function queryCollection(collectionName, query) {
         // Query a document from the collection
         const cursor = await collection.find(query);
         
-        return await cursor.toArray();
+        let array = await cursor.toArray();
+        return array
     } catch(err){
         console.error(err)
     }
@@ -60,6 +61,7 @@ async function insertOneCollection(collectionName, document) {
         return insertResult.insertedId;
     } catch(err){
         console.error(err)
+        return false;
     }
     finally {
         // Ensures that the client will close when you finish/error
@@ -96,7 +98,7 @@ async function modifyOneInCollection(collectionName, objectId, setJson) {
         );
 
         if (updateResult.modifiedCount === 1) {
-            console.log(`Successfully updated document with id ${id}. New read status: ${newReadStatus}`);
+            console.log(`Successfully updated document with id ${objectId}. New read status: ${newReadStatus}`);
             return true
         } else {
             console.log("No document updated.");
@@ -133,8 +135,10 @@ async function modifyAllInCollection(collectionName, query, setJson) {
         );
 
         console.log(`Matched ${updateResult.matchedCount} documents and updated ${updateResult.modifiedCount} documents.`);
+        return updateResult.matchedCount
     } catch(err){
         console.error(err)
+        return 0;
     }
     finally {
         // Ensures that the client will close when you finish/error

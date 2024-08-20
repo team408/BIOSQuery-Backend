@@ -34,14 +34,21 @@ async function newNotification(category, title, desc){
  * @param {ObjectId} id notification id to update read status
  */
 async function markReadNotification(readBool, id){
-    return await mongodbs.modifyOneInCollection(notificaitonsCollectionName, id, {read: readBool})
+
+    return await mongodbs.modifyOneInCollection(notificaitonsCollectionName, new ObjectId(String(id)), {read: readBool})
 }
 
 /**
  * @param {boolean} readBool status of notification if read or nay
  */
 async function markReadAllNotification(readBool){
-    return await mongodbs.modifyAllInCollection(notificaitonsCollectionName, {}, {read: readBool})
+    try{
+        return await mongodbs.modifyAllInCollection(notificaitonsCollectionName, {}, {read: readBool})
+    }
+    catch(err){
+        console.error(err)
+        return false
+    }
 }
 
 /**
@@ -58,10 +65,10 @@ async function getAllNotifications(){
  * @param {Date} endDate to read to 
  */
 async function getNotificationsByDate(startDate, endDate){
-    query = {
+    let query = {
         timestamp: {
-            $gt: new Date(startDate),  // Greater than startTimestamp
-            $lt: new Date(endDate)     // Less than endTimestamp
+            $gt: startDate,  // Greater than startTimestamp
+            $lt: endDate     // Less than endTimestamp
         }
     }
     return await mongodbs.queryCollection(notificaitonsCollectionName, query)
@@ -71,5 +78,6 @@ module.exports = {
     newNotification, 
     markReadNotification,
     markReadAllNotification,
-    getAllNotifications
+    getAllNotifications,
+    getNotificationsByDate
 };
