@@ -52,7 +52,18 @@ async function getAllHostsRisks() {
 
 async function calculateRisk(hostId) {
     let succeededModules = 0;
-    let lastScriptExecutions = await getLatestChipsecExecutions(hostId);
+    let executionScriptsDetails = await fleetService.getScriptByEndpoint([host]);
+    let wantedScripts = [
+        'chipsec_common_bios_ts.sh',
+        'chipsec_common_bios_wp.sh',
+        'chipsec_common_smm.sh',
+        'chipsec_common_smrr.sh',
+        'chipsec_common_spi_desc.sh',
+        'chipsec_common_spi_lock.sh',
+        'chipsec_tools_smm_smm_ptr.sh',
+        'chipsec_tools_uefi_reputation.sh',
+    ]
+    let lastScriptExecutions = getLatestChipsecExecutions(executionScriptsDetails, wantedScripts);
     // Calculate risk score: number of 'Ran' out of all scripts
     for (const script in lastScriptExecutions) {
         if (lastScriptExecutions[script].status === 'ran') {
