@@ -21,21 +21,13 @@
                         <tr>
                             <th>Risk</th>
                             <th>Mitigation Advice</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% advices.forEach(function(advice) { %>
                             <tr>
                                 <td><%= advice.risk %></td>
-                                <td><%= advice.advice %></td>
-                               
-                                <td>
-                                    <button class="btn btn-sm btn-warning mitigation-btn">
-                                        Mark as Mitigated
-                                    </button>
-                                </td>
-                                
+                                <td><%= advice.advice %></td>   
                             </tr>
                         <% }); %>
                     </tbody>
