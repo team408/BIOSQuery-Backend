@@ -36,6 +36,9 @@ body {
 .navbar {
     border-bottom: var(--border);
     margin-bottom: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .nav-item {
@@ -83,7 +86,7 @@ span.nav-link {
 
 .search .fa-search {
     font-size: 1.2rem;
-    margin-left: -30px;
+    margin-left: -20px;
 }
 
 .btn-outline-success {
@@ -184,3 +187,17 @@ a:hover {
 #product-wins .card-title {
     margin-bottom: 30px;
 }
+@media (max-width: 768px) {
+    .nav-link {
+      font-size: 1.2rem;
+      padding: 0 10px;
+    }
+  
+    .search input {
+      width: 150px;
+    }
+  
+    .nav-item {
+      margin: 5px 0;
+    }
+  }
