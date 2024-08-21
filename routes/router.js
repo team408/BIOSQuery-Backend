@@ -17,7 +17,7 @@ router.get("/", homepageController.homepage);
 
 // Endpoints
 router.get("/endpoints", endpointsController.getEndpoints);
-router.get("/endpoints/:id", endpointsController.getEndpoints);
+router.get("/endpoints/:id", endpointsController.getSingleEndpoint);
 
 // Dashboard
 router.get("/statistics", dashboardController.statistics);
