@@ -49,6 +49,7 @@ async function calculateRisk(host) {
         'chipsec_common_spi_desc.sh',
         'chipsec_common_spi_lock.sh',
         'chipsec_tools_smm_smm_ptr.sh',
+        'chipsec_tools_uefi_reputation.sh',
     ]
     let lastScriptExecutions = getLatestChipsecExecutions(executionScriptsDetails, wantedScripts);
     // Calculate risk score: number of 'Ran' out of all scripts
