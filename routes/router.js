@@ -45,6 +45,8 @@ router.get("/risks/download", risksController.downloadCSVReport);
 // Information Center
 router.get("/information-center", infoCenterController.showInfoCenter); 
 
+router.get("/api/hosts/:hostId/scripts", endpointsController.getHostScripts);
+
 // Notifications
 router.get("/api/notifications/all", notificationsController.getAllNotifications)
 router.get("/api/notifications/today", notificationsController.getNotificationsLastDay)
