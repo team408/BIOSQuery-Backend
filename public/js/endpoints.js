@@ -158,18 +158,17 @@ addNodeForm.addEventListener('submit', function(event) {
         }
         else{
             const container = document.getElementById('toast-container');
-        const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
-        const newToast = targetElement.cloneNode(true);
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');            
+            const newToast = targetElement.cloneNode(true);
 
-        newToast.classList.add('toast-error');
-        newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
-        newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+            newToast.classList.add('toast-error');
+            newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+            newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
 
-        container.append(newToast);
-        const toast = bootstrap.Toast.getOrCreateInstance(newToast);
-        toast.show();
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
 
-        console.log(error);
         }
     }).catch((error) => {
         const container = document.getElementById('toast-container');
