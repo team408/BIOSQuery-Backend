@@ -280,6 +280,23 @@ async function removeHostFromFleetById(hostId) {
     return true;
 }
 
+async function getScriptsByHost(hostId) {
+    try {
+        // Construct the URI to fetch scripts for the specific host
+        const scriptUri = `/api/v1/fleet/hosts/${hostId}/scripts`;
+        
+        // Fetch the scripts using the existing fleetApiGetRequest function
+        const response = await fleetApiGetRequest(scriptUri);
+        
+        // If the response contains scripts, return them; otherwise, return an empty array
+        return response.scripts || [];
+    } catch (error) {
+        console.error(`Error fetching scripts for host ${hostId}:`, error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     listEndpoints, 
     getEndpoint,
@@ -292,6 +309,7 @@ module.exports = {
     listScripts,
     getScriptIdByName,
     runScriptByName,
-    removeHostFromFleetById
+    removeHostFromFleetById,
+    getScriptsByHost
    };
 
