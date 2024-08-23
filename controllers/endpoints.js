@@ -1,5 +1,4 @@
 const fleetService = require('../services/fleet');
-const systemService = require('../services/system');
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -15,20 +14,19 @@ function formatDate(dateString) {
 
 async function getSingleEndpoint(req, res) {
     try {
-        // Fetch endpoints
-        var endpoints = await fleetService.listEndpoints();
-
-        // Act for a single endpoint in case of a id in the query
-        if (req.params.id) {
-            const endpointId = req.params.id;
-            endpoints.hosts = endpoints.hosts.filter(host => host.id === parseInt(endpointId));
-            if (!endpoints) {
-                return res.status(404).send('Endpoint not found');
-            } else {
-                const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
-                format_endpoints(endpoints.hosts);
-                res.render("endpoints.ejs", {endpoints: endpoints.hosts, scripts: scriptsData, singleEndpoint: true});
-            }
+        if (!req.params.id) {
+            res.status(404).send("endpointID id parmeter not submitted");
+            return
+        }
+        
+        // Fetch endpoint
+        var endpoint = await fleetService.getEndpoint(req.params.id);
+        if (!endpoint) {
+            return res.status(404).send('Endpoint not found');
+        } else {
+            const scriptsData = await fleetService.getScriptBySingleEndpoint(endpoint);
+            format_single_endpoint(endpoint);
+            res.render("single_endpoint.ejs", {endpoint: endpoint, scripts: scriptsData, singleEndpoint: true});
         }
     } catch (error) {
     console.log(error);
@@ -38,28 +36,6 @@ async function getSingleEndpoint(req, res) {
 
 async function getEndpoints(req, res) {
     try {
-        // // Fetch endpoints
-        // var endpoints = await fleetService.listEndpoints();
-
-        // // Fetch scripts for each endpoint
-        // const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
-
-        // // Map scripts to their respective endpoints
-        // const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpoints.hosts, scriptsData)
-
-        // // Apply search filter if present
-        // let filteredEndpoints = endpointsWithScripts;
-        // if (req.query.search) {
-        //     const searchQuery = req.query.search.toLowerCase();
-        //     filteredEndpoints = endpointsWithScripts.filter(host => {
-        //         return host.hostname.toLowerCase().includes(searchQuery) ||
-        //             host.primary_ip.toLowerCase().includes(searchQuery) ||
-        //             host.primary_mac.toLowerCase().includes(searchQuery);
-        //     });
-        // }
-        
-        // format_endpoints(filteredEndpoints);
-        // res.render("endpoints.ejs", { endpoints: filteredEndpoints , singleEndpoint: false });
         res.render("endpoints.ejs", {singleEndpoint: false});
 
     } catch (error) {
@@ -99,11 +75,14 @@ async function getEndpointsJson(req, res) {
     }
 }
 
-function format_endpoints(endpoints) {
-    for (endpoint of endpoints) {
-        endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
-        endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
+function format_single_endpoint(endpoint){
+    endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
+    endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
+}
 
+function format_endpoints(endpoints) {
+    for (let endpoint of endpoints) {
+        format_single_endpoint(endpoint)
     }
 }
 
