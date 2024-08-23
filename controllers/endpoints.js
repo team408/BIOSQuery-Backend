@@ -38,6 +38,38 @@ async function getSingleEndpoint(req, res) {
 
 async function getEndpoints(req, res) {
     try {
+        // // Fetch endpoints
+        // var endpoints = await fleetService.listEndpoints();
+
+        // // Fetch scripts for each endpoint
+        // const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
+
+        // // Map scripts to their respective endpoints
+        // const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpoints.hosts, scriptsData)
+
+        // // Apply search filter if present
+        // let filteredEndpoints = endpointsWithScripts;
+        // if (req.query.search) {
+        //     const searchQuery = req.query.search.toLowerCase();
+        //     filteredEndpoints = endpointsWithScripts.filter(host => {
+        //         return host.hostname.toLowerCase().includes(searchQuery) ||
+        //             host.primary_ip.toLowerCase().includes(searchQuery) ||
+        //             host.primary_mac.toLowerCase().includes(searchQuery);
+        //     });
+        // }
+        
+        // format_endpoints(filteredEndpoints);
+        // res.render("endpoints.ejs", { endpoints: filteredEndpoints , singleEndpoint: false });
+        res.render("endpoints.ejs", {singleEndpoint: false});
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+async function getEndpointsJson(req, res) {
+    try {
         // Fetch endpoints
         var endpoints = await fleetService.listEndpoints();
 
@@ -59,43 +91,10 @@ async function getEndpoints(req, res) {
         }
         
         format_endpoints(filteredEndpoints);
-        res.render("endpoints.ejs", { endpoints: filteredEndpoints , singleEndpoint: false });
+        res.status(200).json(filteredEndpoints);
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-
-async function addNode(req, res) {
-    try {
-        console.log('Received request to add host with data:', req.body); // Add log here
-
-        // validate hostId
-        const { hostId, osType } = req.body;
-        if (!hostId || !osType) {
-            return res.status(400).send({ error: 'hostID parameter is required' });
-        }
-
-        // Validate correct osType request
-        if (!(['deb', 'rpm'].includes(osType))) {
-            res.status(404).send('Unknown osType');
-            return;
-        }
-
-        // Get EnrollmentCmd
-        const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
-
-        // Fetch endpoints
-        const endpointsData = await fleetService.listEndpoints();
-
-        // Execute enrollment command
-        await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
-        res.send("Node enrolled successfully");
-
-    } catch (error) {
-        console.error('Error in addNode:', error);
         res.status(500).send('Internal Server Error');
     }
 }
@@ -128,4 +127,4 @@ async function getHostScripts(req, res) {
     }
 }
 
-module.exports = { getEndpoints, getSingleEndpoint, addNode, getControlPanel, getHostScripts };
+module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel, getHostScripts };
