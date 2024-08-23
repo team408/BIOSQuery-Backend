@@ -5,21 +5,15 @@
 <link rel="stylesheet" href="/css/endpoints.css">
 
 <div class="container">
-    <% if (!singleEndpoint){ %>
     <div>
         <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
     </div>
-    <% } %>
     <!-- Endpoint cards -->
     <div id="endpointsDivRow" class="row">
         <div style="width: 1000px; height: 300px;">
             <img src="/img/loading.gif" class="center" width="10%">
         </div>
-    <% if (singleEndpoint){ %>
-        <%- include('partials/chipsec_modules') %>
-    <% } %>
-</div>
-<% if (!singleEndpoint){ %>
+    </div>
 <div class="container py-5">
     <!-- Actions for selected endpoints -->
     <div class="fixed-bottom-left">
@@ -80,7 +74,7 @@
         </div>
     </div>
 </div>
-<% } %>
 <script src="/js/endpoints.js"></script>
+<script src="/js/single_endpoint.js"></script>
 <%- include('partials/footer') %>
 </div>
