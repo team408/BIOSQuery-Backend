@@ -15,7 +15,7 @@ function formatDate(dateString) {
 async function getSingleEndpoint(req, res) {
     try {
         if (!req.params.id) {
-            res.status(404).send("endpointID id parmeter not submitted");
+            res.status(400).send("endpointID id parmeter not submitted");
             return
         }
         
