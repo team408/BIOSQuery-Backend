@@ -8,7 +8,8 @@ const modules_to_scripts = {
     "common-bios-ts": "chipsec_common_bios_ts.sh",
     "common-smrr" : "chipsec_common_smrr.sh",
     "tools-smm-smm-ptr": "chipsec_tools_smm_smm_ptr.sh",
-    "tools-uefi-reputation": "chipsec_tools_uefi_reputation.sh"
+    "tools-uefi-reputation": "chipsec_tools_uefi_reputation.sh",
+    "utils-spi-dump": "chipsec_utils_spi_dump.sh"
 }
 
 async function installChipsec(req, res) {

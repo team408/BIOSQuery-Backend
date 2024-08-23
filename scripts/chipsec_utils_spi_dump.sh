@@ -1,0 +1,1 @@
+python /tmp/chipsec-1.13.0/chipsec_util.py spi read 0x0 0x1000000 bios.bin;
