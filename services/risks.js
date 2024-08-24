@@ -24,6 +24,7 @@ async function getAllHostsRisks() {
         endpoints.hosts.map(async (host) => {
             return {
                 host: host.hostname,
+                hostId: host.id,
                 risk: await calculateRisk(host),
                 ip: host.primary_ip,
                 mac: host.primary_mac,
@@ -31,7 +32,7 @@ async function getAllHostsRisks() {
                 details: " ",
                 vulnerabilities: host.vulnerabilities || [], // we need to replace it with actual vulnerability data
                 softwareVersion: host.softwareVersion || '1.0.0', // we need to replace it with actual software version
-                securityFeatures: host.securityFeatures || ['Secure Boot'] // we need to replace it with actual security features
+                securityFeatures: host.securityFeatures || ['Secure Boot'] // we need to replace it with actual security features          
             };
         })
     );
