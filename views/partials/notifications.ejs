@@ -3,7 +3,7 @@
 <script src="/js/notifications.js"></script>
 <style src="/css/notifications.css"></style>
 
-<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#notificationsModal" onclick="fetchNotifications()">
+<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#notificationsModal" onclick="fetchNotifications('today')">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
 </svg>
@@ -19,7 +19,15 @@
             </div>
             <div class="modal-body">
                 <div class="container mt-4">
-                    <div id="notification-section">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item" >
+                          <button class="nav-link active" id="today-tab" data-bs-toggle="tab" role="tab" aria-controls="today" aria-selected="true" onclick="fetchNotifications('today')">Today</button>
+                        </li>
+                        <li class="nav-item">
+                          <button class="nav-link" id="all-tab" data-bs-toggle="tab" role="tab" aria-controls="all" aria-selected="false" onclick="fetchNotifications('all')">All Time</button>
+                        </li>
+                    </ul>
+                    <div id="notification-section" style="width:max-content">
                         <ul id="notification-list" class="list-group list-group-flush">
                             <!-- Notifications will be injected here -->
                         </ul>
