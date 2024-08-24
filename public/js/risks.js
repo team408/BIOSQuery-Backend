@@ -33,10 +33,10 @@ $(document).ready(function() {
         }
 
         // Show modal with loading indicator
-        $('#scriptModal').modal('show');
+        $('#detailedRisksModal').modal('show');
         $('#loadingIndicator').removeClass('d-none');
-        $('#scriptTable').addClass('d-none');
-        $('#scriptDetails').empty(); // Clear any previous content
+        $('#modulesTable').addClass('d-none');
+        $('#modulesDetails').empty(); // Clear any previous content
 
         api_url = `/api/risks/${hostId}`;
 
@@ -61,8 +61,8 @@ $(document).ready(function() {
 
                 // Hide loading indicator and show the table
                 $('#loadingIndicator').addClass('d-none');
-                $('#scriptTable').removeClass('d-none');
-                $('#scriptDetails').html(scriptDetails);
+                $('#modulesTable').removeClass('d-none');
+                $('#modulesDetails').html(scriptDetails);
             },
             error: function (error) {
                 const container = document.getElementById('toast-container');
