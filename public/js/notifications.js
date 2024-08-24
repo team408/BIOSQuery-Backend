@@ -70,7 +70,7 @@ function setButtonsOnclicks(){
 }
 
 function sendRequest(id, readBoolStr) {
-    const url = `/api/notifications/${readBoolStr}/${id}`; 
+    const url = `/api/notifications/${id}/${readBoolStr}`; 
     fetch(url, {
         method: 'GET'
     })

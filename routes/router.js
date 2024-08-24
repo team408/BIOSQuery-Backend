@@ -48,7 +48,6 @@ router.get("/information-center", infoCenterController.showInfoCenter);
 // Notifications
 router.get("/api/notifications/all", notificationsController.getAllNotifications)
 router.get("/api/notifications/today", notificationsController.getNotificationsLastDay)
-router.get("/api/notifications/read/:id", notificationsController.readNotifcation)
-router.get("/api/notifications/unread/:id", notificationsController.unreadNotifcation)
+router.get("/api/notifications/:id/:readBoolStr", notificationsController.readNotifcation)
 
 module.exports = router;

@@ -40,7 +40,7 @@ async function getAllHostsRisks() {
 
 async function calculateRisk(host) {
     let succeededModules = 0;
-    let executionScriptsDetails = await fleetService.getScriptByEndpoint([host]);
+    let executionScriptsDetails = await fleetService.getScriptsByEndpointList([host]);
     let wantedScripts = [
         'chipsec_common_bios_ts.sh',
         'chipsec_common_bios_wp.sh',
