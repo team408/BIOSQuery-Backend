@@ -34,5 +34,19 @@ async function downloadCSVReport(req, res) {
     }
 }
 
+async function getEndpointRiskInfo(req, res) {
+    try {
+        const hostId = req.params.hostId;
+        const riskInfo = await risksSerivce.getLatestChipsecExecutions(hostId);
+        if (riskInfo){
+            res.status(200).json(riskInfo);
+        } else {
+            res.status(400).send({"error": "Failed to get risk info"});
+        }
+    } catch (error) {
+            console.log(error);
+            res.status(500).send({"error": "Failed to get risk info"});
+    }
+}
 
-module.exports = { viewAllHostsRisks, viewMitigationAdvices, downloadCSVReport };
+module.exports = { viewAllHostsRisks, viewMitigationAdvices, downloadCSVReport, getEndpointRiskInfo};

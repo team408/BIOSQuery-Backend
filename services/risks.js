@@ -1,6 +1,17 @@
 const fleetService = require('../services/fleet');
 
-function getLatestChipsecExecutions(scriptsExecutionDetails, wantedScripts) {
+async function getLatestChipsecExecutions(hostId) {
+    const endpoint = await fleetService.getEndpoint(hostId);
+    const scriptsExecutionDetails = await fleetService.getScriptByEndpoint([endpoint]);
+    const wantedScripts = [
+        'chipsec_common_bios_ts.sh',
+        'chipsec_common_bios_wp.sh',
+        'chipsec_common_smm.sh',
+        'chipsec_common_smrr.sh',
+        'chipsec_common_spi_desc.sh',
+        'chipsec_common_spi_lock.sh',
+        'chipsec_tools_smm_smm_ptr.sh',
+    ]
     const scriptsExecutionDetailsWithoutNA = scriptsExecutionDetails.map(execution => {
         return {
             ...execution,
@@ -25,7 +36,7 @@ async function getAllHostsRisks() {
             return {
                 host: host.hostname,
                 hostId: host.id,
-                risk: await calculateRisk(host),
+                risk: await calculateRisk(host.id),
                 ip: host.primary_ip,
                 mac: host.primary_mac,
                 os: host.platform,
@@ -39,19 +50,9 @@ async function getAllHostsRisks() {
     return risks;
 }
 
-async function calculateRisk(host) {
+async function calculateRisk(hostId) {
     let succeededModules = 0;
-    let executionScriptsDetails = await fleetService.getScriptByEndpoint([host]);
-    let wantedScripts = [
-        'chipsec_common_bios_ts.sh',
-        'chipsec_common_bios_wp.sh',
-        'chipsec_common_smm.sh',
-        'chipsec_common_smrr.sh',
-        'chipsec_common_spi_desc.sh',
-        'chipsec_common_spi_lock.sh',
-        'chipsec_tools_smm_smm_ptr.sh',
-    ]
-    let lastScriptExecutions = getLatestChipsecExecutions(executionScriptsDetails, wantedScripts);
+    let lastScriptExecutions = await getLatestChipsecExecutions(hostId);
     // Calculate risk score: number of 'Ran' out of all scripts
     for (const script in lastScriptExecutions) {
         if (lastScriptExecutions[script].status === 'ran') {
@@ -89,4 +90,4 @@ async function generateCSVReport(risks) {
     return csvContent;
 }
 
-module.exports = { getAllHostsRisks, getMitigationAdvices, generateCSVReport};
+module.exports = { getAllHostsRisks, getMitigationAdvices, generateCSVReport, getLatestChipsecExecutions};
