@@ -12,79 +12,10 @@
 /* h1{ font-size:5rem;} */
 
 .responsive-h1 {
-    font-size: 4vw; /* Responsive size based on viewport width */
+    font-size: 3.2vw; /* Responsive size based on viewport width */
 }
 
 .link {
     color:white;
     text-decoration: underline;
 }
-  
-  .hero-section {
-    padding: 80px 0; /* Adjust the padding as needed */
-  }
-  
-  .hero-section .btn {
-    margin-top: 20px; /* Add some spacing between the text and the CTA button */
-  }
-
-  .feature-box {
-    height: 100%; /* Ensure equal height for the cards */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-  }
-  
-  .feature-box .fas {
-    font-size: 3rem; /* Increase the icon size */
-    margin-bottom: 20px; /* Add more spacing between the icon and the text */
-  }
-  
-  .feature-box h4 {
-    font-size: 1.4rem; /* Adjust the heading font size */
-    font-weight: 600; /* Increase the font weight */
-    color: var(--dark-grey); /* Adjust the heading color */
-  }
-  
-  .feature-box p {
-    font-size: 1rem; /* Adjust the paragraph font size */
-    color: var(--medium-grey); /* Adjust the paragraph color */
-  }
-
-  .testimonial {
-    padding: 40px;
-    background-color: var(--light-grey);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-  }
-  
-  .testimonial .quote {
-    font-size: 1.2rem; /* Increase the quote font size */
-    line-height: 1.6; /* Increase the line height */
-    margin-bottom: 20px; /* Add more spacing between the quote and the author */
-  }
-  
-  .testimonial .author {
-    font-weight: 600;
-    color: var(--medium-grey);
-  }
-
-  .news-item {
-    background-color: var(--light-grey);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    padding: 30px;
-    height: 100%; /* Ensure equal height for the cards */
-  }
-  
-  .news-item h5 {
-    font-size: 1.2rem; /* Increase the news item title font size */
-    font-weight: 600; /* Increase the font weight */
-    margin-bottom: 15px; /* Add more spacing between the title and the content */
-  }
-  
-  .news-item p {
-    color: var(--medium-grey);
-  }

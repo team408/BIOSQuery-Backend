@@ -1,19 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const data = JSON.parse(document.getElementById('data-container').textContent);
 
-    // Function to format the date to day/month/year
-function formatDate(executionTime) {
-    const date = new Date(executionTime);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-
-// Use formatDate when rendering the tables
-data.forEach(item => {
-    item.execution_time = formatDate(item.execution_time);
-});
     // Chart options
     const chartOptions = {
         responsive: true,
@@ -46,6 +33,28 @@ data.forEach(item => {
         data: statusData,
         options: chartOptions
     });
+
+    // Handle click on status chart slices
+    statusChart.canvas.onclick = function(event) {
+        var segments = statusChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+        if (segments.length > 0) {
+            var clickedSegment = segments[0];
+            var statusLabel = statusChart.data.labels[clickedSegment.index];
+
+            if (statusLabel === 'Ran') {
+                var ranScripts = data.filter(function(item) {
+                    return item.status === 'ran';
+                });
+
+                var scriptList = document.getElementById('script-list');
+                scriptList.innerHTML = "<h2>Most Recently Executed Scripts</h2><ul>";
+                ranScripts.forEach(function(script) {
+                    scriptList.innerHTML += "<li>" + script.script + " - " + script.execution_time + "</li>";
+                });
+                scriptList.innerHTML += "</ul>";
+            }
+        }
+    };
 
     // Most Frequently Executed Scripts Data
     const scriptCounts = {};
@@ -95,20 +104,16 @@ data.forEach(item => {
         rows.forEach(row => tbody.appendChild(row));
     }
 
-    // Apply sorting to all tables
-    const tables = document.querySelectorAll('.sortable');
-    tables.forEach(table => {
-        const headers = table.querySelectorAll('th');
-        headers.forEach((header, index) => {
-            header.addEventListener('click', () => {
-                const isAscending = header.classList.contains('asc');
-                headers.forEach(h => h.classList.remove('asc', 'desc'));
-                header.classList.toggle('asc', !isAscending);
-                header.classList.toggle('desc', isAscending);
-                sortTable(table, index, isAscending);
-            });
+    // Add event listeners to table headers
+    const table = document.querySelector('table');
+    const headers = table.querySelectorAll('th');
+    headers.forEach((header, index) => {
+        header.addEventListener('click', () => {
+            const isAscending = header.classList.contains('asc');
+            headers.forEach(h => h.classList.remove('asc', 'desc'));
+            header.classList.toggle('asc', !isAscending);
+            header.classList.toggle('desc', isAscending);
+            sortTable(table, index, isAscending);
         });
     });
 });
-
-
