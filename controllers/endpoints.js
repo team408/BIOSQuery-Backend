@@ -24,7 +24,7 @@ async function getSingleEndpoint(req, res) {
         if (!endpoint) {
             return res.status(404).send('Endpoint not found');
         } else {
-            const scriptsData = await fleetService.getScriptBySingleEndpoint(endpoint);
+            const scriptsData = await fleetService.getScriptsBySingleEndpoint(endpoint);
             format_single_endpoint(endpoint);
             res.render("single_endpoint.ejs", {endpoint: endpoint, scripts: scriptsData, singleEndpoint: true});
         }
@@ -36,7 +36,7 @@ async function getSingleEndpoint(req, res) {
 
 async function getEndpoints(req, res) {
     try {
-        res.render("endpoints.ejs", {singleEndpoint: false});
+        res.render("endpoints.ejs");
 
     } catch (error) {
         console.log(error);
@@ -50,7 +50,7 @@ async function getEndpointsJson(req, res) {
         var endpoints = await fleetService.listEndpoints();
 
         // Fetch scripts for each endpoint
-        const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
+        const scriptsData = await fleetService.getScriptsByEndpointList(endpoints.hosts);
 
         // Map scripts to their respective endpoints
         const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpoints.hosts, scriptsData)

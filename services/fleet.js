@@ -55,14 +55,14 @@ async function fleetApiDeleteRequest(uri){
 }
 
 async function buildStatistics(){
-    // get all endpoints in order to iterate their ids in getScriptByEndpoint
+    // get all endpoints in order to iterate their ids in getScriptsByEndpoint
     endpoints = await listEndpoints();
     // sending the endpoints to the data
-    data = getScriptByEndpoint(endpoints.hosts);
+    data = getScriptsByEndpointList(endpoints.hosts);
     return data;
 };
 
-async function getScriptBySingleEndpoint(endpoint) {
+async function getScriptsBySingleEndpoint(endpoint) {
     // keeping all scripts in a variable
     let allScripts = [];
     
@@ -97,7 +97,7 @@ async function getScriptBySingleEndpoint(endpoint) {
     return allScripts;
 }
 
-async function getScriptByEndpoint(endpointList) {
+async function getScriptsByEndpointList(endpointList) {
     // keeping all scripts in a variable
     let allScripts = [];
 
@@ -337,8 +337,8 @@ module.exports = {
     getEndpoint,
     buildStatistics,
     getAgentEnrollCmd,
-    getScriptBySingleEndpoint,
-    getScriptByEndpoint,
+    getScriptsByEndpointList,
+    getScriptsBySingleEndpoint,
     mergeEndpointAndScripts, 
     fleetApiPostRequest, 
     fleetApiDeleteRequest,
