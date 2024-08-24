@@ -24,20 +24,26 @@ $(document).ready(function() {
     }
 
     // Info button click event
-    $('.info-btn').click(async function () {
+    $('.info-btn').click(function () {
         const hostId = $(this).data('host-id');
 
         if (!hostId) {
             console.error('Host ID is not defined.');
             return;
         }
+
+        // Show modal with loading indicator
+        $('#scriptModal').modal('show');
+        $('#loadingIndicator').removeClass('d-none');
+        $('#scriptTable').addClass('d-none');
+        $('#scriptDetails').empty(); // Clear any previous content
+
         api_url = `/api/risks/${hostId}`;
 
         $.ajax({
             url: api_url,
             method: 'GET',
             success: function (response) {
-                console.log(response);
                 let scriptDetails = '';
                 let scriptNames = Object.keys(response);
                 scriptNames.forEach(function (scriptName) {
@@ -45,15 +51,18 @@ $(document).ready(function() {
                     const status = response[scriptName].status;
                     const executionTime = formatDate(response[scriptName].execution_time);
                     scriptDetails += `
-                <tr>
-                    <td>${script}</td>
-                    <td>${executionTime}</td>
-                    <td>${fillStatus(status)}</td>
-                </tr>
-                `;
-                    $('#scriptDetails').html(scriptDetails);
-                    $('#scriptModal').modal('show');
+                        <tr>
+                            <td>${script}</td>
+                            <td>${executionTime}</td>
+                            <td>${fillStatus(status)}</td>
+                        </tr>
+                    `;
                 });
+
+                // Hide loading indicator and show the table
+                $('#loadingIndicator').addClass('d-none');
+                $('#scriptTable').removeClass('d-none');
+                $('#scriptDetails').html(scriptDetails);
             },
             error: function (error) {
                 const container = document.getElementById('toast-container');
@@ -69,11 +78,13 @@ $(document).ready(function() {
                 toast.show();
 
                 console.log(error);
+
+                // Hide loading indicator if error occurs
+                $('#loadingIndicator').addClass('d-none');
             }
         });
     });
 });
-
 // Filter functionality
 $('#riskFilter').on('change', function() {
     var selectedRisk = $(this).val();
