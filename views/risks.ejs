@@ -46,7 +46,7 @@
                                 <td><%= risk.mac %></td>
                                 <td><%= risk.os %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="<%= risk.details %>">
+                                    <button class="btn btn-sm btn-info info-btn" data-host-id="<%= risk.hostId %>" data-bs-toggle="tooltip" title="<%= risk.details %>">
                                         <i class="fas fa-info-circle"></i> Info
                                     </button>
                                 </td>
@@ -59,30 +59,31 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function(){
-        $('[data-bs-toggle="tooltip"]').tooltip();
-        
-        // Filter functionality
-        $('#riskFilter').on('change', function() {
-            var selectedRisk = $(this).val();
-            if(selectedRisk === 'all') {
-                $('.risk-row').show();
-            } else {
-                $('.risk-row').hide();
-                $('.risk-row[data-risk="' + selectedRisk + '"]').show();
-            }
-        });
-    });
+<!-- Modal Template -->
+<div class="modal fade" id="scriptModal" tabindex="-1" aria-labelledby="scriptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scriptModalLabel">Script Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Script</th>
+                            <th>Execution Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scriptDetails">
+                        <!-- Script details will be appended here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-    function getOSIcon(os) {
-        switch(os.toLowerCase()) {
-            case 'windows': return 'windows';
-            case 'linux': return 'linux';
-            case 'mac': return 'apple';
-            default: return 'desktop';
-        }
-    }
-</script>
-
+<script src=/js/risks.js></script>
 <%- include('partials/footer') %>
