@@ -95,4 +95,15 @@ async function getControlPanel(req, res) {
     }
 }
 
-module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel };
+async function getHostScripts(req, res) {
+    try {
+        const hostId = req.params.hostId;
+        const scripts = await fleetService.getScriptsByHost(hostId);
+        res.json(scripts);
+    } catch (error) {
+        console.error('Error fetching scripts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel, getHostScripts };
