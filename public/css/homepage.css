@@ -1,15 +1,14 @@
 .image-background {
-    height: 700px; /* Adjust based on your design needs */
-    background-image: url('/img/desktop.jpg'); /* Default background image */
-    background-size: cover; /* Cover the entire area of the div */
-    background-position: center; /* Center the background image */
-    transition: background-image 0.5s ease-in-out; /* Transition effect for the background change */
+    height: 700px; 
+    background-image: url('/img/desktop.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    transition: background-image 0.5s ease-in-out; 
 }
 .image-background:hover {
-    background-image: url('/img/desktop.jpg'); /* Background image on hover */
+    background-image: url('/img/desktop.jpg'); 
 }
 
-/* Other styles */
 .responsive-h1 {
     font-size: 3.2vw;
 }
@@ -20,15 +19,15 @@
 }
   
   .hero-section {
-    padding: 80px 0; /* Adjust the padding as needed */
+    padding: 80px 0; 
   }
   
   .hero-section .btn {
-    margin-top: 20px; /* Add some spacing between the text and the CTA button */
+    margin-top: 20px; 
   }
 
   .feature-box {
-    height: 100%; /* Ensure equal height for the cards */
+    height: 100%; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,19 +36,19 @@
   }
   
   .feature-box .fas {
-    font-size: 3rem; /* Increase the icon size */
-    margin-bottom: 20px; /* Add more spacing between the icon and the text */
+    font-size: 3rem; 
+    margin-bottom: 20px; 
   }
   
   .feature-box h4 {
-    font-size: 1.4rem; /* Adjust the heading font size */
-    font-weight: 600; /* Increase the font weight */
-    color: white; /* Adjust the heading color */
+    font-size: 1.4rem; 
+    font-weight: 600; 
+    color: black; 
   }
   
   .feature-box p {
-    font-size: 1rem; /* Adjust the paragraph font size */
-    color: white; /* Adjust the paragraph color */
+    font-size: 1rem; 
+    color: black; 
   }
 
   .testimonial {
@@ -60,9 +59,9 @@
   }
   
   .testimonial .quote {
-    font-size: 1.2rem; /* Increase the quote font size */
-    line-height: 1.6; /* Increase the line height */
-    margin-bottom: 20px; /* Add more spacing between the quote and the author */
+    font-size: 1.2rem; 
+    line-height: 1.6; 
+    margin-bottom: 20px;
   }
   
   .testimonial .author {
@@ -71,47 +70,44 @@
   }
 
   .news-item {
-    background-color: white;
+    background-color: black;
     border-radius: 10px;
     box-shadow: var(--shadow);
     padding: 30px;
-    height: 100%; /* Ensure equal height for the cards */
-    color: white;
+    height: 100%; 
+    color: black;
   }
   
   .news-item h5 {
-    font-size: 1.2rem; /* Increase the news item title font size */
-    font-weight: 600; /* Increase the font weight */
-    margin-bottom: 15px; /* Add more spacing between the title and the content */
-    color: white;
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    margin-bottom: 15px; 
+    color: black;
   }
   
   .news-item p {
-    color: white;
+    color: black;
   }
 
-/* Change text color to white */
 h1.responsive-h1, p.lead, .card-text, .card-title, .card-header {
-    color: rgb(248, 246, 246);
+    color: black(248, 246, 246);
 }
 
 .card .btn {
-    color: white; /* Ensure the button text is white */
+    color: black;
 }
 
-/* Ensure links inside cards are also white */
 .card a {
     color: white;
-    text-decoration: underline; /* Optional: keep underline on links */
+    text-decoration: underline; 
 }
 
-/* Optional: add hover effects for links */
 .card a:hover {
-    color: #ddd; /* A slightly lighter color on hover */
+    color: black; 
 }
 .lead {
-    font-size: 1.5rem; /* Adjust the value as needed */
-    color: white; /* Ensure it remains visible against the background */
+    font-size: 1.5rem; 
+    color: black;
 }
 
 

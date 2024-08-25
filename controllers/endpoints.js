@@ -128,4 +128,61 @@ async function getHostScripts(req, res) {
     }
 }
 
-module.exports = { getEndpoints, getSingleEndpoint, addNode, getControlPanel, getHostScripts };
+function initializeEndpointActions() {
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelected');
+        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+        const addNodeForm = document.getElementById('addNodeForm');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.disabled = false;
+            checkbox.addEventListener('change', () => {
+                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            });
+        });
+    
+        deleteSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            console.log('Deleting selected endpoints:', selectedIds);
+        });
+    
+        installChipsecSelectedBtn.addEventListener('click', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
+        });
+        
+        addNodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const osType = document.getElementById('osType').value;
+            const hostId = document.getElementById('hostId').value;
+    
+            console.log('Submitting form with data:', { osType, hostId }); 
+    
+            // Send AJAX request to add the new host
+            $.ajax({
+                url: '/endpoints/addNode',
+                method: 'POST',
+                data: {
+                    osType,
+                    hostId
+                },
+                success: function(response) {
+                    console.log('Host added successfully:', response);
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error('Error adding host:', error);
+                }
+            });
+        });
+    });
+}
+
+module.exports = { getEndpoints, getSingleEndpoint, addNode, getControlPanel, getHostScripts, initializeEndpointActions };
+
+

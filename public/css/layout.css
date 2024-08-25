@@ -49,7 +49,7 @@ body {
 
 .nav-link {
     font-weight: 400;
-    font-size: 1.3rem; /* Increase the font size here */
+    font-size: 1.3rem; 
     display: inline;
     color: rgba(0, 0, 0, .7);
     text-decoration: none;

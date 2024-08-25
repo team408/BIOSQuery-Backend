@@ -7,8 +7,8 @@
 <body class="endpoint-page">
 <div class="container">
     <% if (!singleEndpoint){ %>
-    <div class="fixed-top-left">
-        <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
+    <div>
+        <button id="addNode" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
     </div>        
     <% } %>
     <!-- Endpoint cards -->
@@ -55,7 +55,6 @@
                                     break;
                             }
                             %>
-                            <a href="/endpoints/<%= endpoint.id %>"><img src="<%= platformLogo %>" class="card-img-top platform-img"></a>
                             <h5 id="endpoint_hostname" class="card-title">
                                 <%= endpoint.hostname %>
                             </h5>
@@ -108,8 +107,10 @@
                         <div class="card-footer">
                             <% if (endpoint.chipsec) { %>
                                 <div class="text-muted chipsec-status">✅ Chipsec installed</div>
+                                <img src="<%= platformLogo %>" class="card-img-top" alt="Platform Logo">
                             <% } else { %>
                                 <div class="text-muted chipsec-status">⛔ Chipsec isn't installed </div>
+                                <img src="<%= platformLogo %>" class="card-img-top" alt="Platform Logo">
                             <% } %>
                         </div>
                     </div>
@@ -122,11 +123,11 @@
     <% } %>
 </div>
 <% if (!singleEndpoint){ %>
-<div class="container py-5">
+<div class="select-endpoints">
     <!-- Actions for selected endpoints -->
-    <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="btn btn-light red-hover" disabled>Delete Selected</button>
-        <button id="installChipsecSelected" class="btn btn-light green-hover" disabled>Install CHIPSEC on Selected</button>
+    <div>
+        <button id="deleteSelected" class="btn btn-outline-dark red-hover" disabled>Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-outline-dark green-hover" disabled>Install CHIPSEC on Selected</button>
     </div>
 </div>
 
@@ -181,66 +182,11 @@
     </div>
 </div>
 <% } %>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-        const deleteSelectedBtn = document.getElementById('deleteSelected');
-        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-        const addNodeForm = document.getElementById('addNodeForm');
-        
-        checkboxes.forEach(checkbox => {
-            checkbox.disabled = false;
-            checkbox.addEventListener('change', () => {
-                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-                deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
-                installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
-            });
-        });
-    
-        deleteSelectedBtn.addEventListener('click', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-            // handle delete action
-            console.log('Deleting selected endpoints:', selectedIds);
-        });
-    
-        installChipsecSelectedBtn.addEventListener('click', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-            // handle install chipsec action
-            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
-        });
-        
-        addNodeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const osType = document.getElementById('osType').value;
-            const hostId = document.getElementById('hostId').value;
-    
-            console.log('Submitting form with data:', { osType, hostId }); // Add log here
-    
-            // Send AJAX request to add the new host
-            $.ajax({
-                url: '/endpoints.js/addNode',
-                method: 'POST',
-                data: {
-                    osType,
-                    hostId
-                },
-                success: function(response) {
-                    // Handle success (e.g., refresh the list of endpoints)
-                    console.log('Host added successfully:', response);
-                    location.reload();
-                },
-                error: function(error) {
-                    // Handle error
-                    console.error('Error adding host:', error);
-                }
-            });
-        });
-    });
-</script>
 
 </body>
 <script src="/js/endpoints.js"></script>
+<script>
+    initializeEndpointActions();
+</script>
 <%- include('partials/footer') %>
 </div>
