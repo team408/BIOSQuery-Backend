@@ -64,11 +64,10 @@
     text-overflow: ellipsis; 
     white-space: nowrap; 
     color: inherit;
-}
-.card-text {
     display: block;
-    max-height: 40px; 
+    max-height: 40px;
 }
+
 custom-dropdown {
     position: relative;
     display: inline-block;
