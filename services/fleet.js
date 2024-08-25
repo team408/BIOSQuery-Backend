@@ -324,7 +324,7 @@ async function getScriptsByHost(hostId) {
         const response = await fleetApiGetRequest(scriptUri);
         
         // If the response contains scripts, return them; otherwise, return an empty array
-        return response.scripts || [];
+        return await response.scripts || [];
     } catch (error) {
         console.error(`Error fetching scripts for host ${hostId}:`, error);
         throw error;
@@ -346,7 +346,7 @@ module.exports = {
     getScriptIdByName,
     runScriptByName,
     removeHostFromFleetById,
-    getScriptsByHost
+    getScriptsByHost,
     removeHostFromFleetById
    };
 
