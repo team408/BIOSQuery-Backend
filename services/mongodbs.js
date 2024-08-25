@@ -97,7 +97,7 @@ async function modifyOneInCollection(collectionName, objectId, setJson) {
         );
 
         if (updateResult.modifiedCount === 1) {
-            console.log(`Successfully updated document with id ${objectId}. New read status: ${newReadStatus}`);
+            console.log(`Successfully updated document with id ${objectId}.`);
             return true
         } else {
             console.log("No document updated.");
