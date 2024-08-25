@@ -41,6 +41,7 @@ router.get("/api/chipsec/run/:hostId/:module", chipsecController.runModule);
 router.get("/risks", risksController.viewAllHostsRisks);
 router.get("/risks/mitigation", risksController.viewMitigationAdvices);
 router.get("/risks/download", risksController.downloadCSVReport);
+router.get("/api/risks/:hostId", risksController.getEndpointRiskInfo);
 
 // Information Center
 router.get("/information-center", infoCenterController.showInfoCenter); 
