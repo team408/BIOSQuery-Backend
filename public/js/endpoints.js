@@ -300,6 +300,7 @@ function populateEndpoints(){
                 colDiv.appendChild(cardDiv);
                 $endpointsDivRow.append(colDiv);
             });
+            document.getElementById("div-action-buttons").style.display = "block";
         };
     })
     .fail(function(error) {
