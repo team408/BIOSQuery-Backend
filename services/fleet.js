@@ -55,14 +55,49 @@ async function fleetApiDeleteRequest(uri){
 }
 
 async function buildStatistics(){
-    // get all endpoints in order to iterate their ids in getScriptByEndpoint
+    // get all endpoints in order to iterate their ids in getScriptsByEndpoint
     endpoints = await listEndpoints();
     // sending the endpoints to the data
-    data = getScriptByEndpoint(endpoints.hosts);
+    data = getScriptsByEndpointList(endpoints.hosts);
     return data;
 };
 
-async function getScriptByEndpoint(endpointList) {
+async function getScriptsBySingleEndpoint(endpoint) {
+    // keeping all scripts in a variable
+    let allScripts = [];
+    
+    // building the API url with the correct endpoint id each time
+    let scriptUri = `/api/v1/fleet/hosts/${endpoint.id}/scripts`;
+    try {
+        // sending the request and listening for response
+        const response = await fleetApiGetRequest(scriptUri);
+        const scripts = response.scripts;
+        if (scripts) {
+            
+            scriptsWithExecutionDetails = await fillScriptExecutionDetails(scripts);
+            allScripts = allScripts.concat(scriptsWithExecutionDetails.map(script => (
+                {
+                endpoint_id: endpoint.id,
+                endpoint: endpoint.hostname,
+                script: script.name,
+                execution_time: script.last_execution ? script.last_execution.executed_at : 'N/A',
+                status: script.last_execution ? script.last_execution.status : 'N/A',
+                execution_id: script.execution_id,
+                message: script.message,
+                output: script.output ? Buffer.from(script.output).toString('base64') : null,
+                exit_code: script.exit_code,
+                script_contents: script.script_contents ? Buffer.from(script.script_contents).toString('base64') : null,
+            })));
+        } else {
+            console.warn(`No scripts found for endpoint ${endpoint.id}`);
+        }
+    } catch (error) {
+        console.error(`Error fetching scripts for endpoint ${endpoint.id}:`, error);
+    }
+    return allScripts;
+}
+
+async function getScriptsByEndpointList(endpointList) {
     // keeping all scripts in a variable
     let allScripts = [];
 
@@ -289,7 +324,7 @@ async function getScriptsByHost(hostId) {
         const response = await fleetApiGetRequest(scriptUri);
         
         // If the response contains scripts, return them; otherwise, return an empty array
-        return response.scripts || [];
+        return await response.scripts || [];
     } catch (error) {
         console.error(`Error fetching scripts for host ${hostId}:`, error);
         throw error;
@@ -302,7 +337,8 @@ module.exports = {
     getEndpoint,
     buildStatistics,
     getAgentEnrollCmd,
-    getScriptByEndpoint,
+    getScriptsByEndpointList,
+    getScriptsBySingleEndpoint,
     mergeEndpointAndScripts, 
     fleetApiPostRequest, 
     fleetApiDeleteRequest,
@@ -310,6 +346,7 @@ module.exports = {
     getScriptIdByName,
     runScriptByName,
     removeHostFromFleetById,
-    getScriptsByHost
+    getScriptsByHost,
+    removeHostFromFleetById
    };
 

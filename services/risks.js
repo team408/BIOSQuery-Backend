@@ -2,7 +2,7 @@ const fleetService = require('../services/fleet');
 
 async function getLatestChipsecExecutions(hostId) {
     const endpoint = await fleetService.getEndpoint(hostId);
-    const scriptsExecutionDetails = await fleetService.getScriptByEndpoint([endpoint]);
+    const scriptsExecutionDetails = await fleetService.getScriptsBySingleEndpoint(endpoint);
     const wantedScripts = [
         'chipsec_common_bios_ts.sh',
         'chipsec_common_bios_wp.sh',
