@@ -1,10 +1,275 @@
 $(document).ready(function() {
     populateEndpoints();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Onliner Util
+    document.getElementById("osType-oneliner").onchange = ()=>{
+        populateOnliner()
+    }
+    document.getElementById("oneliner-tab").addEventListener("click", populateOnliner());
+});
+
+// oneliner util
+function populateOnliner(){
+    const code = document.getElementById("oneliner-code");
+    code.innerHTML='<a class="text-info">Loading oneliner...</a>'
+    const osType = document.getElementById("osType-oneliner").value
+    const apiUrl = "/api/agents/add/oneliner/" + osType;
+    $.ajax(apiUrl).done(function(data) {
+        code.innerHTML = '<a style="color: orange">#/bin/bash</a>\n' + data
+    })
+    .fail(function(error) {
+        // If the promise fails
+        code.innerHTML ='<a class="text-danger">Error fetching oneliner.</a>'
+    });
+}
+
+// SSH add form util 
+document.getElementById('authMeth').addEventListener('change', function() {
+    var authMeth = this.value;
+    var credentialsSection = document.getElementById('credentials');
+    var privateKeySection = document.getElementById('privateKeySection');
+    if (authMeth === 'pass') {
+        credentialsSection.style.display = 'block';
+        privateKeySection.style.display = 'none';
+    } else if (authMeth === 'key') {
+        credentialsSection.style.display = 'none';
+        privateKeySection.style.display = 'block';
+    }
+});
+
+document.getElementById('defaultKeyCheckbox').addEventListener('change', function() {
+    var privateKeyInput = document.getElementById('privateKey');
+    if (this.checked) {
+        privateKeyInput.disabled = true;
+    } else {
+        privateKeyInput.disabled = false;
+    }
+});
+
+addNodeForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    var osType = document.getElementById('osType').value;
+    var hostId = document.getElementById('hostId').value;
+    var authMeth = document.getElementById('authMeth').value;
+    var data = { osType: osType, hostId: hostId};
+    var username = document.getElementById('username').value;
+    data.username = username;
+    if (authMeth === 'pass') {
+        var password = document.getElementById('password').value;
+        data.password = password;
+    } else if (authMeth === 'key') {
+        var useDefaultKey = document.getElementById('defaultKeyCheckbox').checked;
+        if (!useDefaultKey) {
+            var privateKey = document.getElementById('privateKey').value;
+            data.privateKey = privateKey;
+        }
+        else {
+            data.privateKey = "default";
+        }
+    }
+
+    fetch('/api/agents/addNode/' + osType + "/" + hostId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.ok){
+            // Handle success response
+            const container = document.getElementById('toast-container');
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+            const newToast = targetElement.cloneNode(true);
+
+            // Update title and message
+            newToast.classList.add('toast-success');
+            newToast.querySelector('.toast-header strong').textContent = 'Started action on endpoint\t🚀';
+            newToast.querySelector('.toast-body').textContent = response.result;
+
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
+        }
+        else{
+            const container = document.getElementById('toast-container');
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');            
+            const newToast = targetElement.cloneNode(true);
+
+            newToast.classList.add('toast-error');
+            newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+            newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
+
+        }
+    }).catch((error) => {
+        const container = document.getElementById('toast-container');
+        const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+        const newToast = targetElement.cloneNode(true);
+
+        newToast.classList.add('toast-error');
+        newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+        newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+        container.append(newToast);
+        const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+        toast.show();
+
+        console.log(error);
+});
+    document.getElementById('addNodeModal').ariaHidden = true;
+});
+
+// Populate endpoint cards with data
+function populateEndpoints(_callback) {
+    const $endpointsDivRow = $('#endpointsDivRow');
+    if (!$endpointsDivRow) {
+        return;
+    }
+    const apiUrl = "/api/endpoints/all";
+    $.getJSON(apiUrl).done(function(data) {
+        $endpointsDivRow.empty(); // Clear existing endpoints
+        if (!data.length) {
+            $endpointsDivRow.append('<a class="text-danger">No endpoints found</a>');
+        } else {
+            data.forEach(function(endpoint) {
+                let colDiv = document.createElement("div");
+                colDiv.className = data.length == 1 ? "cust-grid-col" : "col-md-3 g-3";
+
+                let platformLogo, osName;
+                switch (endpoint.platform) {
+                    case "rhel": platformLogo = "/img/rhel_logo.png"; osName = "RHEL"; break;
+                    case "kali": platformLogo = "/img/kali_logo.png"; osName = "Kali"; break;
+                    case "ubuntu": platformLogo = "/img/ubuntu_logo.png"; osName = "Ubuntu"; break;
+                    case "debian": platformLogo = "/img/debian_logo.png"; osName = "Debian"; break;
+                    case "windows": platformLogo = "/img/windows_logo.png"; osName = "Windows"; break;
+                    case "centos": platformLogo = "/img/centos_logo.png"; osName = "CentOS"; break;
+                    case "macos": platformLogo = "/img/macos_logo.png"; osName = "macOS"; break;
+                    default: platformLogo = "/img/generic_logo.png"; osName = "Unknown OS"; break;
+                }
+
+                let cardBody = `
+                <input type="checkbox" class="endpoint-checkbox select-endpoints" data-endpoint-id="${endpoint.id}">
+                <h5 id="endpoint_osname" class="card-title">${osName}</h5>
+                <p class="card-text"><strong>IP:</strong> ${endpoint.primary_ip}</p>
+                <p class="card-text"><strong>MAC:</strong> ${endpoint.primary_mac}</p>
+                <p class="card-text"><strong>OS:</strong> ${endpoint.os_version}</p>
+                <p class="card-text"><strong>Uptime:</strong> ${(endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2)} days</p>
+                <p class="card-text"><strong>Last Seen:</strong> ${endpoint.formatted_last_seen}</p>
+                <p class="card-text"><strong>Last Scan:</strong> 
+                    ${endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00' ? endpoint.formatted_last_scan : 'N/A'}
+                </p>
+                <p id="endpoint_id" hidden class="endpointID">${endpoint.id}</p>
+                <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                    <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton${endpoint.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${endpoint.uuid}">
+                        ${endpoint.chipsec ? `
+                            <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
+                            <li><a id="run_module" class="dropdown-item" href="/endpoints/${endpoint.id}">Run a chipsec module</a></li>
+                            <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
+                            <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
+                        : `
+                            <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
+                            <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
+                        }
+                    </ul>
+                </div>
+            `;
+            
+            let cardFooter = document.createElement("div");
+            cardFooter.className = "card-footer";
+            let cardFooterContent = document.createElement("div");
+            cardFooterContent.className = "text-muted chipsec-status";
+            let chipsecStatusText = document.createTextNode(endpoint.chipsec ? "✅ Chipsec installed" : "⛔ Chipsec isn't installed");
+            let logoImg = document.createElement("img");
+            logoImg.src = platformLogo;
+            logoImg.alt = osName + " logo";
+            logoImg.className = "card-img-top";
+            cardFooterContent.appendChild(chipsecStatusText);
+            cardFooterContent.appendChild(logoImg);
+
+            cardFooter.appendChild(cardFooterContent);
+            
+            let cardDiv = document.createElement("div");
+            cardDiv.className = "card fixed-size-card";
+            cardDiv.innerHTML = cardBody;
+            cardDiv.appendChild(cardFooter);
+            colDiv.appendChild(cardDiv);
+            
+                $endpointsDivRow.append(colDiv);
+            });
+
+            document.getElementById("div-action-buttons").style.display = "block";
+            populateDropdownActions();
+            populateCheckboxUtils();
+        }
+    })
+    .fail(function() {
+        $endpointsDivRow.empty(); // Clear existing endpoints
+        $endpointsDivRow.append('<a class="text-danger">Error fetching endpoints.</a>');
+    });
+}
+
+function updateButtonsOnSelect() {
+    const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+    const deleteSelectedBtn = document.getElementById('deleteSelected');
+    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+
+    if (selectedCheckboxes.length > 0) {
+        deleteSelectedBtn.classList.add('red-hover');
+        deleteSelectedBtn.disabled = false;
+        installChipsecSelectedBtn.classList.add('green-hover');
+        installChipsecSelectedBtn.disabled = false;
+    } else {
+        deleteSelectedBtn.classList.remove('red-hover');
+        deleteSelectedBtn.disabled = true;
+        installChipsecSelectedBtn.classList.remove('green-hover');
+        installChipsecSelectedBtn.disabled = true;
+    }
+}
+
+
+function populateCheckboxUtils() {
+    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = false;
+        checkbox.addEventListener('change', updateButtonsOnSelect);
+    });
+
+    document.getElementById('deleteSelected').addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.endpointId);
+        console.log('Deleting selected endpoints:', selectedIds);
+    });
+
+    document.getElementById('installChipsecSelected').addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.endpointId);
+        console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
+    });
+    updateButtonsOnSelect();
+}
+
+function populateDropdownActions(){
+    // Dropdownlist actions
     $('.dropdown-item').click(function () {
+        // Custom title and message
         const customTitle = 'Started action on endpoint\t🚀';
         let api_url = '';
+        // create custom message based on a switch statement
+        let toast_message = '';
         let action_name = $(this).attr('id');
-        let endpoint_host_id = $(this).closest('.card-body').find('#endpoint_id').text().trim();
+        let endpoint_host_id = $(this).closest('.card-body').find('#endpoint_id').text().trim()
         switch (action_name) {
             case 'install_chipsec':
                 api_url = `/api/chipsec/install/${endpoint_host_id}`;
@@ -24,392 +289,36 @@ $(document).ready(function() {
                 url: api_url,
                 method: 'GET',
                 success: function (response) {
-                    showToast(customTitle, response.result, 'success');
+                    // Handle success response
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
+                    
+                    // Update title and message
+                    newToast.classList.add('toast-success');
+                    newToast.querySelector('.toast-header strong').textContent = customTitle;
+                    newToast.querySelector('.toast-body').textContent = response.result;
+            
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
                 },
                 error: function (error) {
-                    showToast('Action Failed', 'An error occurred. Please try again.', 'error');
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
+
+                    newToast.classList.add('toast-error');
+                    newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+                    newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
+
                     console.log(error);
                 }
-            });
+            });       
         }
     });
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-    const deleteSelectedBtn = document.getElementById('deleteSelected');
-    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-    const addNodeForm = document.getElementById('addNodeForm');
-
-    checkboxes.forEach(checkbox => {
-        checkbox.disabled = false;
-        checkbox.addEventListener('change', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
-            installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
-        });
-    });
-
-    deleteSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        console.log('Deleting selected endpoints:', selectedIds);
-    });
-
-    installChipsecSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
-    });
-
-    addNodeForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        var osType = document.getElementById('osType').value;
-        var hostId = document.getElementById('hostId').value;
-        var authMeth = document.getElementById('authMeth').value;
-        var data = { osType: osType, hostId: hostId };
-        var username = document.getElementById('username').value;
-        data.username = username;
-
-        if (authMeth === 'pass') {
-            var password = document.getElementById('password').value;
-            data.password = password;
-        } else if (authMeth === 'key') {
-            var useDefaultKey = document.getElementById('defaultKeyCheckbox').checked;
-            if (!useDefaultKey) {
-                var privateKey = document.getElementById('privateKey').value;
-                data.privateKey = privateKey;
-            } else {
-                data.privateKey = "default";
-            }
-        }
-
-        fetch('/api/agents/addNode/' + osType + "/" + hostId, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (response.ok) {
-                    showToast('Started action on endpoint\t🚀', response.result, 'success');
-                } else {
-                    showToast('Action Failed', 'An error occurred. Please try again.', 'error');
-                }
-            }).catch((error) => {
-                showToast('Action Failed', 'An error occurred. Please try again.', 'error');
-                console.log(error);
-            });
-    });
-});
-
-function populateEndpoints() {
-    const $endpointsDivRow = $('#endpointsDivRow');
-    const $deleteSelected = $('#deleteSelected');
-    const $installChipsecSelected = $('#installChipsecSelected');
-    
-    if (!$endpointsDivRow) {
-        return;
-    }
-    
-    const apiUrl = "/api/endpoints/all";
-    $.getJSON(apiUrl).done(function (data) {
-        $endpointsDivRow.empty();
-        
-        if (!data.length) {
-            $endpointsDivRow.append('<a class="text-danger">No endpoints found</a>');
-        } else {
-            data.forEach(function (endpoint) {
-                let colDiv = document.createElement("div");
-                const singleEndpoint = data.length === 1;
-                colDiv.className = singleEndpoint ? "card fixed-sized-card" : "card-body";
-                let platformLogo = getPlatformLogo(endpoint.platform);
-
-                let body = `
-                    <input type="checkbox" class="endpoint-checkbox select-endpoints" data-endpoint-id="${endpoint.id}">
-                    <a href="/endpoints/${endpoint.id}"><img src="${platformLogo}" class="card-img-top"></a>
-                    <h5 id="endpoint_hostname" class="card-title">${endpoint.hostname}</h5>
-                    <p class="card-text"><strong>IP:</strong> ${endpoint.primary_ip}</p>
-                    <p class="card-text"><strong>MAC:</strong> ${endpoint.primary_mac}</p>
-                    <p class="card-text"><strong>OS:</strong> ${endpoint.os_version}</p>
-                    <p class="card-text"><strong>Uptime:</strong> ${(endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2)} days</p>
-                    <p class="card-text"><strong>Last Seen:</strong> ${endpoint.formatted_last_seen}</p>
-                    <p class="card-text"><strong>Last Scan:</strong> 
-                    ${endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00' ? endpoint.formatted_last_scan : 'N/A'}</p>
-                    <p id="endpoint_id" hidden class="endpointID">${endpoint.id}</p>
-                    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                        <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton${endpoint.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                            </svg>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${endpoint.uuid}">
-                            ${getEndpointMenu(endpoint.chipsec, endpoint.id)}
-                        </ul>
-                    </div>
-                `;
-
-                let cardFooter = document.createElement("div");
-                cardFooter.className = "card-footer";
-                let cardFooterContent = document.createElement("div");
-                cardFooterContent.className = "text-muted chipsec-status";
-                cardFooterContent.textContent = endpoint.chipsec ? "✅ Chipsec installed" : "⛔ Chipsec isn't installed";
-                cardFooter.appendChild(cardFooterContent);
-
-                let cardBody = document.createElement("div");
-                cardBody.className = "card-body";
-                cardBody.innerHTML = body;
-                let cardDiv = document.createElement("div");
-                cardDiv.className = "card fixed-size-card";
-                cardDiv.appendChild(cardBody);
-                cardDiv.appendChild(cardFooter);
-                colDiv.appendChild(cardDiv);
-                $endpointsDivRow.append(colDiv);
-            });
-
-            $('.endpoint-checkbox').on('change', function() {
-                updateButtonsState();
-            });
-        }
-    }).fail(function (error) {
-        $endpointsDivRow.empty();
-        let noEndpointsAlert = `<a class="text-danger">No endpoints found</a>`;
-        $endpointsDivRow.append(noEndpointsAlert);
-        console.log(error);
-    });
-
-    function updateButtonsState() {
-        const selectedCount = $('.endpoint-checkbox:checked').length;
-        $deleteSelected.prop('disabled', selectedCount === 0);
-        $installChipsecSelected.prop('disabled', selectedCount === 0);
-    }
 }
-
-function getPlatformLogo(platform) {
-    let platformLogo = "https://via.placeholder.com/100";
-    switch (platform) {
-        case "windows":
-            platformLogo = "https://img.icons8.com/color/96/windows-11.png";
-            break;
-        case "linux":
-            platformLogo = "https://img.icons8.com/color/96/linux--v1.png";
-            break;
-        case "mac":
-            platformLogo = "https://img.icons8.com/officel/96/mac-logo.png";
-            break;
-    }
-    return platformLogo;
-}
-
-function getEndpointMenu(chipsecInstalled, endpointId) {
-    if (chipsecInstalled) {
-        return `
-            <li><a class="dropdown-item" id="uninstall_chipsec">Uninstall CHIPSEC</a></li>
-            <li><a class="dropdown-item text-danger" id="delete_host">Delete Endpoint</a></li>
-        `;
-    } else {
-        return `
-            <li><a class="dropdown-item" id="install_chipsec">Install CHIPSEC</a></li>
-            <li><a class="dropdown-item text-danger" id="delete_host">Delete Endpoint</a></li>
-        `;
-    }
-}
-
-function showToast(title, message, type) {
-    const toastId = 'toast-' + Math.random().toString(36).substr(2, 9);
-    const toast = `
-        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-            <div class="toast-header ${type === 'success' ? 'bg-success text-white' : 'bg-danger text-white'}">
-                <strong class="me-auto">${title}</strong>
-                <small>Just now</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                ${message}
-            </div>
-        </div>
-    `;
-    $('#toast-container').append(toast);
-    const newToast = new bootstrap.Toast(document.getElementById(toastId));
-    newToast.show();
-}
-
-
-function populateEndpoints(){
-    const $endpointsDivRow = $('#endpointsDivRow');
-    if(!$endpointsDivRow){
-        return
-    }
-    const apiUrl = "/api/endpoints/all"
-    $.getJSON(apiUrl).done(function(data) {
-        $endpointsDivRow.empty(); // Clear existing endpoints
-        if(!data.length){
-            $endpointsDivRow.append('<a class="text-danger">No endpoints found</a>');
-        }
-        else{
-            data.forEach(function (endpoint) {
-                let colDiv = document.createElement("div");
-                const singleEndpoint = data.length == 1;
-                if (!singleEndpoint)
-                    colDiv.className = "col-md-3 g-3";
-                else
-                    colDiv.className = "cust-grid-col";
-                let platformLogo;
-                switch (endpoint.platform) {
-                    case "rhel":
-                        platformLogo = "/img/rhel_logo.png";
-                        break;
-                    case "kali":
-                        platformLogo = "/img/kali_logo.png";
-                        break;
-                    case "ubuntu":
-                        platformLogo = "/img/ubuntu_logo.png";
-                        break;
-                    case "debian":
-                        platformLogo = "/img/debian_logo.png";
-                        break;
-                    case "windows":
-                        platformLogo = "/img/windows_logo.png";
-                        break;
-                    case "centos":
-                        platformLogo = "/img/centos_logo.png";
-                        break;
-                    case "macos":
-                        platformLogo = "/img/macos_logo.png";
-                        break;
-                    default:
-                        platformLogo = "/img/generic_logo.png";
-                        break;
-                }
-                let body = `<input type="checkbox" class="endpoint-checkbox" data-endpoint-id="${endpoint.id}">
-                            <a href="/endpoints/${endpoint.id}"><img src="${platformLogo}" class="card-img-top platform-img"></a>
-                            <h5 id="endpoint_hostname" class="card-title">
-                                ${endpoint.hostname}
-                            </h5>
-                            <p class="card-text">
-                                <strong>IP:</strong> ${endpoint.primary_ip}
-                            </p>
-                            <p class="card-text">
-                                <strong>MAC:</strong> ${endpoint.primary_mac}
-                            </p>
-                            <p class="card-text">
-                                <strong>OS:</strong> ${endpoint.os_version}
-                            </p>
-                            <p class="card-text">
-                                <strong>Uptime:</strong> ${(endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2)} days
-                            </p>
-                            <p class="card-text">
-                                <strong>Last Seen:</strong> ${endpoint.formatted_last_seen}
-                            </p>
-                            <p class="card-text">
-                                <strong>Last Scan:</strong>
-                                ${endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00' ? endpoint.formatted_last_scan : 'N/A'}
-                            </p>
-                            <p id="endpoint_id" hidden class="endpointID">
-                                ${endpoint.id}
-                            </p>
-                            <!-- Dropdown menu -->
-                            <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                                <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton${endpoint.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                    </svg>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${endpoint.uuid}">
-                                    ${endpoint.chipsec ? `<li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
-                                        <li><a id="run_module" class="dropdown-item" href="/endpoints/<%= endpoint.id %>">Run a chipsec module</a></li>
-                                        <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
-                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
-                                    :
-                                        `<li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
-                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
-                                    }
-                                </ul>
-                            </div>
-                `
-                let cardFooter = document.createElement("div");
-                cardFooter.className = "card-footer"
-                let cardFooterContent = document.createElement("div");
-                cardFooterContent.className = "text-muted chipsec-status";
-                endpoint.chipsec ? cardFooterContent.textContent = "✅ Chipsec installed" : cardFooterContent.textContent = "⛔ Chipsec isn't installed";
-                cardFooter.appendChild(cardFooterContent);
-                
-                // Assembeling
-                let cardBody = document.createElement("div");
-                cardBody.className = "card-body";
-                cardBody.innerHTML = body;
-                let cardDiv = document.createElement("div");
-                cardDiv.className = "card fixed-sized-card";
-                cardDiv.appendChild(cardBody);
-                cardDiv.appendChild(cardFooter);
-                colDiv.appendChild(cardDiv);
-                $endpointsDivRow.append(colDiv);
-            });
-        };
-    })
-    .fail(function(error) {
-        // If the promise fails
-        $endpointsDivRow.empty(); // Clear existing endpoints
-        $endpointsDivRow.append('<a class="text-danger">Error fetching endpoints.</a>');
-    });
-};
-
-// Dev note: From Gaia's branch
-document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-    const deleteSelectedBtn = document.getElementById('deleteSelected');
-    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-    const addNodeForm = document.getElementById('addNodeForm');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.disabled = false;
-        checkbox.addEventListener('change', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
-            installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
-        });
-    });
-
-    deleteSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        // handle delete action
-        console.log('Deleting selected endpoints:', selectedIds);
-    });
-
-    installChipsecSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        // handle install chipsec action
-        console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
-    });
-    
-    addNodeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const osType = document.getElementById('osType').value;
-        const hostId = document.getElementById('hostId').value;
-
-        console.log('Submitting form with data:', { osType, hostId }); // Add log here
-
-        // Send AJAX request to add the new host
-        $.ajax({
-            url: '/endpoints.js/addNode',
-            method: 'POST',
-            data: {
-                osType,
-                hostId
-            },
-            success: function(response) {
-                // Handle success (e.g., refresh the list of endpoints)
-                console.log('Host added successfully:', response);
-                location.reload();
-            },
-            error: function(error) {
-                // Handle error
-                console.error('Error adding host:', error);
-            }
-        });
-    });
-});
