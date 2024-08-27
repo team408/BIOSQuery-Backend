@@ -7,6 +7,9 @@ const defaultPrivateKey = fs.readFileSync('./secrets/default.key').toString()
 const secret_path = process.env.SSH_SECRET_PATH
 const username = process.env.SSH_USERNAME
 
+const installerByOs = {"ubuntu": "apt", "centos" : "yum"}
+const dpkgByOs = {"ubuntu": "dpkg", "centos" : "rpm"}
+
 async function getSSHCon(host, username, password = null, privateKey = null) {
   const ssh = new NodeSSH();
   if (!password && !privateKey) {
@@ -39,23 +42,44 @@ async function executeRemoteCommand(sshCon, command) {
  * @param {string} password either passwor dor private key to complete ssh auth
  * @param {string} privateKey either password or private key to complete ssh auth
  */
-async function remoteEnrollLinuxHost(host_id, username, enrollCmd, password = null, privateKey = null){
+async function remoteEnrollLinuxHost(host_id, username, osType, enrollCmd, password = null, privateKey = null){
   const sshConn = await getSSHCon(host_id, username, password, privateKey);
   try{
     console.log("[*] Enrolling Fleet agent on " + host_id)
-    let response = await executeRemoteCommand(sshConn, fleetctlBashDownload);
-    response = await executeRemoteCommand(sshConn, './fleetctl -v')
-    response = await executeRemoteCommand(sshConn, "./" + enrollCmd)
+    let cmdInstallCurl
     if (password){
-      response = await executeRemoteCommand(sshConn, path.join("echo ", password, " | sudo -S dpkg -i fleet-osquery*.deb"))
+      cmdInstallCurl = ["echo ", password, " | sudo -S ", installerByOs[osType], " update && echo ", password, " | sudo ", installerByOs[osType], " -y install curl;"].join("");
     }
     else{
-      response = await executeRemoteCommand(sshConn, "sudo dpkg -i fleet-osquery*.deb")
+      cmdInstallCurl = ["sudo ", installerByOs[osType], " update && ", installerByOs[osType], " -y install curl;"].join("");
     }
+    let response = await executeRemoteCommand(sshConn, cmdInstallCurl);
+    response = await executeRemoteCommand(sshConn, fleetctlBashDownload);
+    response = await executeRemoteCommand(sshConn, './fleetctl -v')
+    
+    // Validation for fleetctl installation
+    if (!response.stdout.search("fleetctl.*version.*"))
+      return false; 
+    response = await executeRemoteCommand(sshConn, "./" + enrollCmd)
+    
+    // Validatation for pckg downloading
+    if (!response.stdout.search("Generating your fleetd agent...\n\nSuccess!"))
+      return false;
+    if (password){
+      response = await executeRemoteCommand(sshConn, ["echo ", password, " | sudo -S ", dpkgByOs[osType], " -i fleet-osquery*.deb"].join(""))
+    }
+    else{
+      response = await executeRemoteCommand(sshConn, "sudo " + dpkgByOs[osType] +" -i fleet-osquery*.deb")
+    }
+    
+    //validation for successful installation
+    if (!response.stdout.search("Created symlink"))
+      return false;
+    return true
   }
   catch(err){
     console.error(err)
-    return
+    return false
   }
   finally{
     sshConn.dispose()

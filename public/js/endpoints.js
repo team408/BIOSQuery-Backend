@@ -139,23 +139,51 @@ function populateEndpoints(_callback) {
         } else {
             data.forEach(function(endpoint) {
                 let colDiv = document.createElement("div");
-                colDiv.className = data.length == 1 ? "cust-grid-col" : "col-md-3 g-3";
-
-                let platformLogo, osName;
+                const singleEndpoint = data.length == 1;
+                if (!singleEndpoint)
+                    colDiv.className = "col-md-3 g-3";
+                else
+                    colDiv.className = "cust-grid-col";
+                
+                let platformLogo;
                 switch (endpoint.platform) {
-                    case "rhel": platformLogo = "/img/rhel_logo.png"; osName = "RHEL"; break;
-                    case "kali": platformLogo = "/img/kali_logo.png"; osName = "Kali"; break;
-                    case "ubuntu": platformLogo = "/img/ubuntu_logo.png"; osName = "Ubuntu"; break;
-                    case "debian": platformLogo = "/img/debian_logo.png"; osName = "Debian"; break;
-                    case "windows": platformLogo = "/img/windows_logo.png"; osName = "Windows"; break;
-                    case "centos": platformLogo = "/img/centos_logo.png"; osName = "CentOS"; break;
-                    case "macos": platformLogo = "/img/macos_logo.png"; osName = "macOS"; break;
-                    default: platformLogo = "/img/generic_logo.png"; osName = "Unknown OS"; break;
+                    case "rhel":
+                        platformLogo = "/img/rhel_logo.png";
+                        break;
+                    case "kali":
+                        platformLogo = "/img/kali_logo.png";
+                        break;
+                    case "ubuntu":
+                        platformLogo = "/img/ubuntu_logo.png";
+                        break;
+                    case "debian":
+                        platformLogo = "/img/debian_logo.png";
+                        break;
+                    case "windows":
+                        platformLogo = "/img/windows_logo.png";
+                        break;
+                    case "centos":
+                        platformLogo = "/img/centos_logo.png";
+                        break;
+                    case "macos":
+                        platformLogo = "/img/macos_logo.png";
+                        break;
+                    default:
+                        platformLogo = "/img/generic_logo.png";
+                        break;
                 }
+
+                // Create the image element for the OS logo
+                let platformImg = `<img src="${platformLogo}" class="card-img-top" alt="${endpoint.platform} logo">`;
 
                 let cardBody = `
                 <input type="checkbox" class="endpoint-checkbox select-endpoints" data-endpoint-id="${endpoint.id}">
-                <h5 id="endpoint_osname" class="card-title">${osName}</h5>
+                <a href="/endpoints/${endpoint.id}"></a>
+                <h5 id="endpoint_hostname" class="card-title">
+                    ${endpoint.hostname}
+                    ${platformImg}
+
+                </h5>
                 <p class="card-text"><strong>IP:</strong> ${endpoint.primary_ip}</p>
                 <p class="card-text"><strong>MAC:</strong> ${endpoint.primary_mac}</p>
                 <p class="card-text"><strong>OS:</strong> ${endpoint.os_version}</p>
@@ -183,29 +211,25 @@ function populateEndpoints(_callback) {
                         }
                     </ul>
                 </div>
-            `;
+                `;
+                
             
             let cardFooter = document.createElement("div");
-            cardFooter.className = "card-footer";
+            cardFooter.className = "card-footer"
             let cardFooterContent = document.createElement("div");
             cardFooterContent.className = "text-muted chipsec-status";
-            let chipsecStatusText = document.createTextNode(endpoint.chipsec ? "✅ Chipsec installed" : "⛔ Chipsec isn't installed");
-            let logoImg = document.createElement("img");
-            logoImg.src = platformLogo;
-            logoImg.alt = osName + " logo";
-            logoImg.className = "card-img-top";
-            cardFooterContent.appendChild(chipsecStatusText);
-            cardFooterContent.appendChild(logoImg);
-
+            endpoint.chipsec ? cardFooterContent.textContent = "✅ Chipsec installed" : cardFooterContent.textContent = "⛔ Chipsec isn't installed";
             cardFooter.appendChild(cardFooterContent);
             
+            let Body = document.createElement("div");
+            Body.className = "card fixed-size-card";
+            Body.innerHTML = cardBody;
             let cardDiv = document.createElement("div");
-            cardDiv.className = "card fixed-size-card";
-            cardDiv.innerHTML = cardBody;
+            cardDiv.className = "card fixed-sized-card";
+            cardDiv.appendChild(Body);
             cardDiv.appendChild(cardFooter);
             colDiv.appendChild(cardDiv);
-            
-                $endpointsDivRow.append(colDiv);
+            $endpointsDivRow.append(colDiv);
             });
 
             document.getElementById("div-action-buttons").style.display = "block";
@@ -218,6 +242,8 @@ function populateEndpoints(_callback) {
         $endpointsDivRow.append('<a class="text-danger">Error fetching endpoints.</a>');
     });
 }
+
+
 
 function updateButtonsOnSelect() {
     const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
@@ -322,3 +348,4 @@ function populateDropdownActions(){
         }
     });
 }
+

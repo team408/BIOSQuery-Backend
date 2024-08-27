@@ -1,7 +1,7 @@
 .card-img-top {
     width: 15%;
     height: 15%;
-    margin-left: 10%;
+    margin-left: 10px;
     display: inline-block;
 }
 .fixed-size-card {
@@ -24,6 +24,7 @@
     padding: 20px;
     margin: auto;
     position: relative;
+    cursor: pointer;
 }
 .row {
     border-radius: 4px; 
@@ -51,12 +52,12 @@
 }
 .card-title{
     font-size: 1.8rem; 
-    display: center;
-    align-items: center;       
+    align-items: center;
+    display: flex;       
     padding: 10px;
     background-color: #343a40;
     color: white;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 .card-text {
     overflow: hidden;

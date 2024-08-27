@@ -19,7 +19,6 @@ router.get("/", homepageController.homepage);
 router.get("/endpoints", endpointsController.getEndpoints);
 router.get("/api/endpoints/all", endpointsController.getEndpointsJson);
 router.get("/endpoints/:id", endpointsController.getSingleEndpoint);
-router.get("/api/endpoints/all", endpointsController.getEndpointsJson);
 
 // Dashboard
 router.get("/statistics", dashboardController.statistics);
@@ -27,6 +26,7 @@ router.get("/statistics", dashboardController.statistics);
 // Agents
 router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
 router.get("/api/agents/rmNode/:hostId", agentsController.rmNode);
+router.get("/api/agents/add/oneliner/:osType", agentsController.getEnrollOneliner);
 
 router.get("/controlPanel", (req, res, next) => {
     console.log('getControlPanel route called');
