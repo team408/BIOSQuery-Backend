@@ -73,7 +73,7 @@ async function addNode(req, res) {
             res.status(404).send({ error: 'unsupported osType, yet.'});
             return;
         }
-        const msg = 'Task Submitted, trying to enroll ' + hostId;
+        const msg = "Task Submitted, trying to enroll " + hostId;
         res.status(200).send({"result": msg});
 
         // get EnrollmentCmd before 
@@ -93,14 +93,15 @@ async function addNode(req, res) {
 }
 
 async function rmNode(req, res) {
+    const hostId = req.params.hostId;
+    let host;
     try {
-        const hostId = req.params.hostId;
         if (!hostId) {
             res.status(400).send({ error: 'hostID parameter is required' });
             return
         }
         //check if host exists
-        const host = (await fleetService.getEndpoint(hostId));
+        host = (await fleetService.getEndpoint(hostId));
         if (!host){
             res.status(400).send({"result":'Internal Server Error'})
             return
@@ -133,7 +134,6 @@ async function rmNode(req, res) {
         // delete via fleet api
         response = await fleetService.removeHostFromFleetById(hostId);
         if (!response) {
-            throw new Error(`Failed to remove host with response data: ${response}`);
             notificationsService.newNotification("Agents", "Rm host [" + host.display_name + "] action FAILURE", `Failed to remove host with response data: ${response}`);
         }
 

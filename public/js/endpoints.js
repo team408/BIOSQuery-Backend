@@ -77,7 +77,7 @@ addNodeForm.addEventListener('submit', function(event) {
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
+    .then(async response => {
         if (response.ok){
             // Handle success response
             const container = document.getElementById('toast-container');
@@ -87,7 +87,7 @@ addNodeForm.addEventListener('submit', function(event) {
             // Update title and message
             newToast.classList.add('toast-success');
             newToast.querySelector('.toast-header strong').textContent = 'Started action on endpoint\t🚀';
-            newToast.querySelector('.toast-body').textContent = response.result;
+            newToast.querySelector('.toast-body').textContent = (await response.json()).result;
 
             container.append(newToast);
             const toast = bootstrap.Toast.getOrCreateInstance(newToast);
@@ -222,7 +222,7 @@ function populateEndpoints(_callback) {
             cardFooter.appendChild(cardFooterContent);
             
             let Body = document.createElement("div");
-            Body.className = "card fixed-size-card";
+            Body.className = "card-body fixed-size-card";
             Body.innerHTML = cardBody;
             let cardDiv = document.createElement("div");
             cardDiv.className = "card fixed-sized-card";
