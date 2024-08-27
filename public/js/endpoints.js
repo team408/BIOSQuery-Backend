@@ -1,96 +1,31 @@
 $(document).ready(function() {
     populateEndpoints();
-    $('.dropdown-item').click(function () {
-        
-        // Custom title and message
-        const customTitle = 'Started action on endpoint\t🚀';
-        let api_url = '';
-        // create custom message based on a switch statement
-        let toast_message = '';
-        let action_name = $(this).attr('id');
-        let endpoint_host_id = $(this).closest('.card-body').find('#endpoint_id').text().trim()
-        switch (action_name) {
-            case 'install_chipsec':
-                api_url = `/api/chipsec/install/${endpoint_host_id}`;
-                break;
-            case 'uninstall_chipsec':
-                api_url = `/api/chipsec/uninstall/${endpoint_host_id}`;
-                break;
-            case 'delete_host':
-                api_url = `/api/agents/rmNode/${endpoint_host_id}`;
-                break;
-            default:
-                return;
-        }
-
-        if (api_url !== '') {
-            $.ajax({
-                url: api_url,
-                method: 'GET',
-                success: function (response) {
-                    // Handle success response
-                    const container = document.getElementById('toast-container');
-                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
-                    const newToast = targetElement.cloneNode(true);
-                    
-                    // Update title and message
-                    newToast.classList.add('toast-success');
-                    newToast.querySelector('.toast-header strong').textContent = customTitle;
-                    newToast.querySelector('.toast-body').textContent = response.result;
-            
-                    container.append(newToast);
-                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
-                    toast.show();
-                },
-                error: function (error) {
-                    const container = document.getElementById('toast-container');
-                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
-                    const newToast = targetElement.cloneNode(true);
-
-                    newToast.classList.add('toast-error');
-                    newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
-                    newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
-
-                    container.append(newToast);
-                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
-                    toast.show();
-
-                    console.log(error);
-                }
-            });
-        }
-    });
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-    const deleteSelectedBtn = document.getElementById('deleteSelected');
-    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-    const addNodeForm = document.getElementById('addNodeForm');
-
-    checkboxes.forEach(checkbox => {
-        checkbox.disabled = false;
-        checkbox.addEventListener('change', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
-            installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
-        });
-    });
-
-    deleteSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        // handle delete action
-    });
-
-    installChipsecSelectedBtn.addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-        // handle install chipsec action
-    });
+    // Onliner Util
+    document.getElementById("osType-oneliner").onchange = ()=>{
+        populateOnliner()
+    }
+    document.getElementById("oneliner-tab").addEventListener("click", populateOnliner());
 });
 
+// oneliner util
+function populateOnliner(){
+    const code = document.getElementById("oneliner-code");
+    code.innerHTML='<a class="text-info">Loading oneliner...</a>'
+    const osType = document.getElementById("osType-oneliner").value
+    const apiUrl = "/api/agents/add/oneliner/" + osType;
+    $.ajax(apiUrl).done(function(data) {
+        code.innerHTML = '<a style="color: orange">#/bin/bash</a>\n' + data
+    })
+    .fail(function(error) {
+        // If the promise fails
+        code.innerHTML ='<a class="text-danger">Error fetching oneliner.</a>'
+    });
+}
 
+// SSH add form util 
 document.getElementById('authMeth').addEventListener('change', function() {
     var authMeth = this.value;
     var credentialsSection = document.getElementById('credentials');
@@ -186,11 +121,12 @@ addNodeForm.addEventListener('submit', function(event) {
         toast.show();
 
         console.log(error);
-    });
+});
     document.getElementById('addNodeModal').ariaHidden = true;
 });
 
-function populateEndpoints(){
+// Populate endpoitns cards with data
+function populateEndpoints(_callback){
     const $endpointsDivRow = $('#endpointsDivRow');
     if(!$endpointsDivRow){
         return
@@ -301,6 +237,8 @@ function populateEndpoints(){
                 $endpointsDivRow.append(colDiv);
             });
             document.getElementById("div-action-buttons").style.display = "block";
+            populateDropdownActions()
+            populateCheckboxUtils()
         };
     })
     .fail(function(error) {
@@ -310,12 +248,12 @@ function populateEndpoints(){
     });
 };
 
-// Dev note: From Gaia's branch
-document.addEventListener('DOMContentLoaded', function () {
+function populateCheckboxUtils(){
+    // Dev note: From Gaia's branch
+    document.addEventListener('DOMContentLoaded', function () {
     const checkboxes = document.querySelectorAll('.endpoint-checkbox');
     const deleteSelectedBtn = document.getElementById('deleteSelected');
     const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-    const addNodeForm = document.getElementById('addNodeForm');
     
     checkboxes.forEach(checkbox => {
         checkbox.disabled = false;
@@ -339,31 +277,68 @@ document.addEventListener('DOMContentLoaded', function () {
         // handle install chipsec action
         console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
     });
-    
-    addNodeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const osType = document.getElementById('osType').value;
-        const hostId = document.getElementById('hostId').value;
-
-        console.log('Submitting form with data:', { osType, hostId }); // Add log here
-
-        // Send AJAX request to add the new host
-        $.ajax({
-            url: '/endpoints.js/addNode',
-            method: 'POST',
-            data: {
-                osType,
-                hostId
-            },
-            success: function(response) {
-                // Handle success (e.g., refresh the list of endpoints)
-                console.log('Host added successfully:', response);
-                location.reload();
-            },
-            error: function(error) {
-                // Handle error
-                console.error('Error adding host:', error);
-            }
-        });
-    });
 });
+}
+
+function populateDropdownActions(){
+    // Dropdownlist actions
+    $('.dropdown-item').click(function () {
+        // Custom title and message
+        const customTitle = 'Started action on endpoint\t🚀';
+        let api_url = '';
+        // create custom message based on a switch statement
+        let toast_message = '';
+        let action_name = $(this).attr('id');
+        let endpoint_host_id = $(this).closest('.card-body').find('#endpoint_id').text().trim()
+        switch (action_name) {
+            case 'install_chipsec':
+                api_url = `/api/chipsec/install/${endpoint_host_id}`;
+                break;
+            case 'uninstall_chipsec':
+                api_url = `/api/chipsec/uninstall/${endpoint_host_id}`;
+                break;
+            case 'delete_host':
+                api_url = `/api/agents/rmNode/${endpoint_host_id}`;
+                break;
+            default:
+                return;
+        }
+
+        if (api_url !== '') {
+            $.ajax({
+                url: api_url,
+                method: 'GET',
+                success: function (response) {
+                    // Handle success response
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
+                    
+                    // Update title and message
+                    newToast.classList.add('toast-success');
+                    newToast.querySelector('.toast-header strong').textContent = customTitle;
+                    newToast.querySelector('.toast-body').textContent = response.result;
+            
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
+                },
+                error: function (error) {
+                    const container = document.getElementById('toast-container');
+                    const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+                    const newToast = targetElement.cloneNode(true);
+
+                    newToast.classList.add('toast-error');
+                    newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+                    newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+                    container.append(newToast);
+                    const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+                    toast.show();
+
+                    console.log(error);
+                }
+            });       
+        }
+    });
+}

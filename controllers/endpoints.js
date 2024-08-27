@@ -15,14 +15,14 @@ function formatDate(dateString) {
 async function getSingleEndpoint(req, res) {
     try {
         if (!req.params.id) {
-            res.status(400).send("endpointID id parmeter not submitted");
+            res.status(400).send({"result":"endpointID id parmeter not submitted"});
             return
         }
         
         // Fetch endpoint
         var endpoint = await fleetService.getEndpoint(req.params.id);
         if (!endpoint) {
-            return res.status(404).send('Endpoint not found');
+            return res.status(404).send({"result":'Endpoint not found'});
         } else {
             const scriptsData = await fleetService.getScriptsBySingleEndpoint(endpoint);
             format_single_endpoint(endpoint);

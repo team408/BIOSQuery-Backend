@@ -272,12 +272,12 @@ async function getAgentEnrollCmd(osType = "deb"){
     // API call to get enrollment cli accordig to given OS Type
     getSecretUri = "/api/v1/fleet/spec/enroll_secret";
     enrollSecret = await fleetApiGetRequest(getSecretUri);
-    secret = enrollSecret.spec.secrets[0].secret
+    const secret = enrollSecret.spec.secrets[0].secret
     if (!secret){
         console.error("[!] Error fetching new enroll secret from fleet via API.");
         throw new Error("[!] Error fetching new enroll secret from fleet via API.");
     }
-    cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
+    const cmd = "fleetctl package --type=" +osType+" --insecure --enable-scripts --fleet-url="+fleetUrl+" --enroll-secret="+ secret +";";
     return cmd;
 }
 async function getScriptIdByName(scriptName){
@@ -298,6 +298,11 @@ async function runScriptById(hostId, scriptId){
     let module_data=`{"host_id": ${hostId}, "script_id": ${scriptId}}`;
     const response = await fleetApiPostRequest("/api/latest/fleet/scripts/run", data=module_data)
     // check if script has been ran correctly?
+    if (response.status != 409){
+        console.error("[!] Script is already in queue to host.")
+        return null
+    }
+    // check if script has been ran correctly?
     if (response.status != 202){
         console.error("[!] Error running script")
         return null
@@ -310,7 +315,7 @@ async function removeHostFromFleetById(hostId) {
     const response = await fleetApiDeleteRequest(`/api/v1/fleet/hosts/${hostId}`)
     console.log(`Response status: ${response.status}`);
     if (response.status !== 200) {
-        throw new Error(`Failed to remove host with status code: ${response.status}`);
+        return response.data;
     }
     return true;
 }
@@ -340,6 +345,7 @@ module.exports = {
     getScriptsByEndpointList,
     getScriptsBySingleEndpoint,
     mergeEndpointAndScripts, 
+    fleetApiGetRequest,
     fleetApiPostRequest, 
     fleetApiDeleteRequest,
     listScripts,
