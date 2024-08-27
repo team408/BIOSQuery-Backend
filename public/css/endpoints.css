@@ -9,7 +9,7 @@
     width: 100%; 
     overflow: hidden; 
     border-radius: 40px;
-    display: flex;
+    display: relative;
 }
 .card-footer {
     display: flex;
