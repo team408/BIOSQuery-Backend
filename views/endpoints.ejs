@@ -14,7 +14,6 @@
             <button id="installChipsecSelected" class="btn btn-outline-dark green-hover" disabled>Install CHIPSEC on Selected</button>
         </div>
     </div>
-    <% } %>
 
     <!-- Endpoint cards -->
     <div class="row">
@@ -130,6 +129,13 @@
             <% }); %>
         <% } %>
     </div>
+<div class="container py-5">
+    <!-- Actions for selected endpoints -->
+    <div class="fixed-bottom-left">
+        <button id="deleteSelected" class="btn btn-secondary">Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-secondary">Install CHIPSEC on Selected</button>
+    </div>
+</div>
 
     <% if (singleEndpoint) { %>
         <%- include('partials/chipsec_modules') %>
@@ -195,4 +201,6 @@
     </div>
     <% } %>
 </div>
+<script src="/js/endpoints.js"></script>
+<script src="/js/single_endpoint.js"></script>
 <%- include('partials/footer') %>

@@ -1,54 +1,10 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-    a.svg:after {
-        content: ""; 
-        position: absolute; 
-        top: 0; 
-        right: 0; 
-        bottom: 0; 
-        left: 0;
-      }
-</style>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Example URL - replace with your API endpoint
-        const apiUrl = '/api/notifications/all';
+<script src="/js/notifications.js"></script>
+<style src="/css/notifications.css"></style>
 
-        function fetchNotifications() {
-            $.getJSON(apiUrl).done(function(data) {
-                const $notificationList = $('#notification-list');
-                $notificationList.empty(); // Clear existing notifications
-
-                data.forEach(notification => {
-                    const isRead = notification.read;
-                    const notificationClass = isRead ? 'list-group-item-light' : 'list-group-item-info';
-                    const svgRead = isRead ? "/svg/mail-open.svg" : "/svg/mail-close.svg";
-
-                    const notificationItem = `
-                        <li class="list-group-item ${notificationClass}">
-                            <object style="display: inline-block" width="4%" data="${svgRead}" type="image/svg+xml"></object>
-                            <a style="display: inline-block"><h5>${notification.title}</h5><p>${notification.desc}</p></a>
-                        </li>
-                    `;
-                    $notificationList.append(notificationItem);
-                });
-            })
-            .fail(function(error) {
-                // If the promise fails
-                console.error("Error fetching notifications:", error);
-                const $notificationList = $('#notification-list');
-                $notificationList.html('<li class="list-group-item text-danger">Failed to load notifications.</li>');
-            });
-        }
-
-        // Fetch notifications when the page loads
-        fetchNotifications();
-    });
-</script>
-
-<button type="submit" class="btn btn-secondary" data-toggle="modal" data-target="#notificationsModal">Notifications</button>
+<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#notificationsModal" onclick="fetchNotifications('today')">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
+</svg>
+  </button>
