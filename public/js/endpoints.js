@@ -22,7 +22,29 @@ function populateOnliner(){
     .fail(function(error) {
         // If the promise fails
         code.innerHTML ='<a class="text-danger">Error fetching oneliner.</a>'
+    // Onliner Util
+    document.getElementById("osType-oneliner").onchange = ()=>{
+        populateOnliner()
+    }
+    document.getElementById("oneliner-tab").addEventListener("click", populateOnliner());
+});
+
+// oneliner util
+function populateOnliner(){
+    const code = document.getElementById("oneliner-code");
+    code.innerHTML='<a class="text-info">Loading oneliner...</a>'
+    const osType = document.getElementById("osType-oneliner").value
+    const apiUrl = "/api/agents/add/oneliner/" + osType;
+    $.ajax(apiUrl).done(function(data) {
+        code.innerHTML = '<a style="color: orange">#/bin/bash</a>\n' + data
+    })
+    .fail(function(error) {
+        // If the promise fails
+        code.innerHTML ='<a class="text-danger">Error fetching oneliner.</a>'
     });
+}
+
+// SSH add form util 
 }
 
 // SSH add form util 
@@ -231,7 +253,6 @@ function populateEndpoints(_callback){
             colDiv.appendChild(cardDiv);
             $endpointsDivRow.append(colDiv);
             });
-
             document.getElementById("div-action-buttons").style.display = "block";
             populateDropdownActions()
             populateCheckboxUtils()
@@ -243,31 +264,21 @@ function populateEndpoints(_callback){
     });
 };
 
-
 function populateCheckboxUtils(){
+    // Dev note: From Gaia's branch
     document.addEventListener('DOMContentLoaded', function () {
-        const checkboxes = document.querySelectorAll('.endpoint-checkbox');
-        const deleteSelectedBtn = document.getElementById('deleteSelected');
-        const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
-
-        checkboxes.forEach(checkbox => {
-            checkbox.disabled = false;
-            checkbox.addEventListener('change', () => {
-                const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-                const isEnabled = selectedCheckboxes.length > 0;
-                
-                  deleteSelectedBtn.disabled = !isEnabled;
-                installChipsecSelectedBtn.disabled = !isEnabled;
-
-                if (isEnabled) {
-                    deleteSelectedBtn.classList.add('red-hover');
-                    installChipsecSelectedBtn.classList.add('green-hover');
-                } else {
-                    deleteSelectedBtn.classList.remove('red-hover');
-                    installChipsecSelectedBtn.classList.remove('green-hover');
-                }
-            });
+    const checkboxes = document.querySelectorAll('.endpoint-checkbox');
+    const deleteSelectedBtn = document.getElementById('deleteSelected');
+    const installChipsecSelectedBtn = document.getElementById('installChipsecSelected');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = false;
+        checkbox.addEventListener('change', () => {
+            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+            deleteSelectedBtn.disabled = selectedCheckboxes.length === 0;
+            installChipsecSelectedBtn.disabled = selectedCheckboxes.length === 0;
         });
+    });
 
         deleteSelectedBtn.addEventListener('click', () => {
             const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
@@ -276,15 +287,14 @@ function populateCheckboxUtils(){
             console.log('Deleting selected endpoints:', selectedIds);
         });
 
-        installChipsecSelectedBtn.addEventListener('click', () => {
-            const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
-            const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
-            // handle install chipsec action
-            console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
-        });
+    installChipsecSelectedBtn.addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('.endpoint-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.uuid);
+        // handle install chipsec action
+        console.log('Installing CHIPSEC on selected endpoints:', selectedIds);
     });
+});
 }
-
 
 function populateDropdownActions(){
     // Dropdownlist actions
@@ -348,4 +358,3 @@ function populateDropdownActions(){
         }
     });
 }
-

@@ -73,8 +73,6 @@ async function addNode(req, res) {
             res.status(404).send({ error: 'unsupported osType, yet.'});
             return;
         }
-        const msg = 'Task Submitted, trying to enroll' + hostId;
-        res.status(200).send({"result": msg});
 
         // get EnrollmentCmd before 
         let enrollCmd = await fleetService.getAgentEnrollCmd(platformType);
