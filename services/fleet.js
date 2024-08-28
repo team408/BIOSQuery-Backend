@@ -36,13 +36,13 @@ async function fleetApiGetRequest(uri) {
 };
 
 async function fleetApiPostRequest(uri,data){
-    const fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
+    fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
     let headers = {
         "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`,
         'Content-Type': 'text/plain',
         "Accept": "application/json"
     };
-    let response = await axios.post(fleetUrl + uri, data, { headers: headers })
+    response = await axios.post(fleetUrl + uri, data, { headers: headers })
     return response;
 
 }
@@ -291,23 +291,23 @@ async function getScriptIdByName(scriptName){
 
 async function runScriptByName(hostId, scriptName){
     const scriptId = await getScriptIdByName(scriptName);
-    return await runScriptById(parseInt(hostId), scriptId);
+    return await runScriptById(hostId, scriptId);
 }
 
 async function runScriptById(hostId, scriptId){
-    let module_data={host_id: hostId, script_id: scriptId};
+    let module_data=`{"host_id": ${hostId}, "script_id": ${scriptId}}`;
     const response = await fleetApiPostRequest("/api/latest/fleet/scripts/run", data=module_data)
     // check if script has been ran correctly?
-    if (response.status == 409){
+    if (response.status != 409){
         console.error("[!] Script is already in queue to host.")
-        return response
+        return null
     }
     // check if script has been ran correctly?
     if (response.status != 202){
         console.error("[!] Error running script")
-        return response
+        return null
     }
-    return response
+    return response.data.execution_id;
 }
 async function removeHostFromFleetById(hostId) {
 
