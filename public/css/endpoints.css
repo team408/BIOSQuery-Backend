@@ -1,33 +1,101 @@
 .card-img-top {
-    width: 100%;
-    height: 5vw;
-    object-fit: contain;
+    width: 15%;
+    height: 15%;
+    margin-right: 10px;
+    display: inline-block;
 }
 .fixed-size-card {
-    height: 420px; /* Set a fixed height for each card */
-    width: 100%; /* Card width is responsive to the column width */
-    overflow: hidden; /* Hides any content that goes beyond the card's dimensions */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px; /* Adjust padding to your preference */
+    box-sizing: border-box; /* Ensures padding is included within the card's dimensions */
 }
-.card-body {
+.card-footer {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;           
     padding: 10px;
 }
-.card-title, .card-text {
-    overflow: hidden;
-    text-overflow: ellipsis; /* Add an ellipsis to text that overflows */
-    white-space: nowrap; /* Prevent text from wrapping to the next line */
-    color: inherit;;
+.container {
+    width: calc(100% - 20px); 
+    max-width: 95%; 
+    padding: 20px;
+    margin: auto;
+    position: relative;
+    cursor: pointer;
+}
+.row {
+    border-radius: 4px; 
+    display: flex;                
+    justify-content: center; 
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f1f6fae9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.select-endpoints{
+    display: flex;
+    width: fit-content;
+    margin: 2%;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.card-body {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+}
+.card-title{
+    font-size: 1.4rem; 
+    align-items: center;
+    display: flex;       
+    padding: 10px;
+    background-color: #343a40;
+    color: white;
+    border-radius: 6px;
+    margin: auto;
+    position: relative;
 }
 .card-text {
-    display: block;
-    max-height: 40px; /* Limit text block height */
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    color: inherit;
+    display: relative;
 }
+
 custom-dropdown {
+    position: relative;
+    display: inline-block;
     background: transparent;
     border: none;
     box-shadow: none;
     padding: 0;
 }
 
+.dropdown-item:hover {
+    background-color: #f0f0f0; 
+    color: #000; 
+}
+
+.dropdown-menu {
+    z-index: 1050; 
+    position: absolute;
+}
+.green-hover:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.red-hover:hover {
+    background-color: #dc3545;
+    color: white;
+}
 .custom-dropdown::after {
     display: none;
 }

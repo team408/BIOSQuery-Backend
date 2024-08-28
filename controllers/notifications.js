@@ -1,4 +1,5 @@
 const notificationsService = require('../services/notifications');
+const readStrToBool = {"read" : true, "unread" : false}
 
 async function getAllNotifications(req, res) {
     try {
@@ -27,14 +28,19 @@ async function readNotifcation(req, res) {
     try {
         //check from req the read vaule
         const notificationID = req.params.id;
+        const readBoolStr = req.params.readBoolStr;
         if (!notificationID) {
             return res.status(400).send({ error: 'id parameter is required' });
         }
-        let result
+        if (!readBoolStr) {
+            return res.status(400).send({ error: 'readBoolStr parameter is required' });
+        }
+        const readBool = readStrToBool[readBoolStr];
+        let result;
         if(notificationID === "all")
-            result = await notificationsService.markReadAllNotification(true);    
+            result = await notificationsService.markReadAllNotification(readBool);    
         else
-            result = await notificationsService.markReadNotification(true, notificationID);
+            result = await notificationsService.markReadNotification(readBool, notificationID);
         res.status(200).send();
     } catch (error) {
         console.error(error);
@@ -42,23 +48,4 @@ async function readNotifcation(req, res) {
     }
 }
 
-async function unreadNotifcation(req, res) {
-    try {
-        //check from req the read vaule
-        const notificationID = req.params.id;
-        if (!notificationID) {
-            return res.status(400).send({ error: 'id parameter is required' });
-        }
-        let result
-        if(notificationID === "all")
-            result = await notificationsService.markReadAllNotification(false);    
-        else
-            result = await notificationsService.markReadNotification(false, notificationID);
-        res.status(200).send();
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-}
-
-module.exports = {getAllNotifications, getNotificationsLastDay, readNotifcation, unreadNotifcation}
+module.exports = {getAllNotifications, getNotificationsLastDay, readNotifcation}

@@ -5,125 +5,20 @@
 <link rel="stylesheet" href="/css/endpoints.css">
 
 <div class="container">
-    <% if (!singleEndpoint){ %>
     <div>
-        <button id="addNode" class="btn btn-secondary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
+        <button id="addNode" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
     </div>
-    <% } %>
     <!-- Endpoint cards -->
-    <div class="row">
-        <% if (!endpoints.length) { %>
-            <h1>No endpoints found</h1>
-        <% } else { %>
-            <% endpoints.forEach(function (endpoint) { %>
-                <% if (!singleEndpoint){ %>
-                    <div class="col-md-3 g-3">
-                <% } else { %>
-                    <div class=”cust-grid-col”>
-                <% } %>
-                    <div class="card fixed-sized-card">
-                        <div class="card-body">
-                            <% 
-                            let platformLogo;
-                            switch (endpoint.platform) {
-                                case "rhel":
-                                    platformLogo = "/img/rhel_logo.png";
-                                    break;
-                                case "kali":
-                                    platformLogo = "/img/kali_logo.png";
-                                    break;
-                                case "ubuntu":
-                                    platformLogo = "/img/ubuntu_logo.png";
-                                    break;
-                                case "debian":
-                                    platformLogo = "/img/debian_logo.png";
-                                    break;
-                                case "windows":
-                                    platformLogo = "/img/windows_logo.png";
-                                    break;
-                                case "centos":
-                                    platformLogo = "/img/centos_logo.png";
-                                    break;
-                                case "macos":
-                                    platformLogo = "/img/macos_logo.png";
-                                    break;
-                                default:
-                                    platformLogo = "/img/generic_logo.png";
-                                    break;
-                            }
-                            %>
-                            <a href="/endpoints/<%= endpoint.id %>"><img src="<%= platformLogo %>" class="card-img-top platform-img"></a>
-                            <h5 id="endpoint_hostname" class="card-title">
-                                <%= endpoint.hostname %>
-                            </h5>
-                            <p class="card-text">
-                                <strong>IP:</strong> <%= endpoint.primary_ip %>
-                            </p>
-                            <p class="card-text">
-                                <strong>MAC:</strong> <%= endpoint.primary_mac %>
-                            </p>
-                            <p class="card-text">
-                                <strong>OS:</strong> <%= endpoint.os_version %>
-                            </p>
-                            <p class="card-text">
-                                <strong>Uptime:</strong> <%= (endpoint.uptime / (1000 * 60 * 60 * 24)).toFixed(2) %> days
-                            </p>
-                            <p class="card-text">
-                                <strong>Last Seen:</strong> <%= endpoint.formatted_last_seen %>
-                            </p>
-                            <p class="card-text">
-                                <strong>Last Scan:</strong>
-                                <% if (endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00') { %>
-                                    <%= endpoint.formatted_last_scan %>
-                                <% } else { %>
-                                    N/A
-                                <% } %>
-                            </p>
-                            <p id="endpoint_id" hidden class="endpointID">
-                                <%- endpoint.id %>
-                            </p>
-                            <!-- Dropdown menu -->
-                            <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
-                                <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton<%= endpoint.uuid %>" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                    </svg>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= endpoint.uuid %>">
-                                    <% if (endpoint.chipsec) { %>
-                                        <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
-                                        <li><a id="run_module" class="dropdown-item" href="/endpoints/<%= endpoint.id %>">Run a chipsec module</a></li>
-                                        <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
-                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
-                                    <% } else { %>
-                                        <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
-                                        <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>
-                                    <% } %>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <% if (endpoint.chipsec) { %>
-                                <div class="text-muted chipsec-status">✅ Chipsec installed</div>
-                            <% } else { %>
-                                <div class="text-muted chipsec-status">⛔ Chipsec isn't installed </div>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-            <% }); %>
-        <% } %>
+    <div id="endpointsDivRow" class="row">
+        <div style="width: 1000px; height: 300px;">
+            <img src="/img/loading.gif" class="center" style="width: 10%; display: block; margin: auto; margin-top:10%">
+        </div>
     </div>
-    <% if (singleEndpoint){ %>
-        <%- include('partials/chipsec_modules') %>
-    <% } %>
-</div>
-<% if (!singleEndpoint){ %>
 <div class="container py-5">
     <!-- Actions for selected endpoints -->
-    <div class="fixed-bottom-left">
-        <button id="deleteSelected" class="px-3 mr-3 btn btn-outline-dark" disabled>Delete Selected</button>
-        <button id="installChipsecSelected" class="btn btn-outline-dark" disabled>Install CHIPSEC on Selected</button>
+    <div id="div-action-buttons" class="fixed-bottom-left" style="display: none;">
+        <button id="deleteSelected" class="btn btn-secondary">Delete Selected</button>
+        <button id="installChipsecSelected" class="btn btn-secondary">Install CHIPSEC on Selected</button>
     </div>
 </div>
 
@@ -138,48 +33,102 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addNodeForm">
-                    <div class="form-group">
-                        <label for="osType">OS Type</label>
-                        <select class="form-control" id="osType">
-                            <option value="deb">Debian</option>
-                            <option value="rpm">rpm</option>
-                        </select>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item" >
+                      <button class="nav-link active" id="ssh-tab" data-bs-toggle="tab" role="tab" aria-controls="addSsh" data-bs-target="#addSsh" aria-selected="true">SSH</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link" id="oneliner-tab" data-bs-toggle="tab" role="tab" aria-controls="oneliner" data-bs-target="#oneliner" aria-selected="false">Oneliner</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="scale-tab" data-bs-toggle="tab" role="tab" aria-controls="scale" data-bs-target="#scale" aria-selected="false">At Scale</button>
+                      </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane show active" id="addSsh" role="tabpanel" aria-labelledby="addSsh-tab">
+                        <form id="addNodeForm">
+                            <div class="form-group">
+                                <label for="osType">OS Type</label>
+                                <select class="form-control" id="osType">
+                                    <option value="deb">Debian</option>
+                                    <option value="deb">Ubuntu</option>
+                                    <option value="rpm">Centos</option>
+                                    <option value="rpm">REHL</option>
+                                    <option value="deb">Kali Linux</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hostId">Host ID (IP/Hostname)</label>
+                                <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="hostId">Authentication Method</label>
+                                <select class="form-control" id="authMeth" selected="pass">
+                                    <option value="pass">Credentials</option>
+                                    <option value="key">PrivateKey</option>
+                                </select>
+                            </div>
+                            <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter Username">
+                            <div class="form-group" id="credentials">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter Password">
+                            </div>
+                            <div class="form-group" id="privateKeySection" style="display:none;">
+                                <label for="privateKey">Private Key</label>
+                                <textarea class="form-control" id="privateKey" placeholder="Paste Private Key"></textarea>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="defaultKeyCheckbox">
+                                    <label class="form-check-label" for="defaultKeyCheckbox">
+                                        Use Default Key
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="hostId">Host ID (IP/Hostname)</label>
-                        <input type="text" class="form-control" id="hostId" placeholder="Enter Host ID">
-                    </div>
-                    <div class="form-group">
-                        <label for="hostId">Authentication Method</label>
-                        <select class="form-control" id="authMeth" selected="pass">
-                            <option value="pass">Credentials</option>
-                            <option value="key">PrivateKey</option>
-                        </select>
-                    </div>
-                    <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Enter Username">
-                    <div class="form-group" id="credentials">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter Password">
-                    </div>
-                    <div class="form-group" id="privateKeySection" style="display:none;">
-                        <label for="privateKey">Private Key</label>
-                        <textarea class="form-control" id="privateKey" placeholder="Paste Private Key"></textarea>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="defaultKeyCheckbox">
-                            <label class="form-check-label" for="defaultKeyCheckbox">
-                                Use Default Key
-                            </label>
+                    <div class="tab-pane" id="oneliner" role="tabpanel" aria-labelledby="onliner-tab">
+                        <style>
+                            /* Custom dark mode styles */
+                            .code-container {
+                                background-color: #1e1e1e; /* Dark background */
+                                color: #c5c5c5; /* Light text color */
+                                padding: 1rem;
+                                border-radius: 0.5rem;
+                                font-family: Consolas, "Courier New", monospace;
+                                overflow-x: auto;
+                            }
+                            .code-container code {
+                                color: #dcdcdc; /* Slightly lighter color for code */
+                            }
+                            code {
+                                display: block;
+                                white-space: pre-wrap   
+                              }
+                        </style>
+                        <form id="onelinerForm">
+                            <div class="form-group">
+                                <label for="osType">OS Type</label>
+                                <select class="form-control" id="osType-oneliner">
+                                    <option value="deb">Debian</option>
+                                    <option value="deb">Ubuntu</option>
+                                    <option value="rpm">Centos</option>
+                                    <option value="rpm">REHL</option>
+                                    <option value="deb">Kali Linux</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div class="code-container">
+                            <pre><code id="oneliner-code">Loading your oneliner...</code></pre>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#addNodeModal">Add Host</button>
-                </form>
+                    <div class="tab-pane" id="scale" role="tabpanel" aria-labelledby="scale-tab">Check out the ansible tutorial on our <a href="/information-center">information center</a>.</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<% } %>
 <script src="/js/endpoints.js"></script>
+<script src="/js/single_endpoint.js"></script>
 <%- include('partials/footer') %>
 </div>

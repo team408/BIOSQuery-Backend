@@ -1,5 +1,4 @@
 const fleetService = require('../services/fleet');
-const systemService = require('../services/system');
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -15,20 +14,19 @@ function formatDate(dateString) {
 
 async function getSingleEndpoint(req, res) {
     try {
-        // Fetch endpoints
-        var endpoints = await fleetService.listEndpoints();
-
-        // Act for a single endpoint in case of a id in the query
-        if (req.params.id) {
-            const endpointId = req.params.id;
-            endpoints.hosts = endpoints.hosts.filter(host => host.id === parseInt(endpointId));
-            if (!endpoints) {
-                return res.status(404).send('Endpoint not found');
-            } else {
-                const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
-                format_endpoints(endpoints.hosts);
-                res.render("endpoints.ejs", {endpoints: endpoints.hosts, scripts: scriptsData, singleEndpoint: true});
-            }
+        if (!req.params.id) {
+            res.status(400).send({"result":"endpointID id parmeter not submitted"});
+            return
+        }
+        
+        // Fetch endpoint
+        var endpoint = await fleetService.getEndpoint(req.params.id);
+        if (!endpoint) {
+            return res.status(404).send({"result":'Endpoint not found'});
+        } else {
+            const scriptsData = await fleetService.getScriptsBySingleEndpoint(endpoint);
+            format_single_endpoint(endpoint);
+            res.render("single_endpoint.ejs", {endpoint: endpoint, scripts: scriptsData, singleEndpoint: true});
         }
     } catch (error) {
     console.log(error);
@@ -38,11 +36,21 @@ async function getSingleEndpoint(req, res) {
 
 async function getEndpoints(req, res) {
     try {
+        res.render("endpoints.ejs");
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+async function getEndpointsJson(req, res) {
+    try {
         // Fetch endpoints
         var endpoints = await fleetService.listEndpoints();
 
         // Fetch scripts for each endpoint
-        const scriptsData = await fleetService.getScriptByEndpoint(endpoints.hosts);
+        const scriptsData = await fleetService.getScriptsByEndpointList(endpoints.hosts);
 
         // Map scripts to their respective endpoints
         const endpointsWithScripts = fleetService.mergeEndpointAndScripts(endpoints.hosts, scriptsData)
@@ -59,7 +67,7 @@ async function getEndpoints(req, res) {
         }
         
         format_endpoints(filteredEndpoints);
-        res.render("endpoints.ejs", { endpoints: filteredEndpoints , singleEndpoint: false });
+        res.status(200).json(filteredEndpoints);
 
     } catch (error) {
         console.log(error);
@@ -67,44 +75,14 @@ async function getEndpoints(req, res) {
     }
 }
 
-
-async function addNode(req, res) {
-    try {
-        console.log('Received request to add host with data:', req.body); // Add log here
-
-        // validate hostId
-        const { hostId, osType } = req.body;
-        if (!hostId || !osType) {
-            return res.status(400).send({ error: 'hostID parameter is required' });
-        }
-
-        // Validate correct osType request
-        if (!(['deb', 'rpm'].includes(osType))) {
-            res.status(404).send('Unknown osType');
-            return;
-        }
-
-        // Get EnrollmentCmd
-        const enrollCmd = await fleetService.getAgentEnrollCmd(osType);
-
-        // Fetch endpoints
-        const endpointsData = await fleetService.listEndpoints();
-
-        // Execute enrollment command
-        await systemService.remoteEnrollLinuxHost(enrollCmd, hostId);
-        res.send("Node enrolled successfully");
-
-    } catch (error) {
-        console.error('Error in addNode:', error);
-        res.status(500).send('Internal Server Error');
-    }
+function format_single_endpoint(endpoint){
+    endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
+    endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
 }
 
 function format_endpoints(endpoints) {
-    for (endpoint of endpoints) {
-        endpoint.formatted_last_scan = formatDate(endpoint.last_scan);
-        endpoint.formatted_last_seen = formatDate(endpoint.seen_time);
-
+    for (let endpoint of endpoints) {
+        format_single_endpoint(endpoint)
     }
 }
 
@@ -179,4 +157,4 @@ async function renderAdminPanel(req, res) {
 }
 
 
-module.exports = { getEndpoints, getSingleEndpoint, addNode, getControlPanel, getHostScripts,scheduleScan,  manageModules, renderAdminPanel,  };
+module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel, getHostScripts,scheduleScan,  manageModules, renderAdminPanel,  };
