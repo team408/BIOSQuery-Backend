@@ -1,0 +1,75 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h2>Admin Panel - Scheduled Network Scans</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Scheduled Scans
+        </div>
+        <div class="card-body">
+            <form id="scanSettingsForm">
+                <div class="mb-3">
+                    <label for="scanFrequency" class="form-label">Scan Frequency:</label>
+                    <select id="scanFrequency" class="form-select">
+                        <option value="daily" <%= scanSettings.scanFrequency === 'daily' ? 'selected' : '' %>>Daily</option>
+                        <option value="weekly" <%= scanSettings.scanFrequency === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                        <option value="monthly" <%= scanSettings.scanFrequency === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="scanTime" class="form-label">Scan Time:</label>
+                    <input type="time" id="scanTime" class="form-control" value="<%= scanSettings.scanTime %>">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" id="autoScan" class="form-check-input" <%= scanSettings.autoScan ? 'checked' : '' %>>
+                    <label for="autoScan" class="form-check-label">Enable Automatic Scan</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Scan Settings</button>
+            </form>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">Module Management</div>
+        <div class="card-body">
+            <form id="moduleSettingsForm">
+                <div class="mb-3">
+                    <label for="endpointSelect" class="form-label">Select Endpoint:</label>
+                    <select id="endpointSelect" class="form-select" required>
+                        <!-- Endpoint options will be dynamically loaded -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="moduleSelect" class="form-label">Select Modules to Run:</label>
+                    <select id="moduleSelect" class="form-select" multiple required>
+                        <!-- Module options will be dynamically loaded -->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Module Settings</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Success message will be set dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin-panel.js"></script>
+
+<%- include('partials/footer') %>

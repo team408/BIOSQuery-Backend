@@ -1,4 +1,7 @@
 const fleetService = require('../services/fleet');
+const fs = require('fs');
+const path = require('path');
+
 
 const modules_to_scripts = {
     "common-smm": "chipsec_common_smm.sh",
@@ -119,4 +122,29 @@ async function runModule(req, res) {
     }
 };
 
-module.exports = { installChipsec, uninstallChipsec, runModule};
+async function assignModulesToEndpoint(req, res) {
+    try {
+        const { endpoint, modules } = req.body;
+        if (!endpoint || !modules) {
+            return res.status(400).send('Endpoint and modules are required.');
+        }
+
+        // Load existing module settings
+        const settingsPath = path.join(__dirname, '../config/moduleSettings.json');
+        let settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+
+        // Update settings for the endpoint
+        settings.selectedModules = settings.selectedModules.filter(mod => mod.endpoint !== endpoint);
+        settings.selectedModules.push({ endpoint, modules });
+
+        // Save the updated settings back to the file
+        fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+
+        res.status(200).json({ message: 'Module settings saved successfully!' });
+    } catch (error) {
+        console.error('Error assigning modules to endpoint:', error);
+        res.status(500).send('Failed to save module settings.');
+    }
+}
+
+module.exports = { installChipsec, uninstallChipsec, runModule, assignModulesToEndpoint};

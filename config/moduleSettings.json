@@ -1,0 +1,7 @@
+{
+  "selectedModules": {
+    "endpoint1": ["module1", "module2"],
+    "endpoint2": ["module3"]
+  },
+  "availableModules": ["module1", "module2", "module3", "module4"]
+}

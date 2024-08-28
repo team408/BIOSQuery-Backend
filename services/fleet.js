@@ -1,8 +1,9 @@
+//services/fleet.js
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
 
-fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
+const fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`
 
 async function getRequest(url, headers = null) {
     try {
@@ -296,8 +297,52 @@ async function getScriptsByHost(hostId) {
     }
 }
 
+async function assignModulesToEndpoint(endpoint, modules) {
+    try {
+        const response = await axios.post(`${fleetUrl}/api/assign-modules`, {
+            endpoint: endpoint,
+            modules: modules
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error assigning modules to endpoint:', error);
+        throw new Error('Failed to assign modules.');
+    }
+}
+
+async function scheduleScan(settings) {
+    try {
+        // Construct the API payload based on the scan frequency and time
+        const payload = {
+            frequency: settings.scanFrequency,  // 'daily', 'weekly', or 'monthly'
+            time: settings.scanTime,  // e.g., '19:00'
+            autoScan: settings.autoScan
+        };
+
+        // Use a consistent URL format with the rest of fleet.js
+        const response = await axios.post(`${fleetUrl}/api/v1/fleet/scripts/schedule-scan`, payload, {
+            headers: {
+                "Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status !== 200) {
+            throw new Error('Failed to schedule scan');
+        }
+
+        console.log('Scan scheduled successfully:', response.data);
+    } catch (error) {
+        console.error('Error scheduling scan:', error);
+        throw error;
+    }
+}
+
+
 
 module.exports = {
+    fleetUrl,
     listEndpoints, 
     getEndpoint,
     buildStatistics,
@@ -310,6 +355,8 @@ module.exports = {
     getScriptIdByName,
     runScriptByName,
     removeHostFromFleetById,
-    getScriptsByHost
+    getScriptsByHost,
+    assignModulesToEndpoint,
+    scheduleScan,
    };
 

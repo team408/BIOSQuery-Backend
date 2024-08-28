@@ -10,6 +10,7 @@ const dashboardController = require("../controllers/statistics");
 const risksController = require("../controllers/risks"); 
 const infoCenterController = require("../controllers/information_center");
 const notificationsController = require("../controllers/notifications");
+const adminPanelController = require('../controllers/admin_panel');
 
 
 // Main route
@@ -53,5 +54,10 @@ router.get("/api/notifications/all", notificationsController.getAllNotifications
 router.get("/api/notifications/today", notificationsController.getNotificationsLastDay)
 router.get("/api/notifications/read/:id", notificationsController.readNotifcation)
 router.get("/api/notifications/unread/:id", notificationsController.unreadNotifcation)
+
+// Admin Panel
+router.get('/admin-panel', adminPanelController.getAdminPanel);
+router.post('/admin-panel/save-scan-settings', adminPanelController.saveScanSettings);
+router.post('/admin-panel/save-module-settings', adminPanelController.saveModuleSettings);
 
 module.exports = router;
