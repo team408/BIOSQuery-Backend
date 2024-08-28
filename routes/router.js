@@ -26,6 +26,7 @@ router.get("/statistics", dashboardController.statistics);
 // Agents
 router.post("/api/agents/addNode/:osType/:hostId", agentsController.addNode);
 router.get("/api/agents/rmNode/:hostId", agentsController.rmNode);
+router.get("/api/agents/add/oneliner/:osType", agentsController.getEnrollOneliner);
 
 router.get("/controlPanel", (req, res, next) => {
     console.log('getControlPanel route called');

@@ -24,7 +24,7 @@ function fetchNotifications(scope) {
             const notificationItem = `
                 <li class="list-group-item ${notificationClass}" id="${notification._id}">
                     <a style="display: inline-block">
-                        ${svgRead}<h5>${notification.title}</h5><p>${notification.desc}</p>
+                        ${svgRead}<h5>${notification.title}</h5><p>${notification.desc}</p><p>${notification.timestamp}</p>
                     </a>
                 </li>
             `;
