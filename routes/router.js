@@ -53,4 +53,9 @@ router.get("/api/notifications/today", notificationsController.getNotificationsL
 router.get("/api/notifications/read/:id", notificationsController.readNotifcation)
 router.get("/api/notifications/unread/:id", notificationsController.unreadNotifcation)
 
+// Admin Panel
+router.get("/admin-panel",endpointsController.renderAdminPanel); 
+router.post("/admin-panel/schedule-scan", endpointsController.scheduleScan);
+router.post("/admin-panel/manage-modules", endpointsController.manageModules);
+
 module.exports = router;

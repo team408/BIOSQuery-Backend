@@ -1,0 +1,120 @@
+/* admin_panel.css */
+
+/* General Layout */
+.container {
+    margin-top: 30px;
+}
+
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem;
+    font-size: 1.25rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-success {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: bold;
+}
+
+.form-select,
+.form-control {
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+/* Table Styles */
+.table {
+    margin-bottom: 0;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table thead th {
+    background-color: #343a40;
+    color: white;
+}
+
+/* Badge Styles */
+.badge {
+    font-size: 0.9em;
+    padding: 0.5em 0.75em;
+}
+
+.bg-high {
+    background-color: #dc3545;
+}
+
+.bg-medium {
+    background-color: #ffc107;
+}
+
+.bg-low {
+    background-color: #28a745;
+}
+
+/* Modal Styles */
+.modal-header {
+    background-color: #343a40;
+    color: white;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Specific Customizations */
+.info-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.info-btn .fas {
+    margin-right: 0.5rem;
+}
+
+/* Miscellaneous */
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
