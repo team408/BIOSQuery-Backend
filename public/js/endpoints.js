@@ -196,16 +196,15 @@ function populateEndpoints(_callback){
                         break;
                 }
 
-                // Create the image element for the OS logo
-                let platformImg = `<img src="${platformLogo}" class="card-img-top" alt="${endpoint.platform} logo">`;
-
                 let body = `
                 <input type="checkbox" class="endpoint-checkbox select-endpoints" data-endpoint-id="${endpoint.id}">
-                <a href="/endpoints/${endpoint.id}"></a>
-                <h5 id="endpoint_hostname" class="card-title">
-                    ${platformImg}
+                <a href="/endpoints/${endpoint.id}">
+                <h5 id="endpoint_hostname" class="card-title m-0 ml-2">
+                    <img src="${platformLogo}" class="card-img-top" alt="${endpoint.platform} logo">
                     ${endpoint.hostname}
                 </h5>
+                </a>
+
                 <p class="card-text"><strong>IP:</strong> ${endpoint.primary_ip}</p>
                 <p class="card-text"><strong>MAC:</strong> ${endpoint.primary_mac}</p>
                 <p class="card-text"><strong>OS:</strong> ${endpoint.os_version}</p>
@@ -215,10 +214,10 @@ function populateEndpoints(_callback){
                     ${endpoint.formatted_last_scan && endpoint.formatted_last_scan !== '1/1/1970, 00:00:00' ? endpoint.formatted_last_scan : 'N/A'}
                 </p>
                 <p id="endpoint_id" hidden class="endpointID">${endpoint.id}</p>
-                <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+                <div class="dropdown position-absolute" style="top: 2px; right: 10px;">
                     <button class="btn dropdown-toggle custom-dropdown" type="button" id="dropdownMenuButton${endpoint.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-horizontal" viewBox="0 0 16 16">
+                            <path d="M13 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M9.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M6 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
                         </svg>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${endpoint.uuid}">
@@ -226,13 +225,14 @@ function populateEndpoints(_callback){
                             <li><a id="execute_script" class="dropdown-item" href="#">Execute a script</a></li>
                             <li><a id="run_module" class="dropdown-item" href="/endpoints/<%= endpoint.id %>">Run a chipsec module</a></li>
                             <li><a id="uninstall_chipsec" class="dropdown-item" href="#">Uninstall chipsec</a></li>
-                            <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
-                        : `
+                            <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`: `
                             <li><a id="install_chipsec" class="dropdown-item" href="#">Install chipsec</a></li>
                             <li><a id="delete_host" class="dropdown-item" href="#">Delete host</a></li>`
                         }
                     </ul>
                 </div>
+
+
                 `
                 
             

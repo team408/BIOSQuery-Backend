@@ -46,18 +46,20 @@
 
 
 .card-body {
-    display: relative;
+    display: flex;
     padding: 10px;
-    align-items: left;
+    flex-direction: column;
 }
 .card-title{
-    font-size: 1.8rem; 
+    font-size: 1.4rem; 
     align-items: center;
     display: flex;       
     padding: 10px;
     background-color: #343a40;
     color: white;
     border-radius: 6px;
+    margin: auto;
+    position: relative;
 }
 .card-text {
     overflow: hidden;
