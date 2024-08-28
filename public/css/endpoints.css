@@ -1,7 +1,7 @@
 .card-img-top {
     width: 15%;
     height: 15%;
-    margin-left: 10px;
+    margin-right: 10px;
     display: inline-block;
 }
 .fixed-size-card {
@@ -48,7 +48,7 @@
 .card-body {
     display: relative;
     padding: 10px;
-    align-items: center;
+    align-items: left;
 }
 .card-title{
     font-size: 1.8rem; 

@@ -180,9 +180,8 @@ function populateEndpoints(_callback) {
                 <input type="checkbox" class="endpoint-checkbox select-endpoints" data-endpoint-id="${endpoint.id}">
                 <a href="/endpoints/${endpoint.id}"></a>
                 <h5 id="endpoint_hostname" class="card-title">
-                    ${endpoint.hostname}
                     ${platformImg}
-
+                    ${endpoint.hostname}
                 </h5>
                 <p class="card-text"><strong>IP:</strong> ${endpoint.primary_ip}</p>
                 <p class="card-text"><strong>MAC:</strong> ${endpoint.primary_mac}</p>
