@@ -5,35 +5,47 @@
     display: inline-block;
 }
 .fixed-size-card {
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px; /* Adjust padding to your preference */
-    box-sizing: border-box; /* Ensures padding is included within the card's dimensions */
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 300px; /* Optional: Set a minimum height */
+    flex: 1 1 auto; /* Allows the card to grow and fill available space */
+    margin: 10px; /* Adds space between the cards */
 }
+
 .card-footer {
     display: flex;
-    justify-content: space-between; 
-    align-items: center;           
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
 }
 .container {
-    width: calc(100% - 20px); 
-    max-width: 95%; 
+    width: calc(100% - 20px);
+    max-width: 95%;
     padding: 20px;
     margin: auto;
     position: relative;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    flex-grow: 1;
 }
 .row {
-    border-radius: 4px; 
-    display: flex;                
-    justify-content: center; 
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
     padding: 20px;
     margin-top: 20px;
     background-color: #f1f6fae9;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if needed */
+    align-items: stretch; /* Ensures all cards have the same height */
+    gap: 10px; /* Adds space between the cards */
 }
 
 .select-endpoints{
@@ -44,16 +56,17 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-
 .card-body {
     display: flex;
-    padding: 10px;
     flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    flex-grow: 1; /* Ensures that card body grows to fill available space */
 }
-.card-title{
-    font-size: 1.4rem; 
+.card-title {
+    font-size: 1.4rem;
     align-items: center;
-    display: flex;       
+    display: flex;
     padding: 10px;
     background-color: #343a40;
     color: white;
@@ -61,14 +74,13 @@
     margin: auto;
     position: relative;
 }
-.card-text {
-    overflow: hidden;
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    color: inherit;
-    display: relative;
-}
 
+.card-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    overflow: visible;
+}
 custom-dropdown {
     position: relative;
     display: inline-block;
