@@ -199,7 +199,7 @@ async function getEndpoint(hostID) {
     let endpoint = await fleetApiGetRequest(endpointsUri);
     
     // No endpoints found
-    if (!endpoint.hasOwnProperty("host")){
+    if (!endpoint){
         return null;
     }
 

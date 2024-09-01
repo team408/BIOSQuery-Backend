@@ -36,7 +36,7 @@ async function getAllHostsRisks() {
             return {
                 host: host.hostname,
                 hostId: host.id,
-                risk: await calculateRisk(host.id),
+                risk: await calculateRisk(host),
                 ip: host.primary_ip,
                 mac: host.primary_mac,
                 os: host.platform,
@@ -50,23 +50,12 @@ async function getAllHostsRisks() {
     return risks;
 }
 
-async function calculateRisk(hostId) {
+async function calculateRisk(host) {
     let succeededModules = 0;
-    let executionScriptsDetails = await fleetService.getScriptByEndpoint([host]);
-    let wantedScripts = [
-        'chipsec_common_bios_ts.sh',
-        'chipsec_common_bios_wp.sh',
-        'chipsec_common_smm.sh',
-        'chipsec_common_smrr.sh',
-        'chipsec_common_spi_desc.sh',
-        'chipsec_common_spi_lock.sh',
-        'chipsec_tools_smm_smm_ptr.sh',
-        'chipsec_tools_uefi_reputation.sh',
-    ]
-    let lastScriptExecutions = getLatestChipsecExecutions(executionScriptsDetails, wantedScripts);
+    let executionScriptsDetails = await fleetService.getScriptsBySingleEndpoint(host);
     // Calculate risk score: number of 'Ran' out of all scripts
-    for (const script in lastScriptExecutions) {
-        if (lastScriptExecutions[script].status === 'ran') {
+    for (const script in executionScriptsDetails) {
+        if (executionScriptsDetails[script].status === 'ran') {
             succeededModules += 1;
         }
     }
