@@ -60,7 +60,7 @@
 </div>
 
 <!-- Modal Template -->
-<div class="modal fade" id="scriptModal" tabindex="-1" aria-labelledby="scriptModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailedRisksModal" tabindex="-1" aria-labelledby="scriptModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -71,7 +71,7 @@
                 <div id="loadingIndicator" class="text-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="#4F0EFF" stroke="#4F0EFF" stroke-width="4" r="15" cx="40" cy="65"><animate attributeName="cy" calcMode="spline" dur="1.2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></circle><circle fill="#4F0EFF" stroke="#4F0EFF" stroke-width="4" r="15" cx="100" cy="65"><animate attributeName="cy" calcMode="spline" dur="1.2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></circle><circle fill="#4F0EFF" stroke="#4F0EFF" stroke-width="4" r="15" cx="160" cy="65"><animate attributeName="cy" calcMode="spline" dur="1.2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></circle></svg>
                 </div>
-                <table class="table d-none" id="scriptTable">
+                <table class="table d-none" id="modulesTable">
                     <thead>
                     <tr>
                         <th>Script</th>
@@ -79,7 +79,7 @@
                         <th>Status</th>
                     </tr>
                     </thead>
-                    <tbody id="scriptDetails">
+                    <tbody id="modulesDetails">
                     <!-- Script details will be appended here -->
                     </tbody>
                 </table>

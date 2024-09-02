@@ -58,12 +58,12 @@ async function remoteEnrollLinuxHost(host_id, username, osType, enrollCmd, passw
     response = await executeRemoteCommand(sshConn, './fleetctl -v')
     
     // Validation for fleetctl installation
-    if (response.stdout.search("fleetctl.*version") == -1)
+    if (!response.stdout.search("fleetctl.*version.*"))
       return false; 
     response = await executeRemoteCommand(sshConn, "./" + enrollCmd)
     
     // Validatation for pckg downloading
-    if (response.stdout.search("Generating your fleetd agent...\n\nSuccess!") == -1)
+    if (!response.stdout.search("Generating your fleetd agent...\n\nSuccess!"))
       return false;
     if (password){
       response = await executeRemoteCommand(sshConn, ["echo ", password, " | sudo -S ", dpkgByOs[osType], " -i fleet-osquery*.deb"].join(""))
@@ -73,7 +73,7 @@ async function remoteEnrollLinuxHost(host_id, username, osType, enrollCmd, passw
     }
     
     //validation for successful installation
-    if (response.stdout.search("Created symlink") == -1)
+    if (!response.stdout.search("Created symlink"))
       return false;
     return true
   }

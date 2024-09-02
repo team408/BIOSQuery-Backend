@@ -110,7 +110,8 @@ document.getElementById('defaultKeyCheckbox').addEventListener('change', functio
     }
 });
 
-addNodeForm.addEventListener('submit', () => {
+addNodeForm.addEventListener('submit', function(event) {
+    event.preventDefault();
     var osType = document.getElementById('osType').value;
     var hostId = document.getElementById('hostId').value;
     var authMeth = document.getElementById('authMeth').value;
@@ -138,7 +139,7 @@ addNodeForm.addEventListener('submit', () => {
         },
         body: JSON.stringify(data)
     })
-    .then(async response => {
+    .then(response => {
         if (response.ok){
             // Handle success response
             const container = document.getElementById('toast-container');
@@ -148,7 +149,7 @@ addNodeForm.addEventListener('submit', () => {
             // Update title and message
             newToast.classList.add('toast-success');
             newToast.querySelector('.toast-header strong').textContent = 'Started action on endpoint\t🚀';
-            newToast.querySelector('.toast-body').textContent = (await response.json()).result;
+            newToast.querySelector('.toast-body').textContent = response.result;
 
             container.append(newToast);
             const toast = bootstrap.Toast.getOrCreateInstance(newToast);
@@ -182,6 +183,6 @@ addNodeForm.addEventListener('submit', () => {
         toast.show();
 
         console.log(error);
-});
+    });
     document.getElementById('addNodeModal').ariaHidden = true;
 });

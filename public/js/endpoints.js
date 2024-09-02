@@ -70,6 +70,83 @@ document.getElementById('defaultKeyCheckbox').addEventListener('change', functio
     }
 });
 
+addNodeForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    var osType = document.getElementById('osType').value;
+    var hostId = document.getElementById('hostId').value;
+    var authMeth = document.getElementById('authMeth').value;
+    var data = { osType: osType, hostId: hostId};
+    var username = document.getElementById('username').value;
+    data.username = username;
+    if (authMeth === 'pass') {
+        var password = document.getElementById('password').value;
+        data.password = password;
+    } else if (authMeth === 'key') {
+        var useDefaultKey = document.getElementById('defaultKeyCheckbox').checked;
+        if (!useDefaultKey) {
+            var privateKey = document.getElementById('privateKey').value;
+            data.privateKey = privateKey;
+        }
+        else {
+            data.privateKey = "default";
+        }
+    }
+
+    fetch('/api/agents/addNode/' + osType + "/" + hostId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.ok){
+            // Handle success response
+            const container = document.getElementById('toast-container');
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+            const newToast = targetElement.cloneNode(true);
+
+            // Update title and message
+            newToast.classList.add('toast-success');
+            newToast.querySelector('.toast-header strong').textContent = 'Started action on endpoint\t🚀';
+            newToast.querySelector('.toast-body').textContent = response.result;
+
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
+        }
+        else{
+            const container = document.getElementById('toast-container');
+            const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');            
+            const newToast = targetElement.cloneNode(true);
+
+            newToast.classList.add('toast-error');
+            newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+            newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+            container.append(newToast);
+            const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+            toast.show();
+
+        }
+    }).catch((error) => {
+        const container = document.getElementById('toast-container');
+        const targetElement = document.querySelector('[data-kt-docs-toast="stack"]');
+        const newToast = targetElement.cloneNode(true);
+
+        newToast.classList.add('toast-error');
+        newToast.querySelector('.toast-header strong').textContent = 'Action Failed';
+        newToast.querySelector('.toast-body').textContent = 'An error occurred. Please try again.';
+
+        container.append(newToast);
+        const toast = bootstrap.Toast.getOrCreateInstance(newToast);
+        toast.show();
+
+        console.log(error);
+});
+    document.getElementById('addNodeModal').ariaHidden = true;
+});
+
 // Populate endpoint cards with data
 function populateEndpoints(_callback){
     const $endpointsDivRow = $('#endpointsDivRow');
