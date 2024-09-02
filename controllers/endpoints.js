@@ -105,5 +105,56 @@ async function getHostScripts(req, res) {
         res.status(500).send('Internal Server Error');
     }
 }
+async function scheduleScan(req, res) {
+    const { frequency, time, enableScans } = req.body;
 
-module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel, getHostScripts };
+    try {
+        // Implement logic to save the schedule configuration to your service/database
+        await fleetService.scheduleNetworkScan(frequency, time, enableScans);
+
+        // Redirect back to the admin panel with a success message
+        res.redirect('/admin-panel');
+    } catch (error) {
+        console.error('Error scheduling scan:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+
+async function manageModules(req, res) {
+    const { modules, excludedModules } = req.body;
+
+    try {
+        // Implement logic to update module configuration based on user selection
+        await fleetService.updateModuleConfig(modules, excludedModules);
+
+        // Redirect back to the admin panel with a success message
+        res.redirect('/admin-panel');
+    } catch (error) {
+        console.error('Error managing modules:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+async function renderAdminPanel(req, res) {
+    try {
+        // Fetch the list of available modules (scripts)
+        const scripts = await fleetService.listScripts();
+
+        // Filter the scripts to only include those relevant to network scans
+        const modules = scripts.filter(script => {
+            // Add any logic to filter out specific scripts or include only certain ones
+            // Example: Include only scripts with names that start with 'chipsec'
+            return script.name.startsWith('chipsec');
+        });
+
+        // Render the admin panel view with the modules
+        res.render("admin_panel.ejs", { modules: modules });
+    } catch (error) {
+        console.error('Error rendering Admin Panel:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+
+module.exports = { getEndpoints, getEndpointsJson, getSingleEndpoint, getControlPanel, getHostScripts,scheduleScan,  manageModules, renderAdminPanel,  };

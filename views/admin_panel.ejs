@@ -1,0 +1,115 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/admin_panel.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="container">
+    <h1 class="text-center mt-5 mb-4">Network Scan Admin Panel</h1>
+
+    <div class="row">
+        <!-- Scheduled Scans Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-calendar-alt me-2"></i>Scheduled Network Scans
+                </div>
+                <div class="card-body">
+                    <form action="/admin-panel/schedule-scan" method="POST">
+                        <div class="mb-3">
+                            <label for="frequency" class="form-label">Scan Frequency</label>
+                            <select class="form-select" id="frequency" name="frequency" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Scan Time</label>
+                            <input type="time" class="form-control" id="time" name="time" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="enableScans" name="enableScans" checked>
+                            <label class="form-check-label" for="enableScans">Enable Automatic Scans</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Management Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-puzzle-piece me-2"></i>Module Management
+                </div>
+                <div class="card-body">
+                    <form action="/admin-panel/manage-modules" method="POST">
+                        <div class="mb-3">
+                            <label for="modules" class="form-label">Select Modules to Run</label>
+                            <select multiple class="form-select" id="modules" name="modules[]" required>
+                                <% modules.forEach(function(module) { %>
+                                <option value="<%= module.id %>"><%= module.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="excludedModules" class="form-label">Exclude Specific Modules</label>
+                            <select multiple class="form-select" id="excludedModules" name="excludedModules[]">
+                                <% modules.forEach(function(module) { %>
+                                <option value="<%= module.id %>"><%= module.name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-sync-alt me-2"></i>Update Modules
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Scans Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-history me-2"></i>Recent Scans
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data, replace with actual data -->
+                    <tr>
+                        <td>2023-08-28</td>
+                        <td>09:00 AM</td>
+                        <td><span class="badge bg-success">Completed</span></td>
+                        <td><button class="btn btn-sm btn-info">View Report</button></td>
+                    </tr>
+                    <tr>
+                        <td>2023-08-27</td>
+                        <td>09:00 AM</td>
+                        <td><span class="badge bg-warning">Partial</span></td>
+                        <td><button class="btn btn-sm btn-info">View Report</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin_panel.js"></script>
+<%- include('partials/footer') %>
