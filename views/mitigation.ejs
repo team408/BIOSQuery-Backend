@@ -24,11 +24,20 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <% let advices = [
+                            { risk: 'Compatibility SMRAM is not locked', advice: 'Enable and lock the SMRAM by setting the D_LCK bit in the SMRAM Control Register (SMRAMC).' },
+                            { risk: 'SPI flash descriptor is not protected', advice: 'Ensure that the SPI flash descriptor is locked by enabling the FLOCKDN bit in the Host Firmware Status Register (HSFS).' },
+                            { risk: 'SPI flash controller is not locked', advice: 'Lock the SPI flash controller by setting the FLOCKDN bit in the Host Firmware Status Register (HSFS).' },
+                            { risk: 'SMM BIOS write protection is not correctly used', advice: 'Ensure that the BIOS region in flash is protected either through SMM-based protection or by configuring the SPI controller (PRR) correctly.' },
+                            { risk: 'BIOS interface is not locked', advice: 'Enable BIOS Interface Lock, including Top Swap Mode, to prevent unauthorized access to the BIOS.' },
+                            { risk: 'SMM cache attack', advice: 'Ensure that SMRRs (System Management Range Registers) are enabled and properly configured to prevent unauthorized access to the SMM memory.' },
+                            { risk: 'SMI handlers use pointers/addresses from OS without validation', advice: 'Validate all pointers and addresses passed from the OS to SMI handlers to prevent potential vulnerabilities.' }
+                        ]; %>
+
                         <% advices.forEach(function(advice) { %>
                             <tr>
                                 <td>
-                                        <%= advice.risk %>
-                                    </span>
+                                    <%= advice.risk %>
                                 </td>
                                 <td>
                                     <i class="fas fa-shield-alt text-primary me-2"></i>
