@@ -98,3 +98,7 @@ h1 {
 .card-body {
     word-wrap: break-word;
 }
+.container-custom {
+    max-width: 90%; /* or any value like 80%, 1000px, etc. */
+    margin: 0 auto; /* Center the container */
+}

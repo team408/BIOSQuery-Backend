@@ -23,7 +23,7 @@ async function getEnrollOneliner(req, res){
     try{
         const platformType = req.params.osType;
         if (!platformType) {
-            return res.status(400).send({ error: 'osType parameter is required' });
+            return res.status(400).json({ error: 'osType parameter is required' });
         }
 
         if (!(['deb', 'rpm', 'pkg', 'msi'].includes(platformType))){
@@ -56,25 +56,25 @@ async function addNode(req, res) {
         const password = req.body.password;
         const privateKey = req.body.privateKey;
         if (!hostId) {
-            return res.status(400).send({ error: 'hostID parameter is required' });
+            return res.status(400).json({ error: 'hostID parameter is required' });
         }
         if (!platformType) {
-                return res.status(400).send({ error: 'osType parameter is required' });
+                return res.status(400).json({ error: 'osType parameter is required' });
         }
         if (!password && !privateKey) {
-            return res.status(400).send({ error: 'either password or privateKey parameter is required' });
+            return res.status(400).json({ error: 'either password or privateKey parameter is required' });
         }
 
         if (!(['deb', 'rpm', 'pkg', 'msi'].includes(platformType))){
-            res.status(404).send({ error: 'Unknown osType'});
+            res.status(404).json({ error: 'Unknown osType'});
             return;
         }
         if ((['pkg', 'msi'].includes(platformType))){
-            res.status(404).send({ error: 'unsupported osType, yet.'});
+            res.status(404).json({ error: 'unsupported osType, yet.'});
             return;
         }
         const msg = 'Task Submitted, trying to enroll ' + hostId;
-        res.status(200).send({result: msg});
+        res.status(200).json({result: msg});
         // get EnrollmentCmd before 
         let enrollCmd = await fleetService.getAgentEnrollCmd(platformType);
         // Executing
@@ -99,20 +99,20 @@ async function rmNode(req, res) {
     let host;
     try {
         if (!hostId) {
-            res.status(400).send({ error: 'hostID parameter is required' });
+            res.status(400).json({ error: 'hostID parameter is required' });
             return
         }
         //check if host exists
         host = (await fleetService.getEndpoint(hostId));
         if (!host){
-            res.status(400).send({"result":'Unknown host.'})
+            res.status(400).json({result:'Unknown host.'})
             return
         }
         let msg = 'Task Submitted, trying to remove ' + host.display_name;
-        res.status(200).send({"result": msg});
+        res.status(200).json({result: msg});
     } catch (error) {
         console.error(error);
-        res.status(500).send({"result":'Internal Server Error'});
+        res.status(500).json({result:'Internal Server Error'});
     }
     try{
         // get host os
@@ -155,7 +155,7 @@ async function getControlPanel(req, res) {
         res.render("control.ejs");
     } catch (error) {
         console.log(error);
-        res.status(500).send({"result":'Internal Server Error'});
+        res.status(500).json({result:'Internal Server Error'});
     }
 }
 

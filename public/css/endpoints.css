@@ -1,8 +1,9 @@
 .card-img-top {
-    width: 15%;
-    height: 15%;
     margin-right: 10px;
     display: inline-block;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
 }
 .fixed-size-card {
     height: 100%;
@@ -17,6 +18,7 @@
     justify-content: space-between; 
     align-items: center;           
     padding: 10px;
+    flex-shrink: 0;
 }
 .container {
     width: calc(100% - 20px); 
@@ -34,6 +36,8 @@
     margin-top: 20px;
     background-color: #f1f6fae9;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    margin: -15px; /* Counteract padding on columns */
 }
 
 .select-endpoints{
@@ -49,6 +53,8 @@
     display: flex;
     padding: 10px;
     flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
 }
 .card-title{
     font-size: 1.4rem; 
@@ -60,6 +66,8 @@
     border-radius: 6px;
     margin: auto;
     position: relative;
+    flex-shrink: 0;
+
 }
 .card-text {
     overflow: hidden;
@@ -67,6 +75,7 @@
     white-space: nowrap; 
     color: inherit;
     display: relative;
+    flex-grow: 1;
 }
 
 custom-dropdown {
@@ -106,4 +115,14 @@ custom-dropdown {
 
 .custom-dropdown-icon {
     font-size: 30px;
+}
+
+.card {
+    height: 400px; /* Adjust this value as needed */
+    display: flex;
+    flex-direction: column;
+}
+.col-md-4 {
+    padding: 15px;
+    display: flex;
 }
