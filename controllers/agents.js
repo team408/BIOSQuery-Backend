@@ -74,7 +74,7 @@ async function addNode(req, res) {
             return;
         }
         const msg = 'Task Submitted, trying to enroll ' + hostId;
-        res.status(200).send({"result": msg});
+        res.status(200).send({result: msg});
         // get EnrollmentCmd before 
         let enrollCmd = await fleetService.getAgentEnrollCmd(platformType);
         // Executing
