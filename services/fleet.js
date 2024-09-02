@@ -1,3 +1,5 @@
+const { CygwinAgent } = require('ssh2');
+
 // process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 1;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //Only in dev mode!
 const axios = require('axios').default;
@@ -42,15 +44,29 @@ async function fleetApiPostRequest(uri,data){
         'Content-Type': 'text/plain',
         "Accept": "application/json"
     };
-    response = await axios.post(fleetUrl + uri, data, { headers: headers })
-    return response;
+    let response
+    try{
+        response = await axios.post(fleetUrl + uri, data, { headers: headers })
+        return response;
+    }
+    catch(error){
+        if (error.response.data.errors[0].reason === 'The script is already queued on the given host.')
+            return {status: 409}
+        throw (error)
+    }
 
 }
 
 async function fleetApiDeleteRequest(uri){
     fleetUrl = `https://${process.env.FLEET_SERVER}:${process.env.FLEET_SERVER_PORT}`;
     let headers = {"Authorization": `Bearer ${process.env.FLEET_API_TOKEN}`};
-    response = await axios.delete(fleetUrl + uri, { headers: headers })
+    try{
+        response = await axios.delete(fleetUrl + uri, { headers: headers })
+    }
+    catch(error){
+        console.error(error)
+        throw error;
+    }
     return response;
 }
 
@@ -295,12 +311,12 @@ async function runScriptByName(hostId, scriptName){
 }
 
 async function runScriptById(hostId, scriptId){
-    let module_data=`{"host_id": ${hostId}, "script_id": ${scriptId}}`;
+    let module_data={host_id: parseInt(hostId), script_id: parseInt(scriptId)};
     const response = await fleetApiPostRequest("/api/latest/fleet/scripts/run", data=module_data)
     // check if script has been ran correctly?
-    if (response.status != 409){
+    if (response.status === 409){
         console.error("[!] Script is already in queue to host.")
-        return null
+        return 409
     }
     // check if script has been ran correctly?
     if (response.status != 202){
@@ -314,10 +330,10 @@ async function removeHostFromFleetById(hostId) {
     // Remove the host from Fleet
     const response = await fleetApiDeleteRequest(`/api/v1/fleet/hosts/${hostId}`)
     console.log(`Response status: ${response.status}`);
-    if (response.status !== 200) {
-        return response.data;
+    if (response.status == 200 || response.status == 409) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 async function getScriptsByHost(hostId) {

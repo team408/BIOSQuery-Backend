@@ -73,7 +73,8 @@ async function addNode(req, res) {
             res.status(404).send({ error: 'unsupported osType, yet.'});
             return;
         }
-
+        const msg = 'Task Submitted, trying to enroll ' + hostId;
+        res.status(200).send({"result": msg});
         // get EnrollmentCmd before 
         let enrollCmd = await fleetService.getAgentEnrollCmd(platformType);
         // Executing
@@ -81,6 +82,9 @@ async function addNode(req, res) {
         let result = await systemService.remoteEnrollLinuxHost(hostId, username, osType, enrollCmd, password , privateKey)
         if (result){
             notificationsService.newNotification("Agents", "Add host [" + hostId + "] action SUCCESS", hostAddDescSuccess);
+        }
+        else{
+            notificationsService.newNotification("Agents", "Add host [" + hostId + "] action FAILURE", hostAddDescFailure);    
         }
 
     } catch (error) {
@@ -91,17 +95,17 @@ async function addNode(req, res) {
 }
 
 async function rmNode(req, res) {
-
+    const hostId = req.params.hostId;
+    let host;
     try {
-        const hostId = req.params.hostId;
         if (!hostId) {
             res.status(400).send({ error: 'hostID parameter is required' });
             return
         }
         //check if host exists
-        const host = (await fleetService.getEndpoint(hostId));
+        host = (await fleetService.getEndpoint(hostId));
         if (!host){
-            res.status(400).send({"result":'Internal Server Error'})
+            res.status(400).send({"result":'Unknown host.'})
             return
         }
         let msg = 'Task Submitted, trying to remove ' + host.display_name;
@@ -123,18 +127,22 @@ async function rmNode(req, res) {
         }
         let response;
 
+        if (execution_id != 409){
+            do{
+                await sleep(5000)
+                response = await fleetService.fleetApiGetRequest("/api/v1/fleet/scripts/results/" + execution_id)
+            }while(response.exit_code == null)
+        }
         //validate script has finished
-        do{
-            await sleep(5000)
-            response = await fleetService.fleetApiGetRequest("/api/v1/fleet/scripts/results/" + execution_id)
-        }while(response.exit_code == null)
 
         // delete via fleet api
         response = await fleetService.removeHostFromFleetById(hostId);
         if (!response) {
-            throw new Error(`Failed to remove host with response data: ${response}`);
+            console.error(`Failed to remove host with response data: ${response}`);
             notificationsService.newNotification("Agents", "Rm host [" + host.display_name + "] action FAILURE", `Failed to remove host with response data: ${response}`);
+            throw(response)
         }
+        notificationsService.newNotification("Agents", "Rm host [" + host.display_name + "] action SUCCESS", hostRmDescSuccess);
 
     } catch (error) {
         console.error(error);
