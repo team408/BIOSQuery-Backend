@@ -351,39 +351,6 @@ async function getScriptsByHost(hostId) {
         throw error;
     }
 }
-async function scheduleNetworkScan(frequency, time, enableScans) {
-    try {
-        // Logic to handle scheduling
-        // This might involve updating a cron job or writing to a configuration file
-    } catch (error) {
-        console.error('Error scheduling network scan:', error);
-    }
-}
-
-async function updateModuleConfig(modules, excludedModules) {
-    try {
-        // Assuming you have a configuration file or database where the module settings are stored
-        // For example, let's assume you are updating a configuration in a database
-
-        // modules: an array of module IDs to include
-        // excludedModules: an array of module IDs to exclude
-
-        // Example pseudo-code (replace with your actual logic):
-        const config = {
-            includedModules: modules,
-            excludedModules: excludedModules
-        };
-
-        // Save this configuration to your database or config file
-        // e.g., await saveConfigToDatabase(config);
-
-        console.log('Module configuration updated:', config);
-        return true;
-    } catch (error) {
-        console.error('Error updating module configuration:', error);
-        throw error;
-    }
-}
 
 
 module.exports = {
@@ -402,7 +369,5 @@ module.exports = {
     runScriptByName,
     removeHostFromFleetById,
     getScriptsByHost,
-    scheduleNetworkScan,
-    updateModuleConfig,
     removeHostFromFleetById
    };
